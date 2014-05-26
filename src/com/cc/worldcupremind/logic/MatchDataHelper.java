@@ -1,6 +1,7 @@
 package com.cc.worldcupremind.logic;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -9,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
+import java.util.HashMap;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -42,11 +44,12 @@ public class MatchDataHelper {
 	/* Data files name */
 	private static final String DATA_VERSION_FILE = "version.txt";
 	private static final String DATA_MATCHES_FILE = "matches.json";
+	private static final String DATA_NATIONAL_FILE = "national.json";
 	private static final String FILE_ENCODE_FORMAT = "UTF-8";
 	
 	/* matches.json format */
-	private static final String JSON_MATCHES_LIST = "Matches";	
 	private static final String JSON_MATCHES_DATA_VERSION = "Version";	/* Double */
+	private static final String JSON_MATCHES_LIST = "Matches";			/* Array */
 	private static final String JSON_MATCHES_FILED_NO = "NO";			/* Int */
 	private static final String JSON_MATCHES_FILED_STAGE = "Stage";		/* Enum */
 	private static final String JSON_MATCHES_FILED_GROUP = "Group";		/* String */
@@ -60,8 +63,16 @@ public class MatchDataHelper {
 	private static final String JSON_MATCHES_FILED_SCORE_1= "Score1";	/* Int */
 	private static final String JSON_MATCHES_FILED_SCORE_2= "Score2";	/* Int */
 	
+	/* national.json format */
+	private static final String JSON_NATIONAL_LIST = "National";		/* Array */
+	private static final String JSON_NATIONAL_ID = "id";				/* String */
+	private static final String JSON_NATIONAL_NAME = "name";			/* String */
+	
 	/* Matches list */
 	private SparseArray<MatchesModel> matchesList;
+	
+	/* Save national string */
+	private HashMap<String, String> nationalMap;
 	
 	/* matche.json files version*/
 	private double dataMatchesVersion;
@@ -72,6 +83,7 @@ public class MatchDataHelper {
 	public MatchDataHelper(){
 		matchesList = null;
 		dataMatchesVersion = 0;
+		nationalMap = null;
 	}
 	
 	/*
@@ -103,7 +115,7 @@ public class MatchDataHelper {
 				}
 			}
 		} else {
-			LogHelper.d(TAG, "No need to load from file");
+			LogHelper.d(TAG, "No need to load matches.json from file");
 		}
 		LogHelper.d(TAG, "Return the matchesList size:" + String.valueOf(matchesList.size()));
 		return matchesList;
@@ -119,7 +131,7 @@ public class MatchDataHelper {
 		
 		LogHelper.d(TAG, "haveNewVersion()");
 		
-		//Download file
+		//Get Download file stream
 		InputStream verStream = DataOperateHelper.loadFileFromNetwork(DATA_VERSION_FILE);
 		if(verStream == null){
 			LogHelper.w(TAG, "Download version file filed");
@@ -128,6 +140,13 @@ public class MatchDataHelper {
 		
 		//Get the version
 		String ver = DataOperateHelper.covertStream2String(verStream, FILE_ENCODE_FORMAT);
+		try {
+			verStream.close(); //close stream
+		} catch (IOException e) {
+			LogHelper.e(TAG, e);
+			return false;
+		}
+		
 		if(ver == null){
 			LogHelper.w(TAG, "covertStream2String filed");
 			return false;
@@ -144,13 +163,91 @@ public class MatchDataHelper {
 		return false;
 	}
 	
-	
+	/*
+	 * Update the matches data list
+	 * 
+	 * @param context
+	 * The @Context object
+	 * 
+	 * @return
+	 * return the @MatchesModel list
+	 */
 	public SparseArray<MatchesModel> updateMatchesData(Context context){
 		
 		LogHelper.d(TAG, "getMatchesList()");
+		
 		loadMatchDataFromNetwork(context);
 		return getMatchesList(context);
 	}
+	
+	/*
+	 * Load the national data list
+	 * 
+	 * @param context
+	 * The @Context object
+	 * 
+	 * @return
+	 * return the @HashMap<String, String> national name list
+	 */
+	public HashMap<String, String> getNationalMap(Context context){
+		
+		LogHelper.d(TAG, "getNationalMap()");
+		
+		if(nationalMap == null){
+			
+			LogHelper.d(TAG, "Create the nationalMap");
+			nationalMap = new HashMap<String, String>();
+			
+			//Load data from asset
+			LogHelper.d(TAG, "load National Data From Asset");
+			InputStream nationalStream = DataOperateHelper.loadFileFromAsset(context, DATA_NATIONAL_FILE);
+			if(nationalStream == null){
+				Log.w(TAG, "loadFileFromAsset failed");
+				return null;
+			}
+			
+			// Convert the stream to string
+			String nationalString = DataOperateHelper.covertStream2String(nationalStream, FILE_ENCODE_FORMAT);
+			try {
+				nationalStream.close(); //close stream
+			} catch (IOException e) {
+				LogHelper.e(TAG, e);
+				return null;
+			}
+			if(nationalString == null){
+				Log.w(TAG, "covertStream2String failed");
+				return null;
+			}
+			
+			// Parse the data
+			LogHelper.d(TAG, "Parse National Data From JSON");
+			JSONTokener jsonParser  = new JSONTokener(nationalString);
+			try {
+				JSONObject nationalObj = (JSONObject) jsonParser.nextValue();
+				JSONArray nationalArray = nationalObj.getJSONArray(JSON_NATIONAL_LIST);
+				for(int i=0; i<nationalArray.length(); i++){  
+					JSONObject national = nationalArray.getJSONObject(i);
+					String id = national.getString(JSON_NATIONAL_ID);
+					String name = national.getString(JSON_NATIONAL_NAME);
+					nationalMap.put(id, name);
+				}
+			} catch (JSONException e1) {
+				LogHelper.w(TAG, "Parse the national.json failed");
+				LogHelper.e(TAG, e1);
+				return null;
+			} catch (ClassCastException ex){ //If string format error, will throw ClassCastException
+				LogHelper.w(TAG, "Parse the national.json failed");
+				LogHelper.e(TAG, ex);
+				return null;
+			}
+		} else {
+			LogHelper.d(TAG, "No need to load national.json from asset file");
+		}
+		LogHelper.d(TAG, "Return the nationalMap size:" + String.valueOf(nationalMap.size()));
+		return nationalMap;
+	}
+	
+	 
 	
 	
 	/*
@@ -172,6 +269,13 @@ public class MatchDataHelper {
 		
 		// Convert the stream to string
 		String matchesString = DataOperateHelper.covertStream2String(matchesStream, FILE_ENCODE_FORMAT);
+		try {
+			matchesStream.close(); //close stream
+		} catch (IOException e) {
+			LogHelper.e(TAG, e);
+			return false;
+		}
+		
 		if(matchesString == null){
 			Log.w(TAG, "covertStream2String failed");
 			return false;
@@ -187,16 +291,6 @@ public class MatchDataHelper {
 		if(!DataOperateHelper.saveData2LocalFile(context, matchesString, DATA_MATCHES_FILE)){
 			Log.w(TAG, "saveData2LocalFile failed");
 			return false;
-		}
-		
-		//Close the input stream
-		if(matchesStream != null){
-			try {
-				matchesStream.close();
-			} catch (IOException e) {
-				LogHelper.e(TAG, e.getMessage());
-				return false;
-			}
 		}
 		
 		LogHelper.d(TAG, "loadMatchDataFromAsset Successed!");
@@ -222,6 +316,13 @@ public class MatchDataHelper {
 		
 		// Convert the stream to string
 		String matchesString = DataOperateHelper.covertStream2String(matchesStream, FILE_ENCODE_FORMAT);
+		try {
+			matchesStream.close(); //close stream
+		} catch (IOException e) {
+			LogHelper.e(TAG, e);
+			return false;
+		}
+		
 		if(matchesString == null){
 			Log.w(TAG, "covertStream2String failed");
 			return false;
@@ -231,16 +332,6 @@ public class MatchDataHelper {
 		if(!parseMatchesData(context, matchesString)){
 			Log.w(TAG, "parseMatchData failed");
 			return false;
-		}
-		
-		//Close the input stream
-		if(matchesStream != null){
-			try {
-				matchesStream.close();
-			} catch (IOException e) {
-				LogHelper.e(TAG, e);
-				return false;
-			}
 		}
 		
 		LogHelper.d(TAG, "loadMatchDataFromLocal Successed!");
@@ -269,6 +360,12 @@ public class MatchDataHelper {
 		
 		// Convert the stream to string
 		String matchesString = DataOperateHelper.covertStream2String(matchesStream, FILE_ENCODE_FORMAT);
+		try {
+			matchesStream.close(); //close
+		} catch (IOException e) {
+			LogHelper.e(TAG, e);
+			return false;
+		}
 		if(matchesString == null){
 			Log.w(TAG, "covertStream2String failed");
 			return false;
@@ -284,16 +381,6 @@ public class MatchDataHelper {
 		if(!DataOperateHelper.saveData2LocalFile(context, matchesString, DATA_MATCHES_FILE)){
 			Log.w(TAG, "parseMatchData failed");
 			return false;
-		}
-		
-		//Close the input stream
-		if(matchesStream != null){
-			try {
-				matchesStream.close();
-			} catch (IOException e) {
-				LogHelper.e(TAG, e);
-				return false;
-			}
 		}
 		
 		LogHelper.d(TAG, "loadMatchDataFromNetwork()");
@@ -352,10 +439,14 @@ public class MatchDataHelper {
 				matchesList.put(matchNo, matchItem);
 			}
 		} catch (JSONException e) {
-			LogHelper.w(TAG, "Parse the JSON failed");
+			LogHelper.w(TAG, "Parse the matches.json failed");
 			LogHelper.e(TAG, e);
 			return false;
-		} 
+		} catch (ClassCastException ex){ //If string format error, will throw ClassCastException
+			LogHelper.w(TAG, "Parse the matches.json failed");
+			LogHelper.e(TAG, ex);
+			return null;
+		}
 		
 		LogHelper.d(TAG, "parseMatchData successed!" + String.valueOf(matchesList.size()));
 		return true;

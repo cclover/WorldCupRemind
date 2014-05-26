@@ -17,6 +17,10 @@ import org.apache.commons.net.ftp.FTPReply;
 import android.content.Context;
 import android.content.res.AssetManager;
 
+/*
+ * This is a data tool class. Responsible for check read, write and download data file.
+ * Covert between stream and string and so on.
+ */
 public class DataOperateHelper {
 	
 	private static final String TAG = "DataOperateHelper";

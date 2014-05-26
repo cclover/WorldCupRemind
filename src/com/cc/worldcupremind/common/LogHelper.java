@@ -2,6 +2,9 @@ package com.cc.worldcupremind.common;
 
 import android.util.Log;
 
+/*
+ * This class use to print log
+ */
 public class LogHelper {
 	
 	public static int LEVEL_E = 0;

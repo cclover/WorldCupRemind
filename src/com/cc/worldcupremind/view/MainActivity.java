@@ -82,6 +82,7 @@ public class MainActivity extends ActionBarActivity implements
 		
 		helper = new MatchDataHelper();
 		helper.getMatchesList(this);
+		helper.getNationalMap(this);
 	}
 
 	@Override
