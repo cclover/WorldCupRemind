@@ -47,4 +47,11 @@ public class LogHelper {
 			Log.e(TAG, msg);	
 		}
 	}
+	
+	public static void e(String TAG, Exception e){
+		if(isEnable && level >= LEVEL_E){
+			Log.e(TAG, "[Exception]" + e.getMessage());	
+			e.printStackTrace();
+		}
+	}
 }

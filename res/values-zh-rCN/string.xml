@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">世界杯助手</string>
+    <string name="menu_update">更新</string>
+    <string name="tab_mathces">赛程表</string>
+    <string name="tab_group">小组积分</string>
+    <string name="tab_statistics">数据统计</string>
+</resources>
