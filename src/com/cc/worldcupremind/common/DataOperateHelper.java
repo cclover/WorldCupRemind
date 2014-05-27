@@ -8,11 +8,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.SocketException;
+import java.net.URL;
+import java.util.ArrayList;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
+import org.apache.commons.net.ftp.FTPSClient;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -30,8 +35,8 @@ public class DataOperateHelper {
 	private static final int FTP_SERVER_PORT = 21;
 	private static final String FTP_USER_NAME = "cclover";
 	private static final String FTP_USER_PASSWORD = "12345cc";
-	private static final int FTP_TIMEOUT = 20*1000;
-	
+	private static final int NETWORK_TIMEOUT = 20*1000;
+
 	
 	/*
 	 * Check the file is exist in local private files folder or not
@@ -171,26 +176,67 @@ public class DataOperateHelper {
 	}
 
 	/*
-	 * Download the data file from network
+	 * Download the data file from network (HTTP)
 	 * 
-	 * @param file
-	 * file name on FTP Server or HTTP URL
+	 * @param fileList
+	 * file URL list want to donwload on HTTP Server
+	 * 
+	 * @return 
+	 * The file input stream List if successes. return NULL if fail.
+	 */
+	public static InputStream loadFileFromHTTPNetwork(String fileURL){
+		
+		LogHelper.d(TAG, "loadFileFromNetwork: HTTP" + fileURL);
+			
+		//download from http server
+		InputStream istream = null;
+    	URL url = null;
+    	HttpURLConnection httpConn = null;
+    	try {
+    			//Get update file stream
+				url = new URL(fileURL);
+				httpConn = (HttpURLConnection)url.openConnection();
+			    HttpURLConnection.setFollowRedirects(true);
+			    httpConn.setConnectTimeout(NETWORK_TIMEOUT);
+			    httpConn.setReadTimeout(NETWORK_TIMEOUT);
+	 		    httpConn.setRequestMethod("GET");
+			    httpConn.setRequestProperty("User-Agent", "Mozilla/4.0(compatible;MSIE 6.0;Windows 2000)");
+			    istream = httpConn.getInputStream();
+			    return istream;
+
+		}  catch (MalformedURLException e) {
+			LogHelper.e(TAG, e);
+		} catch (IOException e) {
+			LogHelper.e(TAG, e);
+		} finally {
+			if(httpConn != null){
+				httpConn.disconnect();
+			}
+		}
+		return null;
+	}
+
+	
+	/*
+	 * Download the data file from network (FTP)
+	 * 
+	 * @param fileName
+	 * file name want to donwload on FTP Server
 	 * 
 	 * @return 
 	 * The file input stream if successes. return NULL if fail.
 	 */
-	public static InputStream loadFileFromNetwork(String fileName){
+	public static InputStream loadFileFromFTPNetwork(String fileName){
 		
-		LogHelper.d(TAG, "loadFileFromNetwork:" + fileName);
+		LogHelper.d(TAG, "loadFileFromFTPNetwork:" + fileName);
 		
-		//Connect to the FTP Server
-		FTPClient ftpClient = new FTPClient();
-		try {
+		//Connect to FTP, each FTPClient can only donwload one file....
+		FTPClient ftpClient =  new FTPClient(); 
+		try {	
 			
 			//Connect
-			LogHelper.d(TAG, "Connect to FTP Server");
-			ftpClient.setConnectTimeout(FTP_TIMEOUT);
-			ftpClient.setDataTimeout(FTP_TIMEOUT);
+			ftpClient.setConnectTimeout(NETWORK_TIMEOUT);
+			ftpClient.setDataTimeout(NETWORK_TIMEOUT);
 			ftpClient.connect(FTP_SERVER_URL, FTP_SERVER_PORT);
 			ftpClient.login(FTP_USER_NAME, FTP_USER_PASSWORD);
 			
@@ -203,47 +249,30 @@ public class DataOperateHelper {
 				ftpClient.disconnect();
 				return null;
 			}
+			LogHelper.d(TAG, "Connect to FTP Server Success");
 			
-			// List files and download
-			LogHelper.d(TAG, "List the FTP Files");
-			FTPFile[] files = ftpClient.listFiles();
-			for (FTPFile ftpFile : files) {
-				if (ftpFile.getName().equals(fileName)) {
-					LogHelper.d(TAG, "Start to download");
-					return ftpClient.retrieveFileStream(ftpFile.getName());
-				}
+			// Download
+			LogHelper.d(TAG, "Start to download:" + fileName);
+			InputStream inStream = ftpClient.retrieveFileStream(fileName);
+			if(inStream == null){
+				LogHelper.d(TAG, "download files is null(FTP)");
+			}else{
+				LogHelper.d(TAG, "download files success(FTP)");
 			}
-			LogHelper.w(TAG, "Can't find the file");
+			return inStream;
 		} catch (SocketException e1) {
 			LogHelper.e(TAG, e1);
 		} catch (IOException e1) {
 			LogHelper.e(TAG, e1);
-		}finally{
-			try {
-				ftpClient.disconnect();
-			} catch (IOException e) {
-				LogHelper.e(TAG, e);
+		} finally {
+			if(ftpClient != null){
+				try {
+					ftpClient.disconnect();
+				} catch (IOException e) {
+					LogHelper.e(TAG, e);
+				}
 			}
 		}
 		return null;
-		
-//		//update from http server
-//		InputStream istream = null;
-//    	URL url = null;
-//    	HttpURLConnection httpConn = null;
-//    	try {
-//    			//Get update file stream
-//				url = new URL(file);
-//				httpConn = (HttpURLConnection)url.openConnection();
-//			    HttpURLConnection.setFollowRedirects(true);
-//	 		    httpConn.setRequestMethod("GET");
-//			    httpConn.setRequestProperty("User-Agent", "Mozilla/4.0(compatible;MSIE 6.0;Windows 2000)");
-//			    istream = httpConn.getInputStream();
-//		    	LogHelper.d(TAG, "downloadFile Successed!");
-//			    return istream;       
-//		} catch (IOException e) {
-//			LogHelper.e(TAG, e.getMessage());
-//			return null;
-//		}
-	}
+	}	
 }

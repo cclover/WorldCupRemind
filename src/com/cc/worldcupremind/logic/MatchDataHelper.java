@@ -76,6 +76,15 @@ class MatchDataHelper {
 	
 	private Context context;
 	
+	
+	public enum UPDATE_RET{
+
+		RET_CHECK_UPDATE_ERROR,
+		RET_NO_NEED_UPDATE,
+		RET_UPDATE_ERROR,
+		RET_OK,
+	}
+	
 	/*
 	 * Construct
 	 */
@@ -125,59 +134,48 @@ class MatchDataHelper {
 		return ret;
 	}
 	
-	/*
-	 * Check the data version
-	 * 
-	 * @return
-	 * Have new version return true, otherwise return false, return null when error
-	 */
-	public Boolean checkNewVersion(){
-		
-		LogHelper.d(TAG, "checkNewVersion()");
-		
-		//Get Download file stream
-		InputStream verStream = DataOperateHelper.loadFileFromNetwork(DATA_VERSION_FILE);
-		if(verStream == null){
-			LogHelper.w(TAG, "Download version file filed");
-			return null;
-		}
-		
-		//Get the version
-		LogHelper.d(TAG, "Download success!");
-		String ver = DataOperateHelper.covertStream2String(verStream, FILE_ENCODE_FORMAT);
-		try {
-			verStream.close(); //close stream
-		} catch (IOException e) {
-			LogHelper.e(TAG, e);
-			return null;
-		}
-		
-		if(ver == null){
-			LogHelper.w(TAG, "covertStream2String filed");
-			return null;
-		}
-		
-		LogHelper.d(TAG, "Local version is:" + String.valueOf(dataMatchesVersion) + " Network version is :" + ver);
-		try {
-			JSONObject jsonObject = new JSONObject(ver);
-			double newVer = jsonObject.optDouble(JSON_MATCHES_DATA_VERSION);
-			return (newVer > dataMatchesVersion);
-		} catch (JSONException e1) {
-			LogHelper.e(TAG, e1);
-		}
-		return null;
-	}
-	
+
 	/*
 	 * Update the matches data list
 	 * 
 	 * @return
-	 * True if successes, False if fail. 
+	 * return @UPDATE_RESUT
 	 */
-	public Boolean updateMatchesData(){
+	public UPDATE_RET updateAllData(){
 		
-		LogHelper.d(TAG, "getMatchesList()");
-		return loadMatchDataFromNetwork();
+		LogHelper.d(TAG, "updateAllData()");
+
+		// Check update.
+		LogHelper.d(TAG, "Check version file");
+		ArrayList<String> updateList = checkNewVersion();
+		if(updateList == null){
+			LogHelper.w(TAG, "Fail to check the new version");
+			return UPDATE_RET.RET_CHECK_UPDATE_ERROR;
+		} else if(updateList.size() == 0){
+			 LogHelper.d(TAG, "current is latest version");
+			 return UPDATE_RET.RET_NO_NEED_UPDATE;
+		}
+		 
+		// Update each data
+		LogHelper.d(TAG, "Start to update files");
+		for(String updateFile : updateList){
+			
+			LogHelper.d(TAG, "update the file:" + updateFile);
+			Boolean ret = false; 
+			if(updateFile.equals(DATA_MATCHES_FILE)){
+				ret = loadMatchDataFromNetwork();
+			}
+			
+			//TODO: update other files
+			
+			if(!ret){
+				LogHelper.w(TAG, "update failed!");
+				return UPDATE_RET.RET_UPDATE_ERROR;
+			}
+		}
+		
+		LogHelper.d(TAG, "all update success!");
+		return UPDATE_RET.RET_OK;
 	}
 	
 	/*
@@ -366,6 +364,55 @@ class MatchDataHelper {
 	
 	
 	/*
+	 * Check the data version
+	 * 
+	 * @return
+	 * Return the need update file name list, return null when error
+	 */
+	private ArrayList<String> checkNewVersion(){
+		
+		LogHelper.d(TAG, "checkNewVersion()");
+		ArrayList<String> updateFileList = new ArrayList<String>();
+		
+		//Get Download file stream
+		InputStream verStream = DataOperateHelper.loadFileFromFTPNetwork(DATA_VERSION_FILE);
+		if(verStream == null){
+			LogHelper.w(TAG, "Download version file filed");
+			return null;
+		}
+		
+		//Get the version
+		LogHelper.d(TAG, "Download success!");
+		String ver = DataOperateHelper.covertStream2String(verStream, FILE_ENCODE_FORMAT);
+		try {
+			verStream.close(); //close stream
+		} catch (IOException e) {
+			LogHelper.e(TAG, e);
+			return null;
+		}
+		
+		if(ver == null){
+			LogHelper.w(TAG, "covertStream2String filed");
+			return null;
+		}
+		
+		LogHelper.d(TAG, "Local version is:" + String.valueOf(dataMatchesVersion) + " Network version is :" + ver);
+		try {
+			JSONObject jsonObject = new JSONObject(ver);
+			double newMatchesVer = jsonObject.optDouble(JSON_MATCHES_DATA_VERSION);
+			if(newMatchesVer > dataMatchesVersion){
+				updateFileList.add(DATA_MATCHES_FILE);
+			}
+			//TODO: same operate for other file
+			return updateFileList;
+		} catch (JSONException e1) {
+			LogHelper.e(TAG, e1);
+		}
+		return null;
+	}
+	
+	
+	/*
 	 * Update the isRemind field in MatchesModel list
 	 */
 	private void updataRemindField(){
@@ -478,7 +525,7 @@ class MatchDataHelper {
 		LogHelper.d(TAG, "loadMatchDataFromNetwork()");
 		
 		//Load data from network
-		InputStream matchesStream = DataOperateHelper.loadFileFromNetwork(DATA_MATCHES_FILE);
+		InputStream matchesStream = DataOperateHelper.loadFileFromFTPNetwork(DATA_MATCHES_FILE);
 		if(matchesStream == null){
 			LogHelper.w(TAG, "loadFileFromNetwork failed");
 			return false;

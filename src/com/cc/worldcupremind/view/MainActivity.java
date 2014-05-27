@@ -113,8 +113,8 @@ public class MainActivity extends ActionBarActivity implements
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
-			if(!controller.checkUpdate()){
-				LogHelper.d(TAG, "Can't check the update");
+			if(!controller.updateData()){
+				LogHelper.d(TAG, "Can't update");
 			}
 			return true;
 		}
@@ -226,17 +226,10 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	@Override
-	public void onCheckUpdateDone(Boolean isSuccess, Boolean haveNewVersion) {
-		LogHelper.d(TAG, String.format("onCheckUpdateDone result is %s", isSuccess?"true":"false"));
-		LogHelper.d(TAG, String.format("haveNewVersion is %s", haveNewVersion?"true":"false"));
-		if(haveNewVersion){
-			controller.updateData();
-		}
-	}
+	public void onUpdateDone(Boolean haveNewVersion, Boolean isSuccess) {
 
-	@Override
-	public void onUpdateDone(Boolean isSuccess) {
-		LogHelper.d(TAG, String.format("onUpdateDone result is %s", isSuccess?"true":"false"));
+		LogHelper.d(TAG, String.format("isSuccess is %s", isSuccess?"true":"false"));
+		LogHelper.d(TAG, String.format("haveNewVersion is %s", haveNewVersion?"true":"false"));
 	}
 
 }
