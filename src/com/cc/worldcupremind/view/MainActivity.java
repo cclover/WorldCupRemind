@@ -3,7 +3,9 @@ package com.cc.worldcupremind.view;
 import java.util.Locale;
 
 import com.cc.worldcupremind.R;
-import com.cc.worldcupremind.logic.MatchDataHelper;
+import com.cc.worldcupremind.common.LogHelper;
+import com.cc.worldcupremind.logic.MatchDataController;
+import com.cc.worldcupremind.logic.MatchDataListener;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -12,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
+import android.provider.SyncStateContract.Helpers;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -22,7 +25,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity implements
-		ActionBar.TabListener {
+		ActionBar.TabListener , MatchDataListener{
+
+	private static final String TAG = "MainActivity";
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -37,7 +42,7 @@ public class MainActivity extends ActionBarActivity implements
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
-	MatchDataHelper helper = null;
+	MatchDataController controller;
 	
 
 	@Override
@@ -80,9 +85,17 @@ public class MainActivity extends ActionBarActivity implements
 					.setTabListener(this));
 		}
 		
-		helper = new MatchDataHelper();
-		helper.getMatchesList(this);
-		helper.getNationalMap(this);
+		controller = new MatchDataController();
+		controller.setListener(this);
+		controller.InitData(this);
+	}
+	
+
+	@Override
+	protected void onDestroy() 
+	{
+		super.onDestroy();
+		controller.removeListener(this);
 	}
 
 	@Override
@@ -100,14 +113,9 @@ public class MainActivity extends ActionBarActivity implements
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					if(helper.checkNewVersion()){
-						helper.updateMatchesData(getApplicationContext());
-					}
-				}
-			}).start();
+			if(!controller.checkUpdate()){
+				LogHelper.d(TAG, "Can't check the update");
+			}
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -209,6 +217,26 @@ public class MainActivity extends ActionBarActivity implements
 					ARG_SECTION_NUMBER)));
 			return rootView;
 		}
+	}
+
+	
+	@Override
+	public void onInitDone(Boolean isSuccess) {
+		LogHelper.d(TAG, String.format("onInitDone result is %s", isSuccess?"true":"false"));
+	}
+
+	@Override
+	public void onCheckUpdateDone(Boolean isSuccess, Boolean haveNewVersion) {
+		LogHelper.d(TAG, String.format("onCheckUpdateDone result is %s", isSuccess?"true":"false"));
+		LogHelper.d(TAG, String.format("haveNewVersion is %s", haveNewVersion?"true":"false"));
+		if(haveNewVersion){
+			controller.updateData();
+		}
+	}
+
+	@Override
+	public void onUpdateDone(Boolean isSuccess) {
+		LogHelper.d(TAG, String.format("onUpdateDone result is %s", isSuccess?"true":"false"));
 	}
 
 }

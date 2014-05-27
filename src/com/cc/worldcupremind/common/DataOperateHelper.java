@@ -30,6 +30,7 @@ public class DataOperateHelper {
 	private static final int FTP_SERVER_PORT = 21;
 	private static final String FTP_USER_NAME = "cclover";
 	private static final String FTP_USER_PASSWORD = "12345cc";
+	private static final int FTP_TIMEOUT = 20*1000;
 	
 	
 	/*
@@ -187,10 +188,14 @@ public class DataOperateHelper {
 		try {
 			
 			//Connect
+			LogHelper.d(TAG, "Connect to FTP Server");
+			ftpClient.setConnectTimeout(FTP_TIMEOUT);
+			ftpClient.setDataTimeout(FTP_TIMEOUT);
 			ftpClient.connect(FTP_SERVER_URL, FTP_SERVER_PORT);
 			ftpClient.login(FTP_USER_NAME, FTP_USER_PASSWORD);
 			
 			//Check reply code
+			LogHelper.d(TAG, "Get Reply from FTP Server");
 			int reply = ftpClient.getReplyCode();
 			if (!FTPReply.isPositiveCompletion(reply))
 			{
@@ -200,9 +205,11 @@ public class DataOperateHelper {
 			}
 			
 			// List files and download
+			LogHelper.d(TAG, "List the FTP Files");
 			FTPFile[] files = ftpClient.listFiles();
 			for (FTPFile ftpFile : files) {
 				if (ftpFile.getName().equals(fileName)) {
+					LogHelper.d(TAG, "Start to download");
 					return ftpClient.retrieveFileStream(ftpFile.getName());
 				}
 			}
