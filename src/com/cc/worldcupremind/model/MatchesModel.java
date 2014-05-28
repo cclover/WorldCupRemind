@@ -146,6 +146,12 @@ public class MatchesModel {
 		return team2Score;
 	}
 
+	/**
+	 * @return the isRemind
+	 */
+	public Boolean getIsRemind() {
+		return isRemind;
+	}
 
 	/**
 	 * @param matchStage the matchStage to set

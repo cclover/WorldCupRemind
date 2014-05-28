@@ -69,8 +69,11 @@ class MatchDataHelper {
 	private HashMap<String, String> nationalMap;
 	
 	/* Remind list */
-	private ArrayList<Integer> remindList;
+	private SparseArray<MatchesModel> remindList;
 	
+	private ArrayList<Integer> remindCancelList;
+	
+
 	/* matche.json files version*/
 	private double dataMatchesVersion;
 	
@@ -93,7 +96,8 @@ class MatchDataHelper {
 		this.dataMatchesVersion = 0;
 		this.matchesList = new SparseArray<MatchesModel>();
 		this.nationalMap = new HashMap<String, String>();
-		this.remindList = new ArrayList<Integer>();
+		this.remindList = new SparseArray<MatchesModel>();
+		this.remindCancelList = new ArrayList<Integer>();
 		this.context = context;
 	}
 	
@@ -105,8 +109,12 @@ class MatchDataHelper {
 		return nationalMap;
 	}
 
-	public ArrayList<Integer> getRemindList() {
+	public SparseArray<MatchesModel> getRemindList() {
 		return remindList;
+	}
+	
+	public ArrayList<Integer> getRemindCancelList() {
+		return remindCancelList;
 	}
 	
 	/*
@@ -136,12 +144,12 @@ class MatchDataHelper {
 	
 
 	/*
-	 * Update the matches data list
+	 * Update the all data files from network
 	 * 
 	 * @return
 	 * return @UPDATE_RESUT
 	 */
-	public UPDATE_RET updateAllData(){
+	public UPDATE_RET updateAllDataFiles(){
 		
 		LogHelper.d(TAG, "updateAllData()");
 
@@ -284,7 +292,9 @@ class MatchDataHelper {
 			for(int i = 0; i < remindArray.length(); i++){  
 				JSONObject remindObj = remindArray.getJSONObject(i);
 				int matchNo = remindObj.getInt(JSON_REMIND_MATCH_NO);
-				remindList.add(matchNo);
+				MatchesModel match =  matchesList.get(matchNo); 
+				match.setIsRemind(true); //update the isRemind field
+				remindList.put(matchNo, match);
 			}
 		} catch (JSONException e) {
 			LogHelper.w(TAG, "Parse the remind.json failed");
@@ -295,9 +305,7 @@ class MatchDataHelper {
 			LogHelper.e(TAG, ex);
 			return false;
 		}
-		
-		updataRemindField();
-		
+				
 		LogHelper.d(TAG, "Return the remindList size:" + String.valueOf(remindList.size()));
 		return true;
 	}
@@ -309,14 +317,56 @@ class MatchDataHelper {
 	 * @param newlist 
 	 * New remind matches number list 
 	 */
-	public void updateRemindData(ArrayList<Integer> newlist){
+	public Boolean setRemindData(ArrayList<Integer> newlist){
 
-		//renew the remind list
-		remindList.clear();
-		if(newlist != null && newlist.size() > 0){
-			remindList.addAll(newlist);
+		LogHelper.d(TAG, "updateRemindData()");
+		
+		// renew the remind list
+		if(newlist == null){
+			LogHelper.w(TAG, "The new remind list is null");
+			return false;
 		}
-		updataRemindField();
+		
+		// save to file first
+		if(!saveRemindData()){
+			LogHelper.w(TAG, "Fail to save the remind data");
+			return false;
+		}
+		
+		//Construct the cancel list
+		LogHelper.d(TAG, "Construct the cancel list");
+		remindCancelList.clear();
+		for(int i = 0; i < remindList.size(); i++){
+			int matchNo = remindList.keyAt(i);
+			if(!newlist.contains(matchNo)){
+				LogHelper.d(TAG, "Cancel alarm MatchNo:" + String.valueOf(matchNo));
+				remindCancelList.add(matchNo);
+				
+				//Reset the isRemind flag
+				MatchesModel match = matchesList.get(matchNo);
+				match.setIsRemind(false);
+			}
+		}
+		
+		// clear the remind list
+		LogHelper.d(TAG, "Renew the remindList and matchesList");
+		remindList.clear();
+		for(int no : newlist){
+			LogHelper.d(TAG, "Set alarm MatchNo:" + String.valueOf(no));
+			MatchesModel match = matchesList.get(no);
+			match.setIsRemind(true);
+			remindList.put(no, match);
+		}
+		
+		//For test
+		LogHelper.d(TAG, "alarm no:");
+		for(int i = 0; i < matchesList.size(); i++){
+			MatchesModel match = matchesList.valueAt(i);
+			if(match.getIsRemind()){
+				LogHelper.d(TAG, "alarm no:" + String.valueOf(i));
+			}
+		}
+		return true;
 	}
 	
 	/*
@@ -342,7 +392,7 @@ class MatchDataHelper {
 		try {
 			for(int i = 0; i < remindList.size(); i++){
 				JSONObject remindObj = new JSONObject();
-				remindObj.put(JSON_REMIND_MATCH_NO, remindList.get(i));
+				remindObj.put(JSON_REMIND_MATCH_NO, remindList.keyAt(i));
 				remindArray.put(remindObj);
 			}
 			rootObj.put(JSON_REMIND_LIST, remindArray);
@@ -409,20 +459,6 @@ class MatchDataHelper {
 			LogHelper.e(TAG, e1);
 		}
 		return null;
-	}
-	
-	
-	/*
-	 * Update the isRemind field in MatchesModel list
-	 */
-	private void updataRemindField(){
-
-		LogHelper.d(TAG, "updataRemindField: " + String.valueOf(remindList.size()));
-		
-		for (int i = 0; i < matchesList.size(); i++) {
-			MatchesModel model = matchesList.valueAt(i);
-			model.setIsRemind(remindList.contains(model.getMatchNo()));
-		}
 	}
 	
 

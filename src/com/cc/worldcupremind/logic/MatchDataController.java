@@ -1,7 +1,6 @@
 package com.cc.worldcupremind.logic;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import com.cc.worldcupremind.common.LogHelper;
 import com.cc.worldcupremind.logic.MatchDataHelper.UPDATE_RET;
@@ -20,7 +19,12 @@ public class MatchDataController implements MatchDataListener{
 	private ArrayList<MatchDataListener> linsterList = new ArrayList<MatchDataListener>();
 	private Context context = null;
 	
-	
+	/*
+	 * set @MatchDataListener listener
+	 * 
+	 * @param listener
+	 * The @MatchDataListener object
+	 */
 	public void setListener(MatchDataListener listener){
 		if(listener != null && !linsterList.contains(listener)){
 			linsterList.add(listener);
@@ -28,6 +32,12 @@ public class MatchDataController implements MatchDataListener{
 		}
 	}
 	
+	/*
+	 * remove the @MatchDataListener listener
+	 * 
+	 * @param listener
+	 * The @MatchDataListener object
+	 */
 	public void removeListener(MatchDataListener listener){
 		if(listener != null && linsterList.contains(listener)){
 			linsterList.remove(listener);
@@ -50,6 +60,8 @@ public class MatchDataController implements MatchDataListener{
 	 *
 	 */
 	public void InitData(Context context){
+		
+		LogHelper.d(TAG, "Init Data");
 		
 		//Init
 		this.context = context;
@@ -87,7 +99,10 @@ public class MatchDataController implements MatchDataListener{
 	 */
 	public Boolean updateData(){
 		
+		LogHelper.d(TAG, "updateData");
+		
 		if(!isDataInitDone){
+			LogHelper.w(TAG, "Please init data first");
 			return false;
 		}
 		
@@ -97,7 +112,7 @@ public class MatchDataController implements MatchDataListener{
 			public void run() {
 
 				// Check version
-				UPDATE_RET ret = dataHelper.updateAllData();
+				UPDATE_RET ret = dataHelper.updateAllDataFiles();
 				if(ret ==  UPDATE_RET.RET_CHECK_UPDATE_ERROR){
 					LogHelper.w(TAG, "Check version failed");
 					onUpdateDone(false,false);
@@ -117,6 +132,34 @@ public class MatchDataController implements MatchDataListener{
 		return true;
 	}
 
+	
+	
+	public Boolean setMatchRemind(ArrayList<Integer> matchesList){
+		
+		LogHelper.d(TAG, "updateData");
+		
+		if(!isDataInitDone){
+			LogHelper.w(TAG, "Please init data first");
+			return false;
+		}
+		
+		final ArrayList<Integer> newList = matchesList;
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				if(!dataHelper.setRemindData(newList)){
+					LogHelper.w(TAG, "Fail to set the remind data");
+				}
+				
+				
+			}
+		}).start();
+	
+		return true;
+	}
+	
 	
 	@Override
 	public void onInitDone(Boolean isSuccess) {
