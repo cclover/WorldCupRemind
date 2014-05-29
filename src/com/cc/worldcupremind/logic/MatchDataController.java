@@ -77,6 +77,7 @@ public class MatchDataController implements MatchDataListener{
 		
 		if(isDataInitDone){
 			LogHelper.d(TAG, "Data had init done!");
+			onInitDone(true);
 			return;
 		}
 		

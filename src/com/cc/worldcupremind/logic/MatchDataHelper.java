@@ -16,6 +16,7 @@ import android.util.SparseArray;
 
 import com.cc.worldcupremind.common.DataOperateHelper;
 import com.cc.worldcupremind.common.LogHelper;
+import com.cc.worldcupremind.model.MatchDate;
 import com.cc.worldcupremind.model.MatchStage;
 import com.cc.worldcupremind.model.MatchStatus;
 import com.cc.worldcupremind.model.MatchesModel;
@@ -43,15 +44,13 @@ class MatchDataHelper {
 	private static final String JSON_MATCHES_FILED_NO = "NO";			/* Int */
 	private static final String JSON_MATCHES_FILED_STAGE = "Stage";		/* Enum */
 	private static final String JSON_MATCHES_FILED_GROUP = "Group";		/* String */
-	private static final String JSON_MATCHES_FILED_MONTH = "Month";		/* String */
-	private static final String JSON_MATCHES_FILED_DAY = "Day";			/* String */
-	private static final String JSON_MATCHES_FILED_WEEK = "Week";		/* Int */
-	private static final String JSON_MATCHES_FILED_HOUR = "Hour";		/* String */
+	private static final String JSON_MATCHES_FILED_TIME= "Time";		/* Date */
 	private static final String JSON_MATCHES_FILED_TEAM_1 = "Team1";	/* String */
 	private static final String JSON_MATCHES_FILED_TEAM_2 = "Team2";	/* String */
 	private static final String JSON_MATCHES_FILED_STATUS= "Status";	/* Eunm*/
 	private static final String JSON_MATCHES_FILED_SCORE_1= "Score1";	/* Int */
 	private static final String JSON_MATCHES_FILED_SCORE_2= "Score2";	/* Int */
+
 	
 	/* national.json format */
 	private static final String JSON_NATIONAL_LIST = "National";		/* Array */
@@ -638,16 +637,13 @@ class MatchDataHelper {
 				int matchNo = matchObj.getInt(JSON_MATCHES_FILED_NO);
 				MatchStage stage = MatchStage.valueOf(matchObj.getInt(JSON_MATCHES_FILED_STAGE));
 				String group = matchObj.getString(JSON_MATCHES_FILED_GROUP);
-				int week = matchObj.getInt(JSON_MATCHES_FILED_WEEK);
-				String month = matchObj.getString(JSON_MATCHES_FILED_MONTH);
-				String day = matchObj.getString(JSON_MATCHES_FILED_DAY);
-				String hour = matchObj.getString(JSON_MATCHES_FILED_HOUR);
+				MatchDate time = new MatchDate(context, matchObj.getString(JSON_MATCHES_FILED_TIME));
 				String team1 = matchObj.getString(JSON_MATCHES_FILED_TEAM_1);
 				String team2 = matchObj.getString(JSON_MATCHES_FILED_TEAM_2);
 				MatchStatus status = MatchStatus.valueOf(matchObj.getInt(JSON_MATCHES_FILED_STATUS));
 				int team1Score = matchObj.getInt(JSON_MATCHES_FILED_SCORE_1);
 				int team2Score = matchObj.getInt(JSON_MATCHES_FILED_SCORE_2);
-				MatchesModel matchItem = new MatchesModel(matchNo, stage, group, week, month, day, hour, 
+				MatchesModel matchItem = new MatchesModel(matchNo, stage, group, time,  
 						team1, team2, status, team1Score, team2Score, false);
 				matchesList.put(matchNo, matchItem);
 			}

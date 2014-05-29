@@ -3,10 +3,12 @@ package com.cc.worldcupremind.view;
 import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.R.id;
 import com.cc.worldcupremind.R.layout;
+import com.cc.worldcupremind.model.MatchesModel;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +41,7 @@ public class MatchesFragment extends ListFragment {
 	class MatchesAdapter extends BaseAdapter{
 		
 		
-		
+		SparseArray<MatchesModel> matchList = new SparseArray<>();
 		
 		
 		public MatchesAdapter(){
@@ -48,8 +50,8 @@ public class MatchesFragment extends ListFragment {
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
-			return 0;
+
+			return matchList.size();
 		}
 
 		@Override
