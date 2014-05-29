@@ -16,8 +16,8 @@ public class MatchRemindReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		
 		if(intent.getAction().equals(ACTION_BOOT)){
-			LogHelper.d(TAG, "Receive BOOT_COMPLETED..Register the alarm");
-			
+			LogHelper.d(TAG, "Receive BOOT_COMPLETED..Load data and set alarm");
+			MatchDataController.getInstance().InitData(context);
 			
 		} else if(intent.getAction().equals(MatchRemindHelper.ACTION_ALARM)){
 			LogHelper.d(TAG, "Receive the match alarm");

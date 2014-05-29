@@ -8,7 +8,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.text.format.Time;
 import android.util.Log;
 import android.util.SparseArray;
 
@@ -32,13 +31,13 @@ public class MatchRemindHelper {
 	public static final String REMIND_MATCHES_TEAM_1 = "Team1";		/* String */
 	public static final String REMIND_MATCHES_TEAM_2 = "Team2";		/* String */
 	
-	public void setAlarm(Context context, SparseArray<MatchesModel> remindList, ArrayList<Integer> cancelList){
+	public static void setAlarm(Context context, SparseArray<MatchesModel> remindList, ArrayList<Integer> cancelList){
 
 
 		AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 		
 		//Cancel alarm
-		LogHelper.d(TAG, "Start to cancel alarm:" + String.valueOf(remindList.size()));
+		LogHelper.d(TAG, "Start to cancel alarm:" + String.valueOf(cancelList.size()));
 		Intent intentCancel = new Intent(context, MatchRemindReceiver.class);
 		intentCancel.setAction(ACTION_ALARM);
 		for(int i : cancelList){
@@ -80,8 +79,9 @@ public class MatchRemindHelper {
 		    
 		    PendingIntent pi = PendingIntent.getBroadcast(context, match.getMatchNo(), intent,0);
 		    am.set(AlarmManager.RTC_WAKEUP, remindCalendar.getTimeInMillis(), pi);
-	        Log.d(TAG, String.format("Set Alarm: [%d][%s-%s][%s]",
+	        LogHelper.d(TAG, String.format("Set Alarm: [%d][%s-%s][%s]",
 	        				match.getMatchNo(), match.getMatchTeam1(), match.getMatchTeam2(), remindCalendar.toString()));
 		}
+		LogHelper.d(TAG, "Set alarm done!");
 	}
 }

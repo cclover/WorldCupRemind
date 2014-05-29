@@ -254,6 +254,8 @@ class MatchDataHelper {
 	public Boolean loadRemindData(){
 		
 		LogHelper.d(TAG, "loadRemindData()");
+		remindList.clear();
+		remindCancelList.clear();
 		
 		// Check file
 		if(!DataOperateHelper.isLocalFileExist(context, DATA_REMIND_FILE)){
@@ -319,7 +321,7 @@ class MatchDataHelper {
 	 */
 	public Boolean setRemindData(ArrayList<Integer> newlist){
 
-		LogHelper.d(TAG, "updateRemindData()");
+		LogHelper.d(TAG, "setRemindData()");
 		
 		// renew the remind list
 		if(newlist == null){
@@ -328,7 +330,7 @@ class MatchDataHelper {
 		}
 		
 		// save to file first
-		if(!saveRemindData()){
+		if(!saveRemindData(newlist)){
 			LogHelper.w(TAG, "Fail to save the remind data");
 			return false;
 		}
@@ -354,16 +356,20 @@ class MatchDataHelper {
 		for(int no : newlist){
 			LogHelper.d(TAG, "Set alarm MatchNo:" + String.valueOf(no));
 			MatchesModel match = matchesList.get(no);
+			if(match == null){
+				LogHelper.w(TAG, "The matchNo is not exist:" + String.valueOf(no));
+				continue;
+			}
 			match.setIsRemind(true);
 			remindList.put(no, match);
 		}
 		
 		//For test
-		LogHelper.d(TAG, "alarm no:");
+		LogHelper.d(TAG, "Show Alarm list:");
 		for(int i = 0; i < matchesList.size(); i++){
 			MatchesModel match = matchesList.valueAt(i);
 			if(match.getIsRemind()){
-				LogHelper.d(TAG, "alarm no:" + String.valueOf(i));
+				LogHelper.d(TAG, "alarm MathcNo:" + String.valueOf(match.getMatchNo()));
 			}
 		}
 		return true;
@@ -375,12 +381,12 @@ class MatchDataHelper {
 	 * @return 
 	 * True if successes, False if fail. 
 	 */
-	public Boolean saveRemindData(){
+	private Boolean saveRemindData(ArrayList<Integer> list){
 		
 		LogHelper.d(TAG, "saveRemindData()");
 		
 		// Check the list
-		if(remindList == null || remindList.size() == 0){
+		if(list == null || list.size() == 0){
 			
 			LogHelper.d(TAG, "No remind data to save");
 			return true;
@@ -390,9 +396,9 @@ class MatchDataHelper {
 		JSONArray remindArray = new JSONArray();
 		// Construct the JSON Object
 		try {
-			for(int i = 0; i < remindList.size(); i++){
+			for(int i = 0; i < list.size(); i++){
 				JSONObject remindObj = new JSONObject();
-				remindObj.put(JSON_REMIND_MATCH_NO, remindList.keyAt(i));
+				remindObj.put(JSON_REMIND_MATCH_NO, list.get(i));
 				remindArray.put(remindObj);
 			}
 			rootObj.put(JSON_REMIND_LIST, remindArray);

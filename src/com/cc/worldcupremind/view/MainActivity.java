@@ -1,5 +1,6 @@
 package com.cc.worldcupremind.view;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import com.cc.worldcupremind.R;
@@ -85,7 +86,8 @@ public class MainActivity extends ActionBarActivity implements
 					.setTabListener(this));
 		}
 		
-		controller = new MatchDataController();
+		LogHelper.d(TAG, "Load data!");
+		controller = MatchDataController.getInstance();
 		controller.setListener(this);
 		controller.InitData(this);
 	}
@@ -222,7 +224,15 @@ public class MainActivity extends ActionBarActivity implements
 	
 	@Override
 	public void onInitDone(Boolean isSuccess) {
+		
 		LogHelper.d(TAG, String.format("onInitDone result is %s", isSuccess?"true":"false"));
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		list.add(1);
+		list.add(10);
+		list.add(20);
+		if(!controller.setMatchRemind(list)){
+			LogHelper.w(TAG, "Can't setMatchRemind");
+		}
 	}
 
 	@Override
@@ -230,6 +240,13 @@ public class MainActivity extends ActionBarActivity implements
 
 		LogHelper.d(TAG, String.format("isSuccess is %s", isSuccess?"true":"false"));
 		LogHelper.d(TAG, String.format("haveNewVersion is %s", haveNewVersion?"true":"false"));
+	}
+
+
+	@Override
+	public void onSetRemindDone(Boolean isSuccess) {
+		
+		LogHelper.d(TAG, String.format("onSetRemindDone is %s", isSuccess?"true":"false"));
 	}
 
 }

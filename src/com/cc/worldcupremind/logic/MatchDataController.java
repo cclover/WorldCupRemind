@@ -14,10 +14,22 @@ public class MatchDataController implements MatchDataListener{
 	
 	private static final String TAG = "MatchDataController";
 	
-	private Boolean isDataInitDone = false;
+	private static MatchDataController instance = new MatchDataController();
+	private Boolean isDataInitDone;
 	private MatchDataHelper dataHelper = null;	
-	private ArrayList<MatchDataListener> linsterList = new ArrayList<MatchDataListener>();
+	private ArrayList<MatchDataListener> linsterList = null;
 	private Context context = null;
+	private Object lockObj = null;;
+	
+	public static MatchDataController getInstance(){
+		return instance;
+	}
+	
+	private MatchDataController(){
+		isDataInitDone = false;
+		linsterList = new ArrayList<MatchDataListener>();
+		lockObj = new Object();
+	}
 	
 	/*
 	 * set @MatchDataListener listener
@@ -59,21 +71,34 @@ public class MatchDataController implements MatchDataListener{
 	 * Must invoke this must at first.
 	 *
 	 */
-	public void InitData(Context context){
+	public void InitData(Context appContext){
 		
 		LogHelper.d(TAG, "Init Data");
 		
-		//Init
-		this.context = context;
-		isDataInitDone = false;
-		dataHelper = new MatchDataHelper(this.context);
+		if(isDataInitDone){
+			LogHelper.d(TAG, "Data had init done!");
+			return;
+		}
 		
+		synchronized (lockObj) {
+			if(context == null){
+				context = appContext.getApplicationContext();
+				dataHelper = new MatchDataHelper(context);
+			}
+		}
+
 		new Thread(new Runnable() {
 			
 			@Override
-			public void run() {
+			public synchronized void run() {
+				
+				if(isDataInitDone){
+					LogHelper.d(TAG, "Data had init done!");
+					return;
+				}
 				
 				// Load the necessary data
+				LogHelper.d(TAG, "Load necessary data from file");
 				if(!dataHelper.loadMatchesData() || !dataHelper.loadNationalData()){
 					
 					LogHelper.w(TAG, "Fail to init the data!");
@@ -82,8 +107,14 @@ public class MatchDataController implements MatchDataListener{
 				}
 				
 				//Load the remind filed
-				dataHelper.loadRemindData();
-		
+				LogHelper.d(TAG, "Load remind data");
+				if(dataHelper.loadRemindData()){
+					LogHelper.d(TAG, "Set remind alarm");
+					MatchRemindHelper.setAlarm(context, dataHelper.getRemindList(), dataHelper.getRemindCancelList());
+				}
+				
+				//Init done
+				LogHelper.d(TAG, "Init Data Done!");
 				isDataInitDone = true;
 				onInitDone(true);
 			}
@@ -109,7 +140,7 @@ public class MatchDataController implements MatchDataListener{
 		new Thread(new Runnable() {
 			
 			@Override
-			public void run() {
+			public synchronized void run() {
 
 				// Check version
 				UPDATE_RET ret = dataHelper.updateAllDataFiles();
@@ -147,13 +178,21 @@ public class MatchDataController implements MatchDataListener{
 		new Thread(new Runnable() {
 			
 			@Override
-			public void run() {
+			public synchronized void run() {
 				
 				if(!dataHelper.setRemindData(newList)){
 					LogHelper.w(TAG, "Fail to set the remind data");
+					onSetRemindDone(false);
 				}
 				
-				
+				//Set alarm
+				try{
+					MatchRemindHelper.setAlarm(context, dataHelper.getRemindList(), dataHelper.getRemindCancelList());
+					onSetRemindDone(true);
+				}catch (Exception e) {
+					LogHelper.e(TAG, e);
+					onSetRemindDone(false);
+				}
 			}
 		}).start();
 	
@@ -177,6 +216,16 @@ public class MatchDataController implements MatchDataListener{
 		if(linsterList != null && linsterList.size() > 0){
 			for (MatchDataListener listener : linsterList) {
 				listener.onUpdateDone(haveNewVersion, isSuccess);
+			}
+		}
+	}
+
+	@Override
+	public void onSetRemindDone(Boolean isSuccess) {
+
+		if(linsterList != null && linsterList.size() > 0){
+			for (MatchDataListener listener : linsterList) {
+				listener.onSetRemindDone(isSuccess);
 			}
 		}
 	}
