@@ -1,7 +1,6 @@
 package com.cc.worldcupremind.logic;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import com.cc.worldcupremind.common.LogHelper;
 import com.cc.worldcupremind.common.ResourceHelper;

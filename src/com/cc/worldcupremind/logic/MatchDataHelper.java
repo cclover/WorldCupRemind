@@ -597,6 +597,8 @@ class MatchDataHelper {
 			return false;
 		}
 		
+		double tmpVersion = 0;
+		
 		// Convert the json string to match object
 		JSONTokener jsonParser  = new JSONTokener(matchesString);
 		try {
@@ -604,7 +606,7 @@ class MatchDataHelper {
 			JSONObject rootObj  = (JSONObject) jsonParser.nextValue();
 			
 			//parse data version
-			dataMatchesVersion = rootObj.getDouble(JSON_MATCHES_DATA_VERSION);
+			tmpVersion = rootObj.getDouble(JSON_MATCHES_DATA_VERSION);
 			matchesCount = rootObj.getInt(JSON_MATCHES_COUNT);
 			teamsCount = rootObj.getInt(JSON_TEAMS_COUNT);
 	    	LogHelper.d(TAG, "The match data version is:" + String.valueOf(dataMatchesVersion));
@@ -641,6 +643,7 @@ class MatchDataHelper {
 		}
 		
 		LogHelper.d(TAG, "parseMatchData successed!" + String.valueOf(matchesList.size()));
+		dataMatchesVersion = tmpVersion; //if parse failed. The version will not change.
 		return true;
 	}
 }
