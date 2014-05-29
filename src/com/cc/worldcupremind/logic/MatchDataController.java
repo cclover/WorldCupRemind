@@ -1,63 +1,77 @@
 package com.cc.worldcupremind.logic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.cc.worldcupremind.common.LogHelper;
+import com.cc.worldcupremind.common.ResourceHelper;
 import com.cc.worldcupremind.logic.MatchDataHelper.UPDATE_RET;
 import com.cc.worldcupremind.model.MatchesModel;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.SparseArray;
 
 
 public class MatchDataController implements MatchDataListener{
 	
 	private static final String TAG = "MatchDataController";
-	
 	private static MatchDataController instance = new MatchDataController();
 	private Boolean isDataInitDone;
-	private MatchDataHelper dataHelper = null;	
-	private ArrayList<MatchDataListener> linsterList = null;
-	private Context context = null;
-	private Object lockObj = null;;
+	private MatchDataHelper dataHelper;	
+	private ResourceHelper resourceHelper;
+	private ArrayList<MatchDataListener> listenerList;
+	private Context context;
+	private Object lockObj;
 	
+	/**
+	 * Get the @MatchDataController object
+	 * 
+	 * @return the @MatchDataController single instance
+	 */
 	public static MatchDataController getInstance(){
 		return instance;
 	}
 	
+	/**
+	 * Construct
+	 */
 	private MatchDataController(){
 		isDataInitDone = false;
-		linsterList = new ArrayList<MatchDataListener>();
+		dataHelper = null;
+		resourceHelper = null;
+		context = null;
+		listenerList = new ArrayList<MatchDataListener>();
 		lockObj = new Object();
 	}
 	
-	/*
+	/**
 	 * set @MatchDataListener listener
 	 * 
 	 * @param listener
 	 * The @MatchDataListener object
 	 */
 	public void setListener(MatchDataListener listener){
-		if(listener != null && !linsterList.contains(listener)){
-			linsterList.add(listener);
+		if(listener != null && !listenerList.contains(listener)){
+			listenerList.add(listener);
 			LogHelper.d(TAG, "Add listener " + listener.toString());
 		}
 	}
 	
-	/*
+	/**
 	 * remove the @MatchDataListener listener
 	 * 
 	 * @param listener
 	 * The @MatchDataListener object
 	 */
 	public void removeListener(MatchDataListener listener){
-		if(listener != null && linsterList.contains(listener)){
-			linsterList.remove(listener);
+		if(listener != null && listenerList.contains(listener)){
+			listenerList.remove(listener);
 			LogHelper.d(TAG, "Remove the listener " + listener.toString());
 		}
 	}
 	
-	/*
+	/**
 	 * Get the Matches info @MatchesModel object
 	 * 
 	 * @return @SparseArray<MatchesModel>
@@ -66,7 +80,7 @@ public class MatchDataController implements MatchDataListener{
 		return dataHelper.getMatchesList();
 	}
 
-	/*
+	/**
 	 * Init the necessary data, receive result from @MatchDataListener
 	 * Must invoke this must at first.
 	 *
@@ -85,6 +99,7 @@ public class MatchDataController implements MatchDataListener{
 			if(context == null){
 				context = appContext.getApplicationContext();
 				dataHelper = new MatchDataHelper(context);
+				resourceHelper = new ResourceHelper(context);
 			}
 		}
 
@@ -99,10 +114,19 @@ public class MatchDataController implements MatchDataListener{
 				}
 				
 				// Load the necessary data
-				LogHelper.d(TAG, "Load necessary data from file");
-				if(!dataHelper.loadMatchesData() || !dataHelper.loadNationalData()){
+				LogHelper.d(TAG, "Load matches data from file");
+				if(!dataHelper.loadMatchesData()){
 					
 					LogHelper.w(TAG, "Fail to init the data!");
+					onInitDone(false);
+					return;
+				}
+				
+				// Load resource id
+				LogHelper.d(TAG, "Load resource id");
+				if(!resourceHelper.Init(dataHelper.getTeamsCount())){
+					
+					LogHelper.w(TAG, "Fail to init the resource!");
 					onInitDone(false);
 					return;
 				}
@@ -123,7 +147,7 @@ public class MatchDataController implements MatchDataListener{
 	}
 
 	
-	/*
+	/**
 	 * Update data from network, receive result from @MatchDataListener
 	 * 
 	 * @return true if can update.
@@ -165,7 +189,15 @@ public class MatchDataController implements MatchDataListener{
 	}
 
 	
-	
+	/**
+	 * Set the alarm for the match
+	 * 
+	 * @param matchesList
+	 * Match NO list
+	 * 
+	 * @return true if set success.
+	 * 
+	 */
 	public Boolean setMatchRemind(ArrayList<Integer> matchesList){
 		
 		LogHelper.d(TAG, "updateData");
@@ -199,13 +231,47 @@ public class MatchDataController implements MatchDataListener{
 	
 		return true;
 	}
+
+	
+	/**
+	 * Get the Team's National name
+	 * 
+	 * @param teamCode
+	 * Team code
+	 * 
+	 * @return
+	 * The Team's national name
+	 * 
+	 * @throws
+	 * @Resources.NotFoundException
+	 */
+	public String getTeamNationalName(String teamCode){
+		return resourceHelper.getStringRescourse(teamCode);
+	}
+	
+	
+	/**
+	 * Get the Team's National Flag
+	 * 
+	 * @param resourceID
+	 * Resource ID
+	 * 
+	 * @return
+	 * The Team's national flag @Drawable object
+	 * 
+	 * @throws
+	 * @Resources.NotFoundException
+	 */
+	public Drawable getTeamNationalFlag(String teamCode){
+		return resourceHelper.getDrawableRescourse(teamCode);
+	}
 	
 	
 	@Override
 	public void onInitDone(Boolean isSuccess) {
 
-		if(linsterList != null && linsterList.size() > 0){
-			for (MatchDataListener listener : linsterList) {
+		if(listenerList != null && listenerList.size() > 0){
+			for (MatchDataListener listener : listenerList) {
 				listener.onInitDone(isSuccess);
 			}
 		}
@@ -214,8 +280,8 @@ public class MatchDataController implements MatchDataListener{
 	@Override
 	public void onUpdateDone(Boolean haveNewVersion, Boolean isSuccess) {
 
-		if(linsterList != null && linsterList.size() > 0){
-			for (MatchDataListener listener : linsterList) {
+		if(listenerList != null && listenerList.size() > 0){
+			for (MatchDataListener listener : listenerList) {
 				listener.onUpdateDone(haveNewVersion, isSuccess);
 			}
 		}
@@ -224,8 +290,8 @@ public class MatchDataController implements MatchDataListener{
 	@Override
 	public void onSetRemindDone(Boolean isSuccess) {
 
-		if(linsterList != null && linsterList.size() > 0){
-			for (MatchDataListener listener : linsterList) {
+		if(listenerList != null && listenerList.size() > 0){
+			for (MatchDataListener listener : listenerList) {
 				listener.onSetRemindDone(isSuccess);
 			}
 		}

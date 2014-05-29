@@ -41,7 +41,7 @@ public class MatchesFragment extends ListFragment {
 	class MatchesAdapter extends BaseAdapter{
 		
 		
-		SparseArray<MatchesModel> matchList = new SparseArray<>();
+		SparseArray<MatchesModel> matchList = null;
 		
 		
 		public MatchesAdapter(){
@@ -51,7 +51,7 @@ public class MatchesFragment extends ListFragment {
 		@Override
 		public int getCount() {
 
-			return matchList.size();
+			return 0;
 		}
 
 		@Override

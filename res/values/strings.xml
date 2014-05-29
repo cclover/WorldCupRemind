@@ -1,8 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">WorldCupRemind</string>
+    <string name="app_name">WorldCup Remind</string>
     <string name="menu_update">Update</string>
     <string name="tab_mathces">Matches</string>
     <string name="tab_group">Group</string>
     <string name="tab_statistics">Statistics</string>
+    
+    <!-- National Name -->
+	<string name="bra">"Brazil"</string>
+	<string name="cro">"Croatia"</string>
+	<string name="mex">"Mexico"</string>
+	<string name="cmr">"Cameroon"</string>
+	<string name="esp">"Spain"</string>
+	<string name="ned">"Netherlands"</string>
+	<string name="chi">"Chile"</string>
+	<string name="aus">"Australia"</string>
+	<string name="col">"Columbia"</string>
+	<string name="gre">"Greece"</string>
+	<string name="civ">"Ivory Coast"</string>
+	<string name="jpn">"Japan"</string>
+	<string name="uru">"Uruguay"</string>
+	<string name="crc">"Costa Rica"</string>
+	<string name="eng">"England"</string>
+	<string name="ita">"Italy"</string>
+	<string name="sui">"Switzerland"</string>
+	<string name="ecu">"Ecuador"</string>
+	<string name="fra">"France"</string>
+	<string name="hon">"Honduras"</string>
+	<string name="arg">"Argentina"</string>
+	<string name="bih">"Bosnia and Herzegovina"</string>
+	<string name="irn">"Iran"</string>
+	<string name="nga">"Nigeria"</string>
+	<string name="ger">"Germany"</string>
+	<string name="por">"Portugal"</string>
+	<string name="gha">"Ghana"</string>
+	<string name="usa">"America"</string>
+	<string name="bel">"Belgium"</string>
+	<string name="alg">"Algeria"</string>
+	<string name="rus">"Russia"</string>
+	<string name="kor">"Korea"</string>
 </resources>

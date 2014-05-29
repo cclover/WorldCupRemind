@@ -8,6 +8,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.provider.ContactsContract.Contacts.Data;
 import android.util.SparseArray;
 
 import com.cc.worldcupremind.common.LogHelper;
@@ -53,13 +54,15 @@ public class MatchRemindHelper {
 		    intent.putExtra(REMIND_MATCHES_STAGE, match.getMatchStage());
 		    intent.putExtra(REMIND_MATCHES_GROUP, match.getGroupName());
 		    intent.putExtra(REMIND_MATCHES_TIME, match.getMatchTime().getDate());
-		    intent.putExtra(REMIND_MATCHES_TEAM_1, match.getMatchTeam1());
-		    intent.putExtra(REMIND_MATCHES_TEAM_2, match.getMatchTeam2());
+		    intent.putExtra(REMIND_MATCHES_TEAM_1, match.getTeam1Code());
+		    intent.putExtra(REMIND_MATCHES_TEAM_2, match.getTeam2Code());
 		    
 		    PendingIntent pi = PendingIntent.getBroadcast(context, match.getMatchNo(), intent,0);
 		    am.set(AlarmManager.RTC_WAKEUP, remindCalendar.getTimeInMillis(), pi);
 	        LogHelper.d(TAG, String.format("Set Alarm: [%d][%s-%s][%s %s %s][%s][%d:%d]",
-	        				match.getMatchNo(), match.getMatchTeam1(), match.getMatchTeam2(),
+	        				match.getMatchNo(), 
+	        				MatchDataController.getInstance().getTeamNationalName(match.getTeam1Code()),
+	        				MatchDataController.getInstance().getTeamNationalName(match.getTeam2Code()),
 	        				match.getMatchTime().getDateString(),
 	        				match.getMatchTime().getTimeString(),
 	        				match.getMatchTime().getWeekdayString(),

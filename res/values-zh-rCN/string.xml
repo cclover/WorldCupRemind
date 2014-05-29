@@ -5,4 +5,38 @@
     <string name="tab_mathces">赛程表</string>
     <string name="tab_group">小组积分</string>
     <string name="tab_statistics">数据统计</string>
+    
+     <!-- National Name -->
+	<string name="bra">"巴西"</string>
+	<string name="cro">"克罗地亚"</string>
+	<string name="mex">"墨西哥"</string>
+	<string name="cmr">"喀麦隆"</string>
+	<string name="esp">"西班牙"</string>
+	<string name="ned">"荷兰"</string>
+	<string name="chi">"智利"</string>
+	<string name="aus">"澳大利亚"</string>
+	<string name="col">"哥伦比亚"</string>
+	<string name="gre">"希腊"</string>
+	<string name="civ">"科特迪瓦"</string>
+	<string name="jpn">"日本"</string>
+	<string name="uru">"乌拉圭"</string>
+	<string name="crc">"哥斯达黎加"</string>
+	<string name="eng">"英格兰"</string>
+	<string name="ita">"意大利"</string>
+	<string name="sui">"瑞士"</string>
+	<string name="ecu">"厄瓜多尔"</string>
+	<string name="fra">"法国"</string>
+	<string name="hon">"洪都拉斯"</string>
+	<string name="arg">"阿根廷"</string>
+	<string name="bih">"波黑"</string>
+	<string name="irn">"伊朗"</string>
+	<string name="nga">"尼日利亚"</string>
+	<string name="ger">"德国"</string>
+	<string name="por">"葡萄牙"</string>
+	<string name="gha">"加纳"</string>
+	<string name="usa">"美国"</string>
+	<string name="bel">"比利时"</string>
+	<string name="alg">"阿尔及利亚"</string>
+	<string name="rus">"俄罗斯"</string>
+	<string name="kor">"韩国"</string>
 </resources>

@@ -3,7 +3,6 @@ package com.cc.worldcupremind.logic;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,7 +20,7 @@ import com.cc.worldcupremind.model.MatchStage;
 import com.cc.worldcupremind.model.MatchStatus;
 import com.cc.worldcupremind.model.MatchesModel;
 
-/*
+/**
  * This class will help to load all matches data from data file.
  * 
  * We Save the match data in *.json files. When the APP launch at first time, will copy the data files
@@ -31,15 +30,16 @@ class MatchDataHelper {
 	
 	private static final String TAG = "MatchDataHelper";
 	
-	/* Data files name */
-	private static final String DATA_VERSION_FILE = "version.txt";
+	/** Data files name */
+	private static final String DATA_VERSION_FILE = "version.json";
 	private static final String DATA_MATCHES_FILE = "matches.json";
-	private static final String DATA_NATIONAL_FILE = "national.json";
 	private static final String DATA_REMIND_FILE = "remind.json";
 	private static final String FILE_ENCODE_FORMAT = "UTF-8";
 	
-	/* matches.json format */
+	/** matches.json format */
 	private static final String JSON_MATCHES_DATA_VERSION = "Version";	/* Double */
+	private static final String JSON_TEAMS_COUNT = "TeamsCount";		/* Int */
+	private static final String JSON_MATCHES_COUNT = "MatchesCount";	/* Int */
 	private static final String JSON_MATCHES_LIST = "Matches";			/* Array */
 	private static final String JSON_MATCHES_FILED_NO = "NO";			/* Int */
 	private static final String JSON_MATCHES_FILED_STAGE = "Stage";		/* Enum */
@@ -50,73 +50,92 @@ class MatchDataHelper {
 	private static final String JSON_MATCHES_FILED_STATUS= "Status";	/* Eunm*/
 	private static final String JSON_MATCHES_FILED_SCORE_1= "Score1";	/* Int */
 	private static final String JSON_MATCHES_FILED_SCORE_2= "Score2";	/* Int */
-
 	
-	/* national.json format */
-	private static final String JSON_NATIONAL_LIST = "National";		/* Array */
-	private static final String JSON_NATIONAL_ID = "id";				/* String */
-	private static final String JSON_NATIONAL_NAME = "name";			/* String */
-	
-	/* remind.json format */
+	/** remind.json format */
 	private static final String JSON_REMIND_LIST = "Remind";			/* Array */
 	private static final String JSON_REMIND_MATCH_NO = "no";			/* Int */
 	
-	/* MatchesModel list */
+	/** MatchesModel list */
 	private SparseArray<MatchesModel> matchesList;
 	
-	/* National name string map*/
-	private HashMap<String, String> nationalMap;
-	
-	/* Remind list */
+	/** Remind list */
 	private SparseArray<MatchesModel> remindList;
 	
+	/** Remind list need be cancel*/
 	private ArrayList<Integer> remindCancelList;
 	
-
-	/* matche.json files version*/
+	/** matche.json files version*/
 	private double dataMatchesVersion;
 	
+	/** Applicaiont Context */
 	private Context context;
 	
+	/** Matches Count*/
+	private int matchesCount;
 	
+	/** Teams Count */
+	private int teamsCount;
+	
+	/** Return value of updateAllDataFiles*/
 	public enum UPDATE_RET{
-
+		
 		RET_CHECK_UPDATE_ERROR,
 		RET_NO_NEED_UPDATE,
 		RET_UPDATE_ERROR,
 		RET_OK,
 	}
 	
-	/*
+	/**
 	 * Construct
 	 */
 	public MatchDataHelper(Context context){
 		
 		this.dataMatchesVersion = 0;
 		this.matchesList = new SparseArray<MatchesModel>();
-		this.nationalMap = new HashMap<String, String>();
 		this.remindList = new SparseArray<MatchesModel>();
 		this.remindCancelList = new ArrayList<Integer>();
 		this.context = context;
+		matchesCount = 0;
+		teamsCount = 0;
 	}
 	
+	/**
+	 * @return the matchesList
+	 */
 	public SparseArray<MatchesModel> getMatchesList() {
 		return matchesList;
 	}
 
-	public HashMap<String, String> getNationalMap() {
-		return nationalMap;
-	}
-
+	/**
+	 * @return the remindList
+	 */
 	public SparseArray<MatchesModel> getRemindList() {
 		return remindList;
 	}
-	
+
+	/**
+	 * @return the remindCancelList
+	 */
 	public ArrayList<Integer> getRemindCancelList() {
 		return remindCancelList;
 	}
+
+	/**
+	 * @return the matchesCount
+	 */
+	public int getMatchesCount() {
+		return matchesCount;
+	}
+
+	/**
+	 * @return the teamsCount
+	 */
+	public int getTeamsCount() {
+		return teamsCount;
+	}
+
 	
-	/*
+	/**
 	 * Get the matches data list
 	 * 
 	 * @return
@@ -125,7 +144,7 @@ class MatchDataHelper {
 	public Boolean loadMatchesData(){
 		
 		LogHelper.d(TAG, "loadMatchesData()");
-		
+		matchesList.clear();
 		Boolean ret = false;
 		if(DataOperateHelper.isLocalFileExist(context, DATA_MATCHES_FILE)){
 			ret = loadMatchesDataFromLocal();
@@ -142,7 +161,7 @@ class MatchDataHelper {
 	}
 	
 
-	/*
+	/**
 	 * Update the all data files from network
 	 * 
 	 * @return
@@ -185,66 +204,8 @@ class MatchDataHelper {
 		return UPDATE_RET.RET_OK;
 	}
 	
-	/*
-	 * Load the National Data from asset file
-	 * 
-	 * @return 
-	 * True if successes, False if fail. 
-	 * 
-	 */
-	public Boolean loadNationalData(){
-		
-		LogHelper.d(TAG, "loadNationalData()");
-		
-		//Load data from asset
-		LogHelper.d(TAG, "load National Data From Asset");
-		InputStream nationalStream = DataOperateHelper.loadFileFromAsset(context, DATA_NATIONAL_FILE);
-		if(nationalStream == null){
-			Log.w(TAG, "loadFileFromAsset failed");
-			return false;
-		}
-		
-		// Convert the stream to string
-		String nationalString = DataOperateHelper.covertStream2String(nationalStream, FILE_ENCODE_FORMAT);
-		try {
-			nationalStream.close(); //close stream
-		} catch (IOException e) {
-			LogHelper.e(TAG, e);
-			return false;
-		}
-		if(nationalString == null){
-			Log.w(TAG, "covertStream2String failed");
-			return false;
-		}
-		
-		// Parse the data
-		LogHelper.d(TAG, "Parse National Data From JSON");
-		JSONTokener jsonParser  = new JSONTokener(nationalString);
-		try {
-			JSONObject nationalObj = (JSONObject) jsonParser.nextValue();
-			JSONArray nationalArray = nationalObj.getJSONArray(JSON_NATIONAL_LIST);
-			for(int i=0; i<nationalArray.length(); i++){  
-				JSONObject national = nationalArray.getJSONObject(i);
-				String id = national.getString(JSON_NATIONAL_ID);
-				String name = national.getString(JSON_NATIONAL_NAME);
-				nationalMap.put(id, name);
-			}
-		} catch (JSONException e1) {
-			LogHelper.w(TAG, "Parse the national.json failed");
-			LogHelper.e(TAG, e1);
-			return false;
-		} catch (ClassCastException ex){ //If string format error, will throw ClassCastException
-			LogHelper.w(TAG, "Parse the national.json failed");
-			LogHelper.e(TAG, ex);
-			return false;
-		}
-
-		LogHelper.d(TAG, "Load the national data size:" + String.valueOf(nationalMap.size()));
-		return true; 
-	}
-
 	
-	/*
+	/**
 	 * Load the remind data list
 	 * 
 	 * @return
@@ -305,6 +266,10 @@ class MatchDataHelper {
 			LogHelper.w(TAG, "Parse the remind.json failed");
 			LogHelper.e(TAG, ex);
 			return false;
+		} catch (Exception ex) {
+			LogHelper.w(TAG, "Parse the remind.json failed");
+			LogHelper.e(TAG, ex);
+			return false;
 		}
 				
 		LogHelper.d(TAG, "Return the remindList size:" + String.valueOf(remindList.size()));
@@ -312,7 +277,7 @@ class MatchDataHelper {
 	}
 	
 	
-	/*
+	/**
 	 * Update the Remind Data
 	 * 
 	 * @param newlist 
@@ -374,7 +339,7 @@ class MatchDataHelper {
 		return true;
 	}
 	
-	/*
+	/**
 	 * Save the Remind Data into local file
 	 * 
 	 * @return 
@@ -402,8 +367,13 @@ class MatchDataHelper {
 			}
 			rootObj.put(JSON_REMIND_LIST, remindArray);
 		} catch (JSONException e) {
+			LogHelper.w(TAG, "create remind.json object failed");
 			LogHelper.e(TAG, e);
 			return false;
+		} catch (Exception ex){
+			LogHelper.w(TAG, "create remind.json object failed");
+			LogHelper.e(TAG, ex);
+			return null;
 		}
 		
 		// Save to file
@@ -418,7 +388,7 @@ class MatchDataHelper {
 	}
 	
 	
-	/*
+	/**
 	 * Check the data version
 	 * 
 	 * @return
@@ -461,13 +431,20 @@ class MatchDataHelper {
 			//TODO: same operate for other file
 			return updateFileList;
 		} catch (JSONException e1) {
+			LogHelper.w(TAG, "Parse the version.json failed");
 			LogHelper.e(TAG, e1);
+		}catch (ClassCastException ex){ //If string format error, will throw ClassCastException
+			LogHelper.w(TAG, "Parse the version.json failed");
+			LogHelper.e(TAG, ex);
+		} catch (Exception ex){
+			LogHelper.w(TAG, "Parse the version.json failed");
+			LogHelper.e(TAG, ex);
 		}
 		return null;
 	}
 	
 
-	/*
+	/**
 	 * Load the Matches Data from asset file and copy to private folder
 	 * 
 	 * @return 
@@ -514,7 +491,7 @@ class MatchDataHelper {
 		return true;
 	}
 	
-	/*
+	/**
 	 * Load the Matches data from private folder
 	 * 
 	 * @return 
@@ -555,7 +532,7 @@ class MatchDataHelper {
 		return true;
 	}
 	
-	/*
+	/**
 	 * Load the Matches data from network
 	 * 
 	 * @return 
@@ -603,7 +580,7 @@ class MatchDataHelper {
 	}
 	
 
-	/*
+	/**
 	 * Parse the Data from json format to @MatchesModel object into matchesList
 	 * 
 	 * @return
@@ -628,6 +605,8 @@ class MatchDataHelper {
 			
 			//parse data version
 			dataMatchesVersion = rootObj.getDouble(JSON_MATCHES_DATA_VERSION);
+			matchesCount = rootObj.getInt(JSON_MATCHES_COUNT);
+			teamsCount = rootObj.getInt(JSON_TEAMS_COUNT);
 	    	LogHelper.d(TAG, "The match data version is:" + String.valueOf(dataMatchesVersion));
 	    	
 	    	//parse match data
@@ -652,6 +631,10 @@ class MatchDataHelper {
 			LogHelper.e(TAG, e);
 			return false;
 		} catch (ClassCastException ex){ //If string format error, will throw ClassCastException
+			LogHelper.w(TAG, "Parse the matches.json failed");
+			LogHelper.e(TAG, ex);
+			return null;
+		} catch (Exception ex){
 			LogHelper.w(TAG, "Parse the matches.json failed");
 			LogHelper.e(TAG, ex);
 			return null;

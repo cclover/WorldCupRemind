@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string-array name="national">
+	　　  <item>bra</item>
+		<item>cro</item>
+		<item>mex</item>
+		<item>cmr</item>
+		<item>esp</item>
+		<item>ned</item>
+		<item>chi</item>
+		<item>aus</item>
+		<item>col</item>
+		<item>gre</item>
+		<item>civ</item>
+		<item>jpn</item>
+		<item>uru</item>
+		<item>crc</item>
+		<item>eng</item>
+		<item>ita</item>
+		<item>sui</item>
+		<item>ecu</item>
+		<item>fra</item>
+		<item>hon</item>
+		<item>arg</item>
+		<item>bih</item>
+		<item>irn</item>
+		<item>nga</item>
+		<item>ger</item>
+		<item>por</item>
+		<item>gha</item>
+		<item>usa</item>
+		<item>bel</item>
+		<item>alg</item>
+		<item>rus</item>
+		<item>kor</item>
+　　    </string-array>
+   
+</resources>

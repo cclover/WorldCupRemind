@@ -8,8 +8,8 @@ public class MatchesModel {
 	private MatchStage matchStage;
 	private String groupName;
 	private MatchDate matchTime;
-	private String matchTeam1;
-	private String matchTeam2;
+	private String team1Code;
+	private String team2Code;
 	private MatchStatus matchStatus;
 	private Boolean isRemind;
 
@@ -19,15 +19,15 @@ public class MatchesModel {
 	
 	
 	public MatchesModel(int matchNo, MatchStage matchStage, String groupName,
-			MatchDate matchTime, String matchTeam1, String matchTeam2, 
+			MatchDate matchTime, String team1Code, String team2Code, 
 			MatchStatus matchStatus, int team1Score, int team2Score, Boolean isRemind){
 		
 		this.matchNo = matchNo;
 		this.matchStage = matchStage;
 		this.groupName = groupName;
 		this.matchTime = matchTime;
-		this.matchTeam1 = matchTeam1;
-		this.matchTeam2 = matchTeam2;
+		this.team1Code = team1Code;
+		this.team2Code = team2Code;
 		this.matchStatus = matchStatus;
 		this.team1Score = team1Score;
 		this.team2Score = team2Score;
@@ -69,18 +69,18 @@ public class MatchesModel {
 	
 
 	/**
-	 * @return the matchTeam1
+	 * @return the team1Code
 	 */
-	public String getMatchTeam1() {
-		return matchTeam1;
+	public String getTeam1Code() {
+		return team1Code;
 	}
 
 
 	/**
-	 * @return the matchTeam2
+	 * @return the team2Code
 	 */
-	public String getMatchTeam2() {
-		return matchTeam2;
+	public String getTeam2Code() {
+		return team2Code;
 	}
 
 
