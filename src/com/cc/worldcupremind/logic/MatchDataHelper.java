@@ -77,9 +77,8 @@ class MatchDataHelper {
 	private static final String JSON_STATISTICS_PLAYER_COUNT= "count";
 	
 	/** version.json format */
-	private static final String JSON_VERSION_ARRAY = "Version";			/* ARRAY */
-	private static final String JSON_VERSION_MATCHES = "matches";		/* Double */
-	private static final String JSON_VERSION_STATISTICS = "statistics";	/* Double */
+	private static final String JSON_VERSION_MATCHES = "matchesVer";		/* Double */
+	private static final String JSON_VERSION_STATISTICS = "statisticsVer";	/* Double */
 	
 	
 	/** MatchesModel list */
@@ -460,7 +459,8 @@ class MatchDataHelper {
 		LogHelper.d(TAG, "Local version is:" + String.valueOf(dataMatchesVersion) + " Network version is :" + ver);
 		try {
 			JSONObject jsonObject = new JSONObject(ver);
-			double newMatchesVer = jsonObject.optDouble(JSON_MATCHES_DATA_VERSION);
+			double newMatchesVer = jsonObject.getDouble(JSON_VERSION_MATCHES);
+			double newStatisticsVer = jsonObject.getDouble(JSON_VERSION_STATISTICS);
 			if(newMatchesVer > dataMatchesVersion){
 				updateFileList.add(DATA_MATCHES_FILE);
 			}
