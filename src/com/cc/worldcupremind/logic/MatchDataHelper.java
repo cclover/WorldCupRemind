@@ -15,10 +15,12 @@ import android.util.SparseArray;
 
 import com.cc.worldcupremind.common.DataOperateHelper;
 import com.cc.worldcupremind.common.LogHelper;
+import com.cc.worldcupremind.model.GroupStatistics;
 import com.cc.worldcupremind.model.MatchDate;
 import com.cc.worldcupremind.model.MatchStage;
 import com.cc.worldcupremind.model.MatchStatus;
 import com.cc.worldcupremind.model.MatchesModel;
+import com.cc.worldcupremind.model.PlayerStatistics;
 
 /**
  * This class will help to load all matches data from data file.
@@ -34,6 +36,7 @@ class MatchDataHelper {
 	private static final String DATA_VERSION_FILE = "version.json";
 	private static final String DATA_MATCHES_FILE = "matches.json";
 	private static final String DATA_REMIND_FILE = "remind.json";
+	private static final String DATA_STATISTICS_FILE = "statistics.json";
 	private static final String FILE_ENCODE_FORMAT = "UTF-8";
 	
 	/** matches.json format */
@@ -55,6 +58,30 @@ class MatchDataHelper {
 	private static final String JSON_REMIND_LIST = "Remind";			/* Array */
 	private static final String JSON_REMIND_MATCH_NO = "no";			/* Int */
 	
+	/** statistics.json format */
+	private static final String JSON_STATISTICS_DATA_VERSION = "version";
+	private static final String JSON_STATISTICS_ARRAY_GROUP = "groups";
+	private static final String JSON_STATISTICS_FILED_TEAM = "team";
+	private static final String JSON_STATISTICS_FILED_GROUP = "group";
+	private static final String JSON_STATISTICS_FILED_WIN = "w";
+	private static final String JSON_STATISTICS_FILED_DRAW = "d";
+	private static final String JSON_STATISTICS_FILED_LOSE = "l";
+	private static final String JSON_STATISTICS_FILED_GF = "gf";
+	private static final String JSON_STATISTICS_FILED_GA = "ga";
+	private static final String JSON_STATISTICS_FILED_POINT = "pts";
+	private static final String JSON_STATISTICS_FILED_POS = "pos";
+	private static final String JSON_STATISTICS_ARRAY_GOAL = "goal";
+	private static final String JSON_STATISTICS_ARRAY_ASS = "assist";
+	private static final String JSON_STATISTICS_PLAYER_NAME= "name";
+	private static final String JSON_STATISTICS_PLAYER_TEAM= "team";
+	private static final String JSON_STATISTICS_PLAYER_COUNT= "count";
+	
+	/** version.json format */
+	private static final String JSON_VERSION_ARRAY = "Version";			/* ARRAY */
+	private static final String JSON_VERSION_MATCHES = "matches";		/* Double */
+	private static final String JSON_VERSION_STATISTICS = "statistics";	/* Double */
+	
+	
 	/** MatchesModel list */
 	private SparseArray<MatchesModel> matchesList;
 	
@@ -64,8 +91,17 @@ class MatchDataHelper {
 	/** Remind list need be cancel*/
 	private ArrayList<Integer> remindCancelList;
 	
+	private ArrayList<GroupStatistics> groupStatisticsList;
+	
+	private ArrayList<PlayerStatistics> goalStatisticsList;
+	
+	private ArrayList<PlayerStatistics> assistStatisticsList;
+	
 	/** matche.json files version*/
 	private double dataMatchesVersion;
+	
+	/** statistics.json file version*/
+	private double dataStatisticsVersion;
 	
 	/** Applicaiont Context */
 	private Context context;

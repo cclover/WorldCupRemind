@@ -249,4 +249,11 @@ public class MainActivity extends ActionBarActivity implements
 		LogHelper.d(TAG, String.format("onSetRemindDone is %s", isSuccess?"true":"false"));
 	}
 
+
+	@Override
+	public void onTimezoneChanged() {
+		
+		LogHelper.d(TAG, "onTimezoneChanged");
+	}
+
 }

@@ -8,14 +8,18 @@ import com.cc.worldcupremind.common.ResourceHelper;
 import com.cc.worldcupremind.logic.MatchDataHelper.UPDATE_RET;
 import com.cc.worldcupremind.model.MatchesModel;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.util.SparseArray;
 
 
-public class MatchDataController implements MatchDataListener{
+public class MatchDataController extends BroadcastReceiver implements MatchDataListener{
 	
 	private static final String TAG = "MatchDataController";
+	private static final String ACTION_TIMEZONE_CHANGED = "android.intent.action.TIMEZONE_CHANGED";
 	private static MatchDataController instance = new MatchDataController();
 	private Boolean isDataInitDone;
 	private MatchDataHelper dataHelper;	
@@ -100,6 +104,9 @@ public class MatchDataController implements MatchDataListener{
 				context = appContext.getApplicationContext();
 				dataHelper = new MatchDataHelper(context);
 				resourceHelper = new ResourceHelper(context);
+				IntentFilter filter = new IntentFilter();
+				filter.addAction(ACTION_TIMEZONE_CHANGED);
+				context.registerReceiver(this, filter);
 			}
 		}
 
@@ -268,6 +275,14 @@ public class MatchDataController implements MatchDataListener{
 	
 	
 	@Override
+	public void onReceive(Context context, Intent intent) {
+		if(intent.getAction().equals(ACTION_TIMEZONE_CHANGED)){
+			onTimezoneChanged();
+		}	
+	}
+	
+	
+	@Override
 	public void onInitDone(Boolean isSuccess) {
 
 		if(listenerList != null && listenerList.size() > 0){
@@ -296,4 +311,16 @@ public class MatchDataController implements MatchDataListener{
 			}
 		}
 	}
+
+	@Override
+	public void onTimezoneChanged() {
+		
+		if(listenerList != null && listenerList.size() > 0){
+			for (MatchDataListener listener : listenerList) {
+				listener.onTimezoneChanged();
+			}
+		}
+		
+	}
+
 }
