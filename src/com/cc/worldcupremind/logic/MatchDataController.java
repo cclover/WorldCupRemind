@@ -123,7 +123,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 				
 				// Load the necessary data
 				LogHelper.d(TAG, "Load matches data from file");
-				if(!dataHelper.loadMatchesData()){
+				if(!dataHelper.loadMatchesData() || !dataHelper.loadStatisticsData()){
 					
 					LogHelper.w(TAG, "Fail to init the data!");
 					onInitDone(false);
@@ -256,7 +256,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		try {
 			return resourceHelper.getStringRescourse(teamCode);
 		} catch (Resources.NotFoundException ex){
-			Log.w(TAG, "Not find the team code:" + teamCode);
+			Log.w(TAG, "Not find the team name:" + teamCode);
 			return teamCode;
 		}
 	}
@@ -277,7 +277,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		try {
 			return resourceHelper.getDrawableRescourse(teamCode);
 		} catch (Resources.NotFoundException ex){
-			Log.w(TAG, "Not find the team code:" + teamCode);
+			Log.w(TAG, "Not find the team flag:" + teamCode);
 			return null;
 		}
 	}

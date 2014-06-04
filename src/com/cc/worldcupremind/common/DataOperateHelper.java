@@ -14,6 +14,7 @@ import java.net.SocketException;
 import java.net.URL;
 
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
 import android.content.Context;
@@ -28,10 +29,10 @@ public class DataOperateHelper {
 	private static final String TAG = "DataOperateHelper";
 	
 	/* FTP Server info*/
-	private static final String FTP_SERVER_URL = "cclover.free3v.net";
+	private static final String FTP_SERVER_URL = "174.129.246.208"; //174.129.246.208, cclover.free3v.net
 	private static final int FTP_SERVER_PORT = 21;
-	private static final String FTP_USER_NAME = "cclover";
-	private static final String FTP_USER_PASSWORD = "12345cc";
+	private static final String FTP_USER_NAME = "anonymous";
+	private static final String FTP_USER_PASSWORD = "";
 	private static final int NETWORK_TIMEOUT = 20*1000;
 
 	
@@ -246,7 +247,8 @@ public class DataOperateHelper {
 				ftpClient.disconnect();
 				return null;
 			}
-			LogHelper.d(TAG, "Connect to FTP Server Success");
+			LogHelper.d(TAG, "Connect to FTP Server Success");			
+			ftpClient.changeWorkingDirectory("pub");
 			
 			// Download
 			LogHelper.d(TAG, "Start to download:" + fileName);

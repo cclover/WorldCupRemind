@@ -19,8 +19,10 @@ import com.cc.worldcupremind.model.GroupStatistics;
 import com.cc.worldcupremind.model.MatchDate;
 import com.cc.worldcupremind.model.MatchStage;
 import com.cc.worldcupremind.model.MatchStatus;
+import com.cc.worldcupremind.model.MatchTeam;
 import com.cc.worldcupremind.model.MatchesModel;
 import com.cc.worldcupremind.model.PlayerStatistics;
+import com.cc.worldcupremind.model.PlayerStatistics.STATISTICS_TYPE;
 
 /**
  * This class will help to load all matches data from data file.
@@ -185,9 +187,9 @@ class MatchDataHelper {
 		matchesList.clear();
 		Boolean ret = false;
 		if(DataOperateHelper.isLocalFileExist(context, DATA_MATCHES_FILE)){
-			ret = loadMatchesDataFromLocal();
+			ret = loadDataFromLocal(DATA_MATCHES_FILE);
 		} else {
-			ret = loadMatchesDataFromAsset();
+			ret = loadDataFromAsset(DATA_MATCHES_FILE, true);
 		}
 		
 		if(ret){
@@ -199,6 +201,33 @@ class MatchDataHelper {
 	}
 	
 
+	/**
+	 * Get the matches statistics lists
+	 * 
+	 * @return
+	 * True if successes, False if fail. 
+	 */
+	public Boolean loadStatisticsData(){
+		
+		LogHelper.d(TAG, "loadStatisticsData()");
+		groupStatisticsList.clear();
+		goalStatisticsList.clear();
+		assistStatisticsList.clear();
+		Boolean ret = false;
+		if(DataOperateHelper.isLocalFileExist(context, DATA_STATISTICS_FILE)){
+			ret = loadDataFromLocal(DATA_STATISTICS_FILE);
+		} else {
+			ret = loadDataFromAsset(DATA_STATISTICS_FILE, true);
+		}
+		
+		if(ret){
+			LogHelper.d(TAG, "Load the Statistics data success!");
+		} else {
+			LogHelper.w(TAG, "Load the Statistics data failed!");
+		}
+		return ret;
+	}
+	
 	/**
 	 * Update the all data files from network
 	 * 
@@ -227,10 +256,10 @@ class MatchDataHelper {
 			LogHelper.d(TAG, "update the file:" + updateFile);
 			Boolean ret = false; 
 			if(updateFile.equals(DATA_MATCHES_FILE)){
-				ret = loadMatchDataFromNetwork();
+				ret = loadDataFromNetwork(DATA_MATCHES_FILE);
+			} else if(updateFile.equals(DATA_STATISTICS_FILE)){
+				ret = loadDataFromNetwork(DATA_STATISTICS_FILE);
 			}
-			
-			//TODO: update other files
 			
 			if(!ret){
 				LogHelper.w(TAG, "update failed!");
@@ -262,54 +291,11 @@ class MatchDataHelper {
 		}
 		
 		// Load remind data from local file
-		InputStream remindStream = DataOperateHelper.loadFileFromLocal(context, DATA_REMIND_FILE);
-		if(remindStream == null){
+		if(!loadDataFromLocal(DATA_REMIND_FILE)){
 			Log.w(TAG, "Load remind data failed");
 			return false;
 		}
 		
-		// Convert the stream to string
-		String remindString = DataOperateHelper.covertStream2String(remindStream, FILE_ENCODE_FORMAT);
-		try {
-			remindStream.close(); //close stream
-		} catch (IOException e) {
-			LogHelper.e(TAG, e);
-			return false;
-		}
-		
-		if(remindString == null){
-			Log.w(TAG, "covertStream2String failed");
-			return false;
-		}
-		
-		// Parse the remind data
-		JSONTokener jsonParser  = new JSONTokener(remindString);
-		try {
-			JSONObject rootObj  = (JSONObject) jsonParser.nextValue();
-			
-	    	//parse remind data
-			JSONArray remindArray = rootObj.getJSONArray(JSON_REMIND_LIST);
-			for(int i = 0; i < remindArray.length(); i++){  
-				JSONObject remindObj = remindArray.getJSONObject(i);
-				int matchNo = remindObj.getInt(JSON_REMIND_MATCH_NO);
-				MatchesModel match =  matchesList.get(matchNo); 
-				match.setIsRemind(true); //update the isRemind field
-				remindList.put(matchNo, match);
-			}
-		} catch (JSONException e) {
-			LogHelper.w(TAG, "Parse the remind.json failed");
-			LogHelper.e(TAG, e);
-			return false;
-		} catch (ClassCastException ex){ //If string format error, will throw ClassCastException
-			LogHelper.w(TAG, "Parse the remind.json failed");
-			LogHelper.e(TAG, ex);
-			return false;
-		} catch (Exception ex) {
-			LogHelper.w(TAG, "Parse the remind.json failed");
-			LogHelper.e(TAG, ex);
-			return false;
-		}
-				
 		LogHelper.d(TAG, "Return the remindList size:" + String.valueOf(remindList.size()));
 		return true;
 	}
@@ -377,31 +363,6 @@ class MatchDataHelper {
 		return true;
 	}
 	
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public Boolean loadStatisticsData(){
-		
-		LogHelper.d(TAG, "loadStatisticsData()");
-		groupStatisticsList.clear();
-		goalStatisticsList.clear();
-		assistStatisticsList.clear();
-		Boolean ret = false;
-		if(DataOperateHelper.isLocalFileExist(context, DATA_STATISTICS_FILE)){
-			ret = loadMatchesDataFromLocal();
-		} else {
-			ret = loadMatchesDataFromAsset();
-		}
-		
-		if(ret){
-			LogHelper.d(TAG, "Load the matches data size:" + String.valueOf(matchesList.size()));
-		} else {
-			LogHelper.w(TAG, "Load the matches data failed");
-		}
-		return ret;
-	}
 	
 	/**
 	 * Save the Remind Data into local file
@@ -485,15 +446,20 @@ class MatchDataHelper {
 			return null;
 		}
 		
-		LogHelper.d(TAG, "Local version is:" + String.valueOf(dataMatchesVersion) + " Network version is :" + ver);
+		//Check the version
+		LogHelper.d(TAG, "Network version is :" + ver);
 		try {
 			JSONObject jsonObject = new JSONObject(ver);
 			double newMatchesVer = jsonObject.getDouble(JSON_VERSION_MATCHES);
 			double newStatisticsVer = jsonObject.getDouble(JSON_VERSION_STATISTICS);
 			if(newMatchesVer > dataMatchesVersion){
+				LogHelper.d(TAG, "Matches data need be updated, version:" + dataMatchesVersion);
 				updateFileList.add(DATA_MATCHES_FILE);
 			}
-			//TODO: same operate for other file
+			if(newStatisticsVer > dataStatisticsVersion){
+				LogHelper.d(TAG, "Statisstics data need be updated, version:" + dataStatisticsVersion);
+				updateFileList.add(DATA_STATISTICS_FILE);
+			}
 			return updateFileList;
 		} catch (JSONException e1) {
 			LogHelper.w(TAG, "Parse the version.json failed");
@@ -510,112 +476,125 @@ class MatchDataHelper {
 	
 
 	/**
-	 * Load the Matches Data from asset file and copy to private folder
+	 * Load the Data from asset file and copy to private folder
+	 * 
+ 	 * @param fileName
+	 * The data file want to be load
 	 * 
 	 * @return 
 	 * True if successes, False if fail. 
 	 */
-	private Boolean loadMatchesDataFromAsset(){
+	private Boolean loadDataFromAsset(String fileName, Boolean saveToLocal){
 		
-		LogHelper.d(TAG, "loadMatchDataFromAsset()");
+		LogHelper.d(TAG, "loadDataFromAsset():" + fileName);
 		
 		//Load data from asset
-		InputStream matchesStream = DataOperateHelper.loadFileFromAsset(context, DATA_MATCHES_FILE);
-		if(matchesStream == null){
-			Log.w(TAG, "loadFileFromAsset failed");
+		InputStream dataStream = DataOperateHelper.loadFileFromAsset(context, fileName);
+		if(dataStream == null){
+			Log.w(TAG, "loadFileFromAsset failed:" + fileName);
 			return false;
 		}
 		
 		// Convert the stream to string
-		String matchesString = DataOperateHelper.covertStream2String(matchesStream, FILE_ENCODE_FORMAT);
+		String dataString = DataOperateHelper.covertStream2String(dataStream, FILE_ENCODE_FORMAT);
 		try {
-			matchesStream.close(); //close stream
+			dataStream.close(); //close stream
 		} catch (IOException e) {
 			LogHelper.e(TAG, e);
 			return false;
 		}
 		
-		if(matchesString == null){
-			Log.w(TAG, "covertStream2String failed");
+		if(dataString == null){
+			Log.w(TAG, "covertStream2String failed:" + fileName);
 			return false;
 		}
 		
 		// Parse the data
-		if(!parseMatchesData(matchesString)){
-			Log.w(TAG, "parseMatchData failed");
+		if(!parseData(fileName, dataString)){
+			Log.w(TAG, "parseData failed:" + fileName);
 			return false;
 		}
 		
 		//Save asset file to local file
-		if(!DataOperateHelper.saveData2LocalFile(context, matchesString, DATA_MATCHES_FILE)){
-			Log.w(TAG, "saveData2LocalFile failed");
-			return false;
+		if(saveToLocal){
+			
+			LogHelper.d(TAG, "Save file to local:" + fileName);
+			if(!DataOperateHelper.saveData2LocalFile(context, dataString, DATA_MATCHES_FILE)){
+				Log.w(TAG, "saveData2LocalFile failed:" + fileName);
+				return false;
+			}
 		}
 		
-		LogHelper.d(TAG, "loadMatchDataFromAsset Successed!");
+		LogHelper.d(TAG, "loadDataFromAsset Successed!:" + fileName);
 		return true;
 	}
 	
 	/**
-	 * Load the Matches data from private folder
+	 * Load the data from private folder
+	 * 
+	 * @param fileName
+	 * The data file want to be load
 	 * 
 	 * @return 
 	 * True if successes, False if fail. 
 	 */
-	private Boolean loadMatchesDataFromLocal(){
+	private Boolean loadDataFromLocal(String fileName){
 		
-		LogHelper.d(TAG, "loadMatchDataFromLocal()");
+		LogHelper.d(TAG, "loadDataFromLocal():" + fileName);
 		
 		//Load data from local file
-		InputStream matchesStream = DataOperateHelper.loadFileFromLocal(context, DATA_MATCHES_FILE);
-		if(matchesStream == null){
-			Log.w(TAG, "loadFileFromLocal failed");
+		InputStream dataStream = DataOperateHelper.loadFileFromLocal(context, fileName);
+		if(dataStream == null){
+			Log.w(TAG, "loadFileFromLocal failed:" + fileName);
 			return false;
 		}
 		
 		// Convert the stream to string
-		String matchesString = DataOperateHelper.covertStream2String(matchesStream, FILE_ENCODE_FORMAT);
+		String dataString = DataOperateHelper.covertStream2String(dataStream, FILE_ENCODE_FORMAT);
 		try {
-			matchesStream.close(); //close stream
+			dataStream.close(); //close stream
 		} catch (IOException e) {
 			LogHelper.e(TAG, e);
 			return false;
 		}
 		
-		if(matchesString == null){
-			Log.w(TAG, "covertStream2String failed");
+		if(dataString == null){
+			Log.w(TAG, "covertStream2String failed:" + fileName);
 			return false;
 		}
 		
 		// Parse the data
-		if(!parseMatchesData(matchesString)){
-			Log.w(TAG, "parseMatchData failed");
+		if(!parseData(fileName, dataString)){
+			Log.w(TAG, "parseData failed:" + fileName);
 			return false;
 		}
 		
-		LogHelper.d(TAG, "loadMatchDataFromLocal Successed!");
+		LogHelper.d(TAG, "loadDataFromLocal Successed!:" + fileName);
 		return true;
 	}
 	
 	/**
-	 * Load the Matches data from network
+	 * Load the data from network
+	 * 
+	 * @param fileName
+	 * The data file want to be load
 	 * 
 	 * @return 
 	 * True if successes, False if fail. 
 	 */
-	private Boolean loadMatchDataFromNetwork(){
+	private Boolean loadDataFromNetwork(String fileName){
 		
-		LogHelper.d(TAG, "loadMatchDataFromNetwork()");
+		LogHelper.d(TAG, "loadDataFromNetwork():" + fileName);
 		
 		//Load data from network
-		InputStream matchesStream = DataOperateHelper.loadFileFromFTPNetwork(DATA_MATCHES_FILE);
+		InputStream matchesStream = DataOperateHelper.loadFileFromFTPNetwork(fileName);
 		if(matchesStream == null){
-			LogHelper.w(TAG, "loadFileFromNetwork failed");
+			LogHelper.w(TAG, "loadFileFromNetwork failed:" + fileName);
 			return false;
 		}
 		
 		// Convert the stream to string
-		LogHelper.d(TAG, "Download success!");
+		LogHelper.d(TAG, "Download success!:" + fileName);
 		String matchesString = DataOperateHelper.covertStream2String(matchesStream, FILE_ENCODE_FORMAT);
 		try {
 			matchesStream.close(); //close
@@ -624,27 +603,60 @@ class MatchDataHelper {
 			return false;
 		}
 		if(matchesString == null){
-			Log.w(TAG, "covertStream2String failed");
+			Log.w(TAG, "covertStream2String failed:" + fileName);
 			return false;
 		}
 		
 		// Parse the data
-		if(!parseMatchesData(matchesString)){
-			Log.w(TAG, "parseMatchData failed");
+		if(!parseData(fileName, matchesString)){
+			Log.w(TAG, "parseData failed:" + fileName);
 			return false;
 		}
 
-		//Save asset file to local file
+		//Save network file to local file
 		if(!DataOperateHelper.saveData2LocalFile(context, matchesString, DATA_MATCHES_FILE)){
-			Log.w(TAG, "parseMatchData failed");
+			Log.w(TAG, "save data failed:" + fileName);
 			return false;
 		}
 		
-		LogHelper.d(TAG, "loadMatchDataFromNetwork()");
+		LogHelper.d(TAG, "loadDataFromNetwork():" + fileName);
 		return true;
 	}
 	
 
+	
+	/**
+	 * Parse the data
+	 * 
+	 * @param fileName
+	 * The file which need to be parsed
+	 * 
+	 * @param dataString
+	 * The file content
+	 * 
+	 * @return
+	 * True if successes, False if fail. 
+	 * 
+	 */
+	private Boolean parseData(String fileName, String dataString){
+		
+		LogHelper.d(TAG, "parseData():" + fileName);
+		
+		// Check the string
+		if(dataString == null || dataString.length() == 0){
+			LogHelper.w(TAG, "The dataString is empty:" + fileName);
+			return false;
+		}
+		
+		// Invoke the parse
+		if(fileName.equals(DATA_MATCHES_FILE)){
+			return parseMatchesData(dataString);
+		}else if(fileName.equals(DATA_STATISTICS_FILE)){
+			return parseStatisticsData(dataString);
+		}
+		return false;
+	}
+	
 	/**
 	 * Parse the Data from json format to @MatchesModel object into matchesList
 	 * 
@@ -655,13 +667,6 @@ class MatchDataHelper {
 	private Boolean parseMatchesData(String matchesString){
 		
 		LogHelper.d(TAG, "parseMatchData()");
-		
-		//Check the string
-		if(matchesString == null || matchesString.length() == 0){
-			LogHelper.w(TAG, "The matchesString is empty");
-			return false;
-		}
-		
 		double tmpVersion = 0;
 		
 		// Convert the json string to match object
@@ -674,7 +679,7 @@ class MatchDataHelper {
 			tmpVersion = rootObj.getDouble(JSON_MATCHES_DATA_VERSION);
 			matchesCount = rootObj.getInt(JSON_MATCHES_COUNT);
 			teamsCount = rootObj.getInt(JSON_TEAMS_COUNT);
-	    	LogHelper.d(TAG, "The match data version is:" + String.valueOf(dataMatchesVersion));
+	    	LogHelper.d(TAG, "The match data version is:" + String.valueOf(tmpVersion));
 	    	
 	    	//parse match data
 			JSONArray matchesArray = rootObj.getJSONArray(JSON_MATCHES_LIST);
@@ -707,8 +712,136 @@ class MatchDataHelper {
 			return null;
 		}
 		
-		LogHelper.d(TAG, "parseMatchData successed!" + String.valueOf(matchesList.size()));
+		LogHelper.d(TAG, "parseMatchData successed! matchdata size" + String.valueOf(matchesList.size()));
 		dataMatchesVersion = tmpVersion; //if parse failed. The version will not change.
+		return true;
+	}
+
+	
+	/**
+	 * Parse the Statistics Data from json format
+	 * 
+	 * @return
+	 * True if successes, False if fail. 
+	 * 
+	 */
+	private Boolean parseStatisticsData(String statisticsString){
+		
+		LogHelper.d(TAG, "parseStatisticsData()");
+		double tmpVersion = 0;
+		
+		// Convert the json string to match object
+		JSONTokener jsonParser  = new JSONTokener(statisticsString);
+		try {
+			
+			JSONObject rootObj  = (JSONObject) jsonParser.nextValue();
+			
+			//parse data version
+			tmpVersion = rootObj.getDouble(JSON_STATISTICS_DATA_VERSION);
+	    	LogHelper.d(TAG, "The statistics data version is:" + String.valueOf(tmpVersion));
+	    	
+	    	//parse statistics group data
+	    	LogHelper.d(TAG, "parse group statistics");
+			JSONArray groupArray = rootObj.getJSONArray(JSON_STATISTICS_ARRAY_GROUP);
+			for(int i = 0; i < groupArray.length(); i++){  
+				JSONObject teamObj = groupArray.getJSONObject(i);
+				String teamCode = teamObj.getString(JSON_STATISTICS_FILED_TEAM);
+				String group = teamObj.getString(JSON_STATISTICS_FILED_GROUP);
+				int win = teamObj.getInt(JSON_STATISTICS_FILED_WIN);
+				int draw = teamObj.getInt(JSON_STATISTICS_FILED_DRAW);
+				int lose = teamObj.getInt(JSON_STATISTICS_FILED_LOSE);
+				int gf = teamObj.getInt(JSON_STATISTICS_FILED_GF);
+				int ga = teamObj.getInt(JSON_STATISTICS_FILED_GA);
+				int pts = teamObj.getInt(JSON_STATISTICS_FILED_POINT);
+				int pos = teamObj.getInt(JSON_STATISTICS_FILED_POS);
+				
+				GroupStatistics team = new GroupStatistics(teamCode, group, win, draw, lose, gf, ga, pts, pos);
+				groupStatisticsList.add(team);
+			}
+			
+			//parse goal data
+			JSONArray goalArray = rootObj.getJSONArray(JSON_STATISTICS_ARRAY_GOAL);
+			for(int i = 0; i < goalArray.length(); i++){  
+				JSONObject goalObj = goalArray.getJSONObject(i);
+				String name = goalObj.getString(JSON_STATISTICS_PLAYER_NAME);
+				String team = goalObj.getString(JSON_STATISTICS_PLAYER_TEAM);
+				int count = goalObj.getInt(JSON_STATISTICS_PLAYER_COUNT);
+				PlayerStatistics player = new PlayerStatistics(name, team, count, STATISTICS_TYPE.STATISTICS_GOAL);
+				goalStatisticsList.add(player);
+			}
+			
+			//parse assist data
+			JSONArray assistArray = rootObj.getJSONArray(JSON_STATISTICS_ARRAY_ASS);
+			for(int i = 0; i < assistArray.length(); i++){  
+				JSONObject assistObj = assistArray.getJSONObject(i);
+				String name = assistObj.getString(JSON_STATISTICS_PLAYER_NAME);
+				String team = assistObj.getString(JSON_STATISTICS_PLAYER_TEAM);
+				int count = assistObj.getInt(JSON_STATISTICS_PLAYER_COUNT);
+				PlayerStatistics player = new PlayerStatistics(name, team, count, STATISTICS_TYPE.STATISTICS_ASSIST);
+				goalStatisticsList.add(player);
+			}
+			
+		} catch (JSONException e) {
+			LogHelper.w(TAG, "Parse the matches.json failed");
+			LogHelper.e(TAG, e);
+			return false;
+		} catch (ClassCastException ex){ //If string format error, will throw ClassCastException
+			LogHelper.w(TAG, "Parse the matches.json failed");
+			LogHelper.e(TAG, ex);
+			return null;
+		} catch (Exception ex){
+			LogHelper.w(TAG, "Parse the matches.json failed");
+			LogHelper.e(TAG, ex);
+			return null;
+		}
+		
+		LogHelper.d(TAG, "parseStatisticsData successed!" + String.valueOf(matchesList.size()));
+		dataStatisticsVersion = tmpVersion; //if parse failed. The version will not change.
+		return true;
+	}
+
+	
+	
+	/**
+	 * Parse the Remind Data from json format
+	 * 
+	 * @return
+	 * True if successes, False if fail. 
+	 * 
+	 */
+	private Boolean parseRemindData(String remindString){
+		
+		LogHelper.d(TAG, "parseRemindData()");
+		
+		// Parse the remind data
+		JSONTokener jsonParser  = new JSONTokener(remindString);
+		try {
+			JSONObject rootObj  = (JSONObject) jsonParser.nextValue();
+			
+	    	//parse remind data
+			JSONArray remindArray = rootObj.getJSONArray(JSON_REMIND_LIST);
+			for(int i = 0; i < remindArray.length(); i++){  
+				JSONObject remindObj = remindArray.getJSONObject(i);
+				int matchNo = remindObj.getInt(JSON_REMIND_MATCH_NO);
+				MatchesModel match =  matchesList.get(matchNo); 
+				match.setIsRemind(true); //update the isRemind field
+				remindList.put(matchNo, match);
+			}
+		} catch (JSONException e) {
+			LogHelper.w(TAG, "Parse the remind.json failed");
+			LogHelper.e(TAG, e);
+			return false;
+		} catch (ClassCastException ex){ //If string format error, will throw ClassCastException
+			LogHelper.w(TAG, "Parse the remind.json failed");
+			LogHelper.e(TAG, ex);
+			return false;
+		} catch (Exception ex) {
+			LogHelper.w(TAG, "Parse the remind.json failed");
+			LogHelper.e(TAG, ex);
+			return false;
+		}
+		
+		LogHelper.d(TAG, "parseRemindData successed! remindList size:" + String.valueOf(remindList.size()));
 		return true;
 	}
 }

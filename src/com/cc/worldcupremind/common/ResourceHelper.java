@@ -139,7 +139,7 @@ public class ResourceHelper {
 		try{
 			String[] nationalCodeList = res.getStringArray(R.array.national);
 			for(String code : nationalCodeList){
-				nationalImageMap.put(code, res.getIdentifier(IMAGE_PIEFIX+code, "drawable-xxhdpi", context.getPackageName()));
+				nationalImageMap.put(code, res.getIdentifier(IMAGE_PIEFIX+code, "drawable", context.getPackageName()));
 			}
 		} catch (Exception e){
 			LogHelper.e(TAG, e);
