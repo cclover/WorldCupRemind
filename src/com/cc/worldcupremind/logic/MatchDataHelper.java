@@ -15,10 +15,12 @@ import android.util.SparseArray;
 
 import com.cc.worldcupremind.common.DataOperateHelper;
 import com.cc.worldcupremind.common.LogHelper;
+import com.cc.worldcupremind.model.GroupStatistics;
 import com.cc.worldcupremind.model.MatchDate;
 import com.cc.worldcupremind.model.MatchStage;
 import com.cc.worldcupremind.model.MatchStatus;
 import com.cc.worldcupremind.model.MatchesModel;
+import com.cc.worldcupremind.model.PlayerStatistics;
 
 /**
  * This class will help to load all matches data from data file.
@@ -34,6 +36,7 @@ class MatchDataHelper {
 	private static final String DATA_VERSION_FILE = "version.json";
 	private static final String DATA_MATCHES_FILE = "matches.json";
 	private static final String DATA_REMIND_FILE = "remind.json";
+	private static final String DATA_STATISTICS_FILE = "statistics.json";
 	private static final String FILE_ENCODE_FORMAT = "UTF-8";
 	
 	/** matches.json format */
@@ -55,6 +58,29 @@ class MatchDataHelper {
 	private static final String JSON_REMIND_LIST = "Remind";			/* Array */
 	private static final String JSON_REMIND_MATCH_NO = "no";			/* Int */
 	
+	/** statistics.json format */
+	private static final String JSON_STATISTICS_DATA_VERSION = "version";
+	private static final String JSON_STATISTICS_ARRAY_GROUP = "groups";
+	private static final String JSON_STATISTICS_FILED_TEAM = "team";
+	private static final String JSON_STATISTICS_FILED_GROUP = "group";
+	private static final String JSON_STATISTICS_FILED_WIN = "w";
+	private static final String JSON_STATISTICS_FILED_DRAW = "d";
+	private static final String JSON_STATISTICS_FILED_LOSE = "l";
+	private static final String JSON_STATISTICS_FILED_GF = "gf";
+	private static final String JSON_STATISTICS_FILED_GA = "ga";
+	private static final String JSON_STATISTICS_FILED_POINT = "pts";
+	private static final String JSON_STATISTICS_FILED_POS = "pos";
+	private static final String JSON_STATISTICS_ARRAY_GOAL = "goal";
+	private static final String JSON_STATISTICS_ARRAY_ASS = "assist";
+	private static final String JSON_STATISTICS_PLAYER_NAME= "name";
+	private static final String JSON_STATISTICS_PLAYER_TEAM= "team";
+	private static final String JSON_STATISTICS_PLAYER_COUNT= "count";
+	
+	/** version.json format */
+	private static final String JSON_VERSION_MATCHES = "matchesVer";		/* Double */
+	private static final String JSON_VERSION_STATISTICS = "statisticsVer";	/* Double */
+	
+	
 	/** MatchesModel list */
 	private SparseArray<MatchesModel> matchesList;
 	
@@ -64,8 +90,17 @@ class MatchDataHelper {
 	/** Remind list need be cancel*/
 	private ArrayList<Integer> remindCancelList;
 	
+	private ArrayList<GroupStatistics> groupStatisticsList;
+	
+	private ArrayList<PlayerStatistics> goalStatisticsList;
+	
+	private ArrayList<PlayerStatistics> assistStatisticsList;
+	
 	/** matche.json files version*/
 	private double dataMatchesVersion;
+	
+	/** statistics.json file version*/
+	private double dataStatisticsVersion;
 	
 	/** Applicaiont Context */
 	private Context context;
@@ -94,6 +129,9 @@ class MatchDataHelper {
 		this.matchesList = new SparseArray<MatchesModel>();
 		this.remindList = new SparseArray<MatchesModel>();
 		this.remindCancelList = new ArrayList<Integer>();
+		this.groupStatisticsList = new ArrayList<GroupStatistics>();
+		this.goalStatisticsList = new ArrayList<PlayerStatistics>();
+		this.assistStatisticsList = new ArrayList<PlayerStatistics>();
 		this.context = context;
 		matchesCount = 0;
 		teamsCount = 0;
@@ -339,6 +377,32 @@ class MatchDataHelper {
 		return true;
 	}
 	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Boolean loadStatisticsData(){
+		
+		LogHelper.d(TAG, "loadStatisticsData()");
+		groupStatisticsList.clear();
+		goalStatisticsList.clear();
+		assistStatisticsList.clear();
+		Boolean ret = false;
+		if(DataOperateHelper.isLocalFileExist(context, DATA_STATISTICS_FILE)){
+			ret = loadMatchesDataFromLocal();
+		} else {
+			ret = loadMatchesDataFromAsset();
+		}
+		
+		if(ret){
+			LogHelper.d(TAG, "Load the matches data size:" + String.valueOf(matchesList.size()));
+		} else {
+			LogHelper.w(TAG, "Load the matches data failed");
+		}
+		return ret;
+	}
+	
 	/**
 	 * Save the Remind Data into local file
 	 * 
@@ -424,7 +488,8 @@ class MatchDataHelper {
 		LogHelper.d(TAG, "Local version is:" + String.valueOf(dataMatchesVersion) + " Network version is :" + ver);
 		try {
 			JSONObject jsonObject = new JSONObject(ver);
-			double newMatchesVer = jsonObject.optDouble(JSON_MATCHES_DATA_VERSION);
+			double newMatchesVer = jsonObject.getDouble(JSON_VERSION_MATCHES);
+			double newStatisticsVer = jsonObject.getDouble(JSON_VERSION_STATISTICS);
 			if(newMatchesVer > dataMatchesVersion){
 				updateFileList.add(DATA_MATCHES_FILE);
 			}

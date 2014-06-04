@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <receiver 
-            android:name=".MatchRemindReceiver" 
+            android:name=".logic.MatchRemindReceiver" 
             android:exported="false">
              <intent-filter>
                 <action android:name="com.cc.worldcupremind.alarm" />
