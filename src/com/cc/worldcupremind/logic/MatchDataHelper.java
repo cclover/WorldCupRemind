@@ -129,6 +129,9 @@ class MatchDataHelper {
 		this.matchesList = new SparseArray<MatchesModel>();
 		this.remindList = new SparseArray<MatchesModel>();
 		this.remindCancelList = new ArrayList<Integer>();
+		this.groupStatisticsList = new ArrayList<GroupStatistics>();
+		this.goalStatisticsList = new ArrayList<PlayerStatistics>();
+		this.assistStatisticsList = new ArrayList<PlayerStatistics>();
 		this.context = context;
 		matchesCount = 0;
 		teamsCount = 0;
@@ -372,6 +375,32 @@ class MatchDataHelper {
 			}
 		}
 		return true;
+	}
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Boolean loadStatisticsData(){
+		
+		LogHelper.d(TAG, "loadStatisticsData()");
+		groupStatisticsList.clear();
+		goalStatisticsList.clear();
+		assistStatisticsList.clear();
+		Boolean ret = false;
+		if(DataOperateHelper.isLocalFileExist(context, DATA_STATISTICS_FILE)){
+			ret = loadMatchesDataFromLocal();
+		} else {
+			ret = loadMatchesDataFromAsset();
+		}
+		
+		if(ret){
+			LogHelper.d(TAG, "Load the matches data size:" + String.valueOf(matchesList.size()));
+		} else {
+			LogHelper.w(TAG, "Load the matches data failed");
+		}
+		return ret;
 	}
 	
 	/**

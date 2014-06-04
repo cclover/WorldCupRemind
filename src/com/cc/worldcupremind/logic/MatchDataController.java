@@ -12,7 +12,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.util.SparseArray;
 
 
@@ -249,11 +251,15 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	 * @return
 	 * The Team's national name
 	 * 
-	 * @throws
-	 * @Resources.NotFoundException
 	 */
 	public String getTeamNationalName(String teamCode){
-		return resourceHelper.getStringRescourse(teamCode);
+		
+		try {
+			return resourceHelper.getStringRescourse(teamCode);
+		} catch (Resources.NotFoundException ex){
+			Log.w(TAG, "Not find the team code:" + teamCode);
+			return teamCode;
+		}
 	}
 	
 	
@@ -266,11 +272,15 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	 * @return
 	 * The Team's national flag @Drawable object
 	 * 
-	 * @throws
-	 * @Resources.NotFoundException
 	 */
 	public Drawable getTeamNationalFlag(String teamCode){
-		return resourceHelper.getDrawableRescourse(teamCode);
+
+		try {
+			return resourceHelper.getDrawableRescourse(teamCode);
+		} catch (Resources.NotFoundException ex){
+			Log.w(TAG, "Not find the team code:" + teamCode);
+			return null;
+		}
 	}
 	
 	

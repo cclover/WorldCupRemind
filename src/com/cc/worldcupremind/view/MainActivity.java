@@ -44,6 +44,7 @@ public class MainActivity extends ActionBarActivity implements
 	 */
 	ViewPager mViewPager;
 	MatchDataController controller;
+	MatchesFragment matchFragment;
 	
 
 	@Override
@@ -150,6 +151,7 @@ public class MainActivity extends ActionBarActivity implements
 
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
+			matchFragment = new MatchesFragment();
 		}
 
 		@Override
@@ -158,7 +160,7 @@ public class MainActivity extends ActionBarActivity implements
 			// Return a PlaceholderFragment (defined as a static inner class
 			// below).
 			if(position == 0){
-				return new MatchesFragment();
+				return matchFragment;
 			}
 			return PlaceholderFragment.newInstance(position + 1);
 		}
@@ -226,13 +228,20 @@ public class MainActivity extends ActionBarActivity implements
 	public void onInitDone(Boolean isSuccess) {
 		
 		LogHelper.d(TAG, String.format("onInitDone result is %s", isSuccess?"true":"false"));
-		ArrayList<Integer> list = new ArrayList<Integer>();
-		list.add(1);
-		list.add(10);
-		list.add(20);
-		if(!controller.setMatchRemind(list)){
-			LogHelper.w(TAG, "Can't setMatchRemind");
-		}
+//		ArrayList<Integer> list = new ArrayList<Integer>();
+//		list.add(1);
+//		list.add(10);
+//		list.add(20);
+//		if(!controller.setMatchRemind(list)){
+//			LogHelper.w(TAG, "Can't setMatchRemind");
+//		}
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				matchFragment.setData(controller.getMatchesData());	
+			}
+		});
 	}
 
 	@Override
