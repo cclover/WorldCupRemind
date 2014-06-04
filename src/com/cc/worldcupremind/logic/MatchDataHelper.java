@@ -519,7 +519,7 @@ class MatchDataHelper {
 		if(saveToLocal){
 			
 			LogHelper.d(TAG, "Save file to local:" + fileName);
-			if(!DataOperateHelper.saveData2LocalFile(context, dataString, DATA_MATCHES_FILE)){
+			if(!DataOperateHelper.saveData2LocalFile(context, dataString, fileName)){
 				Log.w(TAG, "saveData2LocalFile failed:" + fileName);
 				return false;
 			}
@@ -653,6 +653,8 @@ class MatchDataHelper {
 			return parseMatchesData(dataString);
 		}else if(fileName.equals(DATA_STATISTICS_FILE)){
 			return parseStatisticsData(dataString);
+		}else if(fileName.equals(DATA_REMIND_FILE)){
+			return parseRemindData(dataString);
 		}
 		return false;
 	}
@@ -705,11 +707,11 @@ class MatchDataHelper {
 		} catch (ClassCastException ex){ //If string format error, will throw ClassCastException
 			LogHelper.w(TAG, "Parse the matches.json failed");
 			LogHelper.e(TAG, ex);
-			return null;
+			return false;
 		} catch (Exception ex){
 			LogHelper.w(TAG, "Parse the matches.json failed");
 			LogHelper.e(TAG, ex);
-			return null;
+			return false;
 		}
 		
 		LogHelper.d(TAG, "parseMatchData successed! matchdata size" + String.valueOf(matchesList.size()));
@@ -788,11 +790,11 @@ class MatchDataHelper {
 		} catch (ClassCastException ex){ //If string format error, will throw ClassCastException
 			LogHelper.w(TAG, "Parse the matches.json failed");
 			LogHelper.e(TAG, ex);
-			return null;
+			return false;
 		} catch (Exception ex){
 			LogHelper.w(TAG, "Parse the matches.json failed");
 			LogHelper.e(TAG, ex);
-			return null;
+			return false;
 		}
 		
 		LogHelper.d(TAG, "parseStatisticsData successed!" + String.valueOf(matchesList.size()));
