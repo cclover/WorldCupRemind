@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal" >
     
 	<LinearLayout
@@ -11,59 +11,85 @@
 
     	<TextView
     	    android:id="@+id/txtGroup"
-    	    android:layout_width="wrap_content"
-    	    android:layout_height="wrap_content" />
-
-    	<TextView
-    	    android:id="@+id/txtTime"
-    	    android:layout_width="wrap_content"
-    	    android:layout_height="wrap_content" />
+    	    android:layout_width="match_parent"
+    	    android:layout_height="match_parent"
+    	    android:gravity="center" 
+    	    android:textSize="20sp"
+			android:textStyle="bold"/>
+    	
+    	<CheckBox
+		    android:id="@+id/chkRemind"
+		    android:layout_width="wrap_content"
+		    android:layout_height="match_parent"
+		    android:layout_gravity="center"
+		    android:visibility="gone" 
+		    android:focusable="false" />
 
 	</LinearLayout>
 
-<RelativeLayout
+	<RelativeLayout
 	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content" >
-
-	    
-		<TextView
-		    android:id="@+id/txtTeam1"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content" 
-		    android:layout_alignParentLeft="true"/>
-		
-		<ImageView 
-	        android:id="@+id/imgFlag1"
-	        android:layout_width="wrap_content"
-		    android:layout_height="wrap_content" 
-	        android:layout_toLeftOf="@id/txtTeam1" />
-
+	    android:layout_height="match_parent" 
+	    android:layout_marginLeft="15dp"
+	    android:layout_marginRight="5dp"
+	    android:layout_marginTop="5dp"
+		android:layout_marginBottom="5dp" >
+    	
+	    <LinearLayout
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content" 
+			android:layout_centerVertical="true"
+			android:layout_alignParentLeft="true"
+			android:orientation="vertical">
+	   
+		   <ImageView 
+		        android:id="@+id/imgFlag1"
+		        android:layout_width="70dp"
+			    android:layout_height="46dp" />
+			
+			<TextView
+			    android:id="@+id/txtTeam1"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:gravity="center_horizontal" 
+			    android:layout_marginTop="2dp" 
+			    android:textSize="12sp"
+			    android:textStyle="bold"/>
+			
+		</LinearLayout>
+			
 		<TextView
 		    android:id="@+id/txtScore"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content" 
-		    android:layout_centerInParent="true"/>
-
-		<TextView
-		    android:id="@+id/txtTeam2"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content" 
-		    android:layout_alignParentRight="true" />
+		    android:layout_centerVertical="true"
+		    android:layout_centerInParent="true"
+		    android:textSize="32sp"
+		    android:textStyle="bold"/>
 		
-		<ImageView 
-	        android:id="@+id/imgFlag2"
-	        android:layout_width="wrap_content"
-		    android:layout_height="wrap_content" 
-	        android:layout_toRightOf="@id/txtTeam2" />
-    
+		<LinearLayout
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content" 
+			android:layout_centerVertical="true"
+			android:layout_alignParentRight="true"
+			android:orientation="vertical">
+
+			<ImageView 
+		        android:id="@+id/imgFlag2"
+		        android:layout_width="70dp"
+			    android:layout_height="46dp"  />
+					
+			<TextView
+			    android:id="@+id/txtTeam2"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content" 
+			    android:gravity="center_horizontal"
+			    android:layout_marginTop="2dp" 
+			    android:textSize="12sp"
+			    android:textStyle="bold"/>
+		
+		</LinearLayout>
+	
 	</RelativeLayout>
 	
-	<CheckBox
-	    android:id="@+id/chkRemind"
-	    android:layout_width="wrap_content"
-	    android:layout_height="match_parent"
-	    android:layout_gravity="center"
-	    android:visibility="gone" 
-	    android:focusable="false" />
-
 </LinearLayout>

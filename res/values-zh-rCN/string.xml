@@ -39,4 +39,12 @@
 	<string name="alg">"阿尔及利亚"</string>
 	<string name="rus">"俄罗斯"</string>
 	<string name="kor">"韩国"</string>
+	
+	<!-- Match Info -->
+	<string name="str_stage_group">"%s组"</string>
+	<string name="str_stage_16">"1/8"</string>
+	<string name="str_stage_8">"1/4"</string>
+	<string name="str_stage_4">"1/2"</string>
+	<string name="str_stage_2">"决赛"</string>
+	
 </resources>

@@ -174,6 +174,26 @@ class MatchDataHelper {
 		return teamsCount;
 	}
 
+	/**
+	 * @return the groupStatisticsList
+	 */
+	public ArrayList<GroupStatistics> getGroupStatisticsList() {
+		return groupStatisticsList;
+	}
+
+	/**
+	 * @return the goalStatisticsList
+	 */
+	public ArrayList<PlayerStatistics> getGoalStatisticsList() {
+		return goalStatisticsList;
+	}
+
+	/**
+	 * @return the assistStatisticsList
+	 */
+	public ArrayList<PlayerStatistics> getAssistStatisticsList() {
+		return assistStatisticsList;
+	}
 	
 	/**
 	 * Get the matches data list

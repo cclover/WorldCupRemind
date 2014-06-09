@@ -72,4 +72,5 @@ public class MatchDate {
 		}
 		return DateUtils.formatDateTime(context, date.getTime(), DateUtils.FORMAT_SHOW_WEEKDAY);  
 	}
+	
 }

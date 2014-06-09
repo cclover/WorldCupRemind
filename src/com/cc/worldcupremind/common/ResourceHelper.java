@@ -93,8 +93,6 @@ public class ResourceHelper {
 	 * @return
 	 * The Drawable object in drawable folder
 	 * 
-	 * @throws
-	 * @Resources.NotFoundException
 	 */
 	public Drawable getDrawableRescourse(String teamCode){
 		
@@ -102,7 +100,7 @@ public class ResourceHelper {
 			int resourceID = nationalImageMap.get(teamCode);
 			return res.getDrawable(resourceID);	
 		}
-		throw new Resources.NotFoundException(teamCode);
+		return res.getDrawable(R.drawable.t_null);
 	}
 	
 	/**
