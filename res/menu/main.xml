@@ -3,10 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.cc.worldcupremind.MainActivity" >
 
+        
+    <item android:id="@+id/action_remind"
+      android:title="@string/menu_remind"
+      android:icon="@drawable/ic_action_alarms" 
+      android:showAsAction="always"/>
+    
+   <item android:id="@+id/action_confirm"
+      android:title="@string/menu_confirm"
+      android:icon="@drawable/ic_action_accept" 
+      android:showAsAction="always"
+      android:visible="false"/>
+        
+   <item android:id="@+id/action_cancel"
+      android:title="@string/menu_cancel"
+      android:icon="@drawable/ic_action_cancel" 
+      android:showAsAction="always"
+      android:visible="false"/>
+    
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
+        android:id="@+id/action_update"
         android:title="@string/menu_update"
         app:showAsAction="never"/>
+    
+     <item
+        android:id="@+id/action_about"
+        android:title="@string/menu_about"
+        app:showAsAction="never"/>
 
+    
 </menu>

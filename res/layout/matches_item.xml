@@ -5,25 +5,42 @@
     android:orientation="horizontal" >
     
 	<LinearLayout
-	    android:layout_width="wrap_content"
+	    android:layout_width="35dp"
     	android:layout_height="match_parent"
-    	android:orientation="vertical" >
+    	android:orientation="vertical" 
+    	android:layout_marginTop="5dp"
+		android:layout_marginBottom="5dp">
 
     	<TextView
     	    android:id="@+id/txtGroup"
     	    android:layout_width="match_parent"
-    	    android:layout_height="match_parent"
+    	    android:layout_height="0dp"
     	    android:gravity="center" 
     	    android:textSize="20sp"
+    	    android:layout_weight = "1"
 			android:textStyle="bold"/>
     	
-    	<CheckBox
-		    android:id="@+id/chkRemind"
-		    android:layout_width="wrap_content"
-		    android:layout_height="match_parent"
-		    android:layout_gravity="center"
-		    android:visibility="gone" 
-		    android:focusable="false" />
+    	<FrameLayout
+    		android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+	    	<CheckBox
+			    android:id="@+id/chkRemind"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:gravity="center"
+			    android:visibility="gone"
+			    android:focusable="false"
+			    android:clickable="false" />
+	    	
+	    	<ImageView 
+	    	    android:id="@+id/imgRemind"
+	    	    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:gravity="center"
+			    android:background="@drawable/ic_action_alarms"
+			    android:visibility="gone"/>
+	    	
+    	</FrameLayout>
 
 	</LinearLayout>
 
@@ -65,7 +82,8 @@
 		    android:layout_centerVertical="true"
 		    android:layout_centerInParent="true"
 		    android:textSize="32sp"
-		    android:textStyle="bold"/>
+		    android:textStyle="bold"
+		    android:textColor="@color/lightskyblue"/>
 		
 		<LinearLayout
 	    	android:layout_width="wrap_content"

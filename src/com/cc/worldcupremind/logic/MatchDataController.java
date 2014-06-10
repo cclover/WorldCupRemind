@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.util.SparseArray;
 
 
@@ -208,7 +207,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	 */
 	public Boolean setMatchRemind(ArrayList<Integer> matchesList){
 		
-		LogHelper.d(TAG, "updateData");
+		LogHelper.d(TAG, "setMatchRemind");
 		
 		if(!isDataInitDone){
 			LogHelper.w(TAG, "Please init data first");
@@ -224,6 +223,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 				if(!dataHelper.setRemindData(newList)){
 					LogHelper.w(TAG, "Fail to set the remind data");
 					onSetRemindDone(false);
+					return;
 				}
 				
 				//Set alarm

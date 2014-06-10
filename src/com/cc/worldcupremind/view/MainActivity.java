@@ -15,9 +15,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
-import android.provider.SyncStateContract.Helpers;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,6 +43,10 @@ public class MainActivity extends ActionBarActivity implements
 	ViewPager mViewPager;
 	MatchDataController controller;
 	MatchesFragment matchFragment;
+	MenuItem remindItem;
+	MenuItem confirmItem;
+	MenuItem cancelItem;
+	Boolean isSetAlarm = false;
 	
 
 	@Override
@@ -74,6 +76,13 @@ public class MainActivity extends ActionBarActivity implements
 					@Override
 					public void onPageSelected(int position) {
 						actionBar.setSelectedNavigationItem(position);
+						if(position == 0){
+							setMeunStatus();
+						}else{
+							remindItem.setVisible(false);
+							confirmItem.setVisible(false);
+							cancelItem.setVisible(false);
+						}
 					}
 				});
 
@@ -94,6 +103,18 @@ public class MainActivity extends ActionBarActivity implements
 		controller.InitData(this);
 	}
 	
+	
+	private void setMeunStatus(){
+		if(!isSetAlarm){
+			remindItem.setVisible(true);
+			confirmItem.setVisible(false);
+			cancelItem.setVisible(false);
+		}else{
+			remindItem.setVisible(false);
+			confirmItem.setVisible(true);
+			cancelItem.setVisible(true);
+		}
+	}
 
 	@Override
 	protected void onDestroy() 
@@ -107,6 +128,9 @@ public class MainActivity extends ActionBarActivity implements
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		remindItem = menu.findItem(R.id.action_remind);
+		confirmItem = menu.findItem(R.id.action_confirm);
+		cancelItem = menu.findItem(R.id.action_cancel);
 		return true;
 	}
 
@@ -116,11 +140,33 @@ public class MainActivity extends ActionBarActivity implements
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_update) {
 			if(!controller.updateData()){
 				LogHelper.d(TAG, "Can't update");
 			}
 			return true;
+		}else if(id == R.id.action_remind){
+			
+			isSetAlarm = true;
+			setMeunStatus();
+			matchFragment.setAlarmMode(true);
+		}else if(id == R.id.action_confirm){
+			
+			isSetAlarm = false;
+			setMeunStatus();
+			ArrayList<Integer> remindList = matchFragment.getRemindList();
+			for(int i : remindList){
+				LogHelper.d(TAG, "Set Match no:" + String.valueOf(i));
+			}
+			if(!controller.setMatchRemind(remindList)){
+				LogHelper.w(TAG, "Can't setMatchRemind");
+			}
+			matchFragment.setAlarmMode(false);
+		}else if(id == R.id.action_cancel){
+			
+			isSetAlarm = false;
+			setMeunStatus();
+			matchFragment.setAlarmMode(false);
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -229,13 +275,6 @@ public class MainActivity extends ActionBarActivity implements
 	public void onInitDone(Boolean isSuccess) {
 		
 		LogHelper.d(TAG, String.format("onInitDone result is %s", isSuccess?"true":"false"));
-		ArrayList<Integer> list = new ArrayList<Integer>();
-		list.add(1);
-		list.add(10);
-		list.add(20);
-		if(!controller.setMatchRemind(list)){
-			LogHelper.w(TAG, "Can't setMatchRemind");
-		}
 		runOnUiThread(new Runnable() {
 			
 			@Override
@@ -257,6 +296,15 @@ public class MainActivity extends ActionBarActivity implements
 	public void onSetRemindDone(Boolean isSuccess) {
 		
 		LogHelper.d(TAG, String.format("onSetRemindDone is %s", isSuccess?"true":"false"));
+		if(isSuccess){
+			runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					matchFragment.setData(controller.getMatchesData());
+				}
+			});
+		}
 	}
 
 
@@ -264,6 +312,13 @@ public class MainActivity extends ActionBarActivity implements
 	public void onTimezoneChanged() {
 		
 		LogHelper.d(TAG, "onTimezoneChanged");
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				matchFragment.refreshData();
+			}
+		});
 	}
 
 }

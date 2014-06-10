@@ -1,12 +1,8 @@
 package com.cc.worldcupremind.view;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 
 import com.cc.worldcupremind.R;
-import com.cc.worldcupremind.R.id;
-import com.cc.worldcupremind.R.layout;
 import com.cc.worldcupremind.common.LogHelper;
 import com.cc.worldcupremind.logic.MatchDataController;
 import com.cc.worldcupremind.model.MatchDate;
@@ -15,14 +11,10 @@ import com.cc.worldcupremind.model.MatchStatus;
 import com.cc.worldcupremind.model.MatchesModel;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
-import android.util.Pair;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,13 +33,17 @@ public class MatchesFragment extends ListFragment {
 	private Context context;
 	private SparseArray<MatchesModel> matchList;
 	private ArrayList<MatchesModel> matchDataList;
+	private ArrayList<Integer> remindList;
 	private MatchDataController controller;
 	private LayoutInflater mInflater;
 	private Resources resource;
+	private Boolean isAlarmMode;
 			
 	public MatchesFragment(){
         adapter = new MatchesAdapter();  
         matchDataList = new ArrayList<MatchesModel>();
+        remindList = new ArrayList<Integer>();
+        isAlarmMode = false;
 	}
 	
 	public void setData(SparseArray<MatchesModel> list){
@@ -56,12 +52,42 @@ public class MatchesFragment extends ListFragment {
 		adapter.refresh();
 	}
 	
+	public void setAlarmMode(Boolean isOn){
+		isAlarmMode = isOn;
+		if(isOn){
+			remindList.clear();
+			for(int i = 0; i < matchList.size(); i++){
+				MatchesModel model = matchList.valueAt(i);
+				if(model.getIsRemind()){
+					remindList.add(model.getMatchNo());
+				}
+			}
+		}
+		adapter.refresh();
+	}
+	
+	public void refresh(){
+		adapter.refresh();
+	}
+	
+	public void refreshData(){
+		createMatchesDayMap();
+		adapter.refresh();
+	}
+	
+	/**
+	 * @return the remindList
+	 */
+	public ArrayList<Integer> getRemindList() {
+		return remindList;
+	}
+	
 	private void createMatchesDayMap(){
-		
 		
 		ArrayList<Integer> tmpList = new ArrayList<Integer>();
 		ArrayList<Integer> dayIndexList = new ArrayList<Integer>();
 		dayIndexList.clear();
+		matchDataList.clear();
 		int count = 1;
 		String dayNext = "";
 		
@@ -74,12 +100,12 @@ public class MatchesFragment extends ListFragment {
 			if(day.equals(dayNext)){
 				count++;
 			}else{
-				LogHelper.d(TAG, day + "count:" + String.valueOf(count));
+//				LogHelper.d(TAG, day + "count:" + String.valueOf(count));
 				tmpList.add(count);
 				count = 1;
 			}
 		}
-		LogHelper.d(TAG, dayNext + "count:" + String.valueOf(count));
+//		LogHelper.d(TAG, dayNext + "count:" + String.valueOf(count));
 		matchDataList.add(matchList.valueAt(matchList.size()-1));
 		tmpList.add(count);
 		
@@ -104,7 +130,7 @@ public class MatchesFragment extends ListFragment {
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_matches, container, false);
-        matchesList = (ListView) view.findViewById(android.R.id.list);  
+        matchesList = (ListView) view.findViewById(android.R.id.list);
         setListAdapter(adapter);    
         return view;
     }
@@ -120,6 +146,28 @@ public class MatchesFragment extends ListFragment {
         mInflater = LayoutInflater.from(context);
     }  
 
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {  
+		super.onListItemClick(l, v, position, id); 
+
+		if(isAlarmMode && matchDataList.get(position).getMatchNo() != 0){
+			CheckBox box = (CheckBox)v.findViewById(R.id.chkRemind);
+			if(box != null){
+				int matchNo = matchDataList.get(position).getMatchNo();
+				if(box.isChecked()){
+					box.setChecked(false);
+					if(remindList.remove((Object)matchNo)){
+						LogHelper.d(TAG, "Unselect mathc " + String.valueOf(matchNo));
+					}
+				}else{
+					box.setChecked(true);
+					if(remindList.add(matchNo)){
+						LogHelper.d(TAG, "Select mathc " + String.valueOf(matchNo));
+					}
+				}
+			}
+		}
+	}
 	
 	class MatchesAdapter extends BaseAdapter{
 		
@@ -141,13 +189,11 @@ public class MatchesFragment extends ListFragment {
 
 		@Override
 		public Object getItem(int position) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public long getItemId(int position) {
-			// TODO Auto-generated method stub
 			return 0;
 		}
 
@@ -185,7 +231,7 @@ public class MatchesFragment extends ListFragment {
 				
 				//set value
 				holder.day.setText(String.format("%s %s", model.getMatchTime().getDateString(), model.getMatchTime().getWeekdayString()));
-				
+				convertView.setBackgroundColor(resource.getColor(R.color.gainsboro));
 			}else{
 			
 				ViewHolder holder = null;
@@ -199,6 +245,7 @@ public class MatchesFragment extends ListFragment {
 				     holder.team2 = (TextView)convertView.findViewById(R.id.txtTeam2);
 				     holder.flag2 = (ImageView)convertView.findViewById(R.id.imgFlag2);
 				     holder.remind = (CheckBox)convertView.findViewById(R.id.chkRemind);
+				     holder.imgRemind = (ImageView)convertView.findViewById(R.id.imgRemind);
 				     convertView.setTag(holder);
 				} else {
 				     holder = (ViewHolder)convertView.getTag();
@@ -226,7 +273,21 @@ public class MatchesFragment extends ListFragment {
 				}else{
 					holder.score.setText(String.format("%d:%d", model.getTeam1Score(), model.getTeam2Score()));
 				}
-				holder.remind.setChecked(model.getIsRemind());
+				if(model.getIsRemind()){
+					if(!isAlarmMode){
+						holder.imgRemind.setVisibility(View.VISIBLE);
+					}else{
+						holder.imgRemind.setVisibility(View.GONE);
+					}
+				}else{
+					holder.imgRemind.setVisibility(View.GONE);
+				}
+				holder.remind.setChecked(remindList.contains(model.getMatchNo()));
+				if(isAlarmMode){
+					holder.remind.setVisibility(View.VISIBLE);
+				}else{
+					holder.remind.setVisibility(View.GONE);
+				}
 			}
 			return convertView;
 		}
@@ -240,6 +301,7 @@ public class MatchesFragment extends ListFragment {
 			TextView team2;
 			ImageView flag2;
 			CheckBox remind;
+			ImageView imgRemind;
 		}
 		
 		class ViewHolder2{
