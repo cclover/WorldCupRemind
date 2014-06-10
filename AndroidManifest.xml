@@ -8,11 +8,11 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="19" />
 
-	<uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> 
-    <uses-permission android:name="android.permission.SET_TIME_ZONE" /> 
-        
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SET_TIME_ZONE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -24,23 +24,28 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-       <activity
+        <activity
             android:name="com.cc.worldcupremind.view.AlarmActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name" 
-            android:theme="@android:style/Theme.Dialog">
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Dialog" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
-        <receiver 
-            android:name=".logic.MatchRemindReceiver" 
-            android:exported="false">
-             <intent-filter>
+        <activity
+            android:name="com.cc.worldcupremind.view.KonckoutMatchActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
+
+        <receiver
+            android:name=".logic.MatchRemindReceiver"
+            android:exported="false" >
+            <intent-filter>
                 <action android:name="com.cc.worldcupremind.alarm" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
