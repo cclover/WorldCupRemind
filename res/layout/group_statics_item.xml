@@ -8,7 +8,7 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#55222222"
+        android:background="@color/gainsboro"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="10dp"
@@ -24,61 +24,61 @@
 
         <View
             android:layout_width="70dp"
-            android:layout_height="46dp"
+            android:layout_height="30dp"
             android:paddingRight="5dp" />
 
         <TextView
-            android:id="@+id/key_1"
+            android:id="@+id/key_w"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/str_group_key1"
+            android:text="@string/str_group_win"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/key_2"
+            android:id="@+id/key_d"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/str_group_key2"
+            android:text="@string/str_group_draw"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/key_3"
+            android:id="@+id/key_l"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/str_group_key3"
+            android:text="@string/str_group_lose"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/key_4"
+            android:id="@+id/key_gf"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/str_group_key4"
+            android:text="@string/str_group_gf"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/key_5"
+            android:id="@+id/key_ga"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/str_group_key5"
+            android:text="@string/str_group_ga"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/key_6"
+            android:id="@+id/key_pts"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/str_group_key6"
+            android:text="@string/str_group_pts"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -99,48 +99,49 @@
             android:src="@drawable/t_null" />
 
         <TextView
-            android:id="@+id/value_group"
+            android:id="@+id/value_team"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3" />
+            android:layout_weight="3" 
+            android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/value_1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center" />
-
-        <TextView
-            android:id="@+id/value_2"
+            android:id="@+id/value_w"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center" />
 
         <TextView
-            android:id="@+id/value_3"
+            android:id="@+id/value_d"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center" />
 
         <TextView
-            android:id="@+id/value_4"
+            android:id="@+id/value_l"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center" />
 
         <TextView
-            android:id="@+id/value_5"
+            android:id="@+id/value_gf"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center" />
 
         <TextView
-            android:id="@+id/value_6"
+            android:id="@+id/value_ga"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/value_pts"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

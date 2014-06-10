@@ -3,6 +3,7 @@ package com.cc.worldcupremind.view;
 import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.logic.MatchDataController;
 import com.cc.worldcupremind.model.GroupStatistics;
+import com.cc.worldcupremind.model.MatchGroup;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -22,7 +23,7 @@ public class GroupFragment extends ListFragment {
     private ArrayList<GroupStatistics> mGroupStaticsList;
     private ListAdapter mAdapter;
     private LayoutInflater mInflater;
-
+	
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -76,32 +77,32 @@ public class GroupFragment extends ListFragment {
             LinearLayout title;
             ImageView flag;
             TextView key_group;
-            TextView key_1;
-            TextView key_2;
-            TextView key_3;
-            TextView key_4;
-            TextView key_5;
-            TextView key_6;
-            TextView value_group;
-            TextView value_1;
-            TextView value_2;
-            TextView value_3;
-            TextView value_4;
-            TextView value_5;
-            TextView value_6;
+            TextView key_w;
+            TextView key_d;
+            TextView key_l;
+            TextView key_gf;
+            TextView key_ga;
+            TextView key_pts;
+            TextView value_team;
+            TextView value_w;
+            TextView value_d;
+            TextView value_l;
+            TextView value_gf;
+            TextView value_ga;
+            TextView value_pts;
 
             void setupViews(int position) {
-                GroupStatistics item = mGroupStaticsList.get(position);
-                value_group.setText(MatchDataController.getInstance().getTeamNationalName(item.getTeamCode()));
+                GroupStatistics item = getTeamInfo(position);
+                value_team.setText(MatchDataController.getInstance().getTeamNationalName(item.getTeamCode()));
 
                 Drawable drawable = MatchDataController.getInstance().getTeamNationalFlag(item.getTeamCode());
                 flag.setImageDrawable(drawable);
-                value_1.setText(String.valueOf(item.getWinCount()));
-                value_2.setText(String.valueOf(item.getDrawCount()));
-                value_3.setText(String.valueOf(item.getGoalFor()));
-                value_4.setText(String.valueOf(item.getPoint()));
-                value_5.setText(String.valueOf(item.getLoseCount()));
-                value_6.setText(String.valueOf(item.getPosition()));
+                value_w.setText(String.valueOf(item.getWinCount()));
+                value_d.setText(String.valueOf(item.getDrawCount()));
+                value_l.setText(String.valueOf(item.getLoseCount()));
+                value_gf.setText(String.valueOf(item.getGoalFor()));
+                value_ga.setText(String.valueOf(item.getGoalAgainst()));
+                value_pts.setText(String.valueOf(item.getPoint()));
                 if (item.getTeamGroup().equals(mGroupStaticsList.get(position > 1 ? position - 1 : 0).getTeamGroup())) {
                     title.setVisibility(View.GONE);
                 } else {
@@ -119,20 +120,70 @@ public class GroupFragment extends ListFragment {
             public void initViews(View convertView) {
                 key_group = (TextView) convertView.findViewById(R.id.key_group);
                 flag = (ImageView) convertView.findViewById(R.id.flag);
-                key_1 = (TextView) convertView.findViewById(R.id.key_1);
-                key_2 = (TextView) convertView.findViewById(R.id.key_2);
-                key_3 = (TextView) convertView.findViewById(R.id.key_3);
-                key_4 = (TextView) convertView.findViewById(R.id.key_4);
-                key_5 = (TextView) convertView.findViewById(R.id.key_5);
-                key_6 = (TextView) convertView.findViewById(R.id.key_6);
-                value_group = (TextView) convertView.findViewById(R.id.value_group);
-                value_1 = (TextView) convertView.findViewById(R.id.value_1);
-                value_2 = (TextView) convertView.findViewById(R.id.value_2);
-                value_3 = (TextView) convertView.findViewById(R.id.value_3);
-                value_4 = (TextView) convertView.findViewById(R.id.value_4);
-                value_5 = (TextView) convertView.findViewById(R.id.value_5);
-                value_6 = (TextView) convertView.findViewById(R.id.value_6);
+                key_w = (TextView) convertView.findViewById(R.id.key_w);
+                key_d = (TextView) convertView.findViewById(R.id.key_d);
+                key_l = (TextView) convertView.findViewById(R.id.key_l);
+                key_gf = (TextView) convertView.findViewById(R.id.key_gf);
+                key_ga = (TextView) convertView.findViewById(R.id.key_ga);
+                key_pts = (TextView) convertView.findViewById(R.id.key_pts);
+                value_team = (TextView) convertView.findViewById(R.id.value_team);
+                value_w = (TextView) convertView.findViewById(R.id.value_w);
+                value_d = (TextView) convertView.findViewById(R.id.value_d);
+                value_l = (TextView) convertView.findViewById(R.id.value_l);
+                value_gf = (TextView) convertView.findViewById(R.id.value_gf);
+                value_ga = (TextView) convertView.findViewById(R.id.value_ga);
+                value_pts = (TextView) convertView.findViewById(R.id.value_pts);
                 title = (LinearLayout) convertView.findViewById(R.id.title);
+            }
+            
+            /**
+             * Get the team by position
+             */
+            private GroupStatistics getTeamInfo(int pos){
+            	int p = 0;
+            	int start = 0;
+            	int end = 0;
+            	if(pos >= 0 && pos <= 3){
+            		start = 0;
+            		end = 3;
+            		p = pos + 1;
+            	}else if(pos >= 4 && pos <= 7){
+            		start = 4;
+            		end = 7;
+            		p = pos - 3;
+            	}else if(pos >= 8 && pos <= 11){
+            		start = 8;
+            		end = 11;
+            		p = pos - 7;
+            	}else if(pos >= 12 && pos <= 15){
+            		start = 12;
+            		end = 15;
+            		p = pos - 11;
+            	}else if(pos >= 16 && pos <= 19){
+            		start = 16;
+            		end = 19;
+            		p = pos - 15;
+            	}else if(pos >= 20 && pos <= 23){
+            		start = 20;
+            		end = 23;
+            		p = pos - 19;
+            	}else if(pos >= 24 && pos <= 27){
+            		start = 24;
+            		end = 27;
+            		p = pos - 23;
+            	}else if(pos >= 28 && pos <= 31){
+            		start = 28;
+            		end = 31;
+            		p = pos - 27;
+            	}
+            	
+            	for(int i = start; i <= end; i++){
+            		GroupStatistics item = mGroupStaticsList.get(i);
+            		if(item.getPosition() == p){
+            			return item;
+            		}
+            	}
+            	return null;
             }
         }
 

@@ -51,13 +51,12 @@
 	<string name="str_stage_4">"1/2"</string>
 	<string name="str_stage_2">"决赛"</string>
 	
-	<!-- Match Info -->
-	<string name="str_group_key1">MP</string>
-	<string name="str_group_key2">W</string>
-	<string name="str_group_key3">D</string>
-	<string name="str_group_key4">L</string>
-	<string name="str_group_key5">GF</string>
-	<string name="str_group_key6">GA</string>
-
+	<!-- Group Info -->
+	<string name="str_group_win">胜</string>
+	<string name="str_group_draw">平</string>
+	<string name="str_group_lose">负</string>
+	<string name="str_group_gf">进球</string>
+	<string name="str_group_ga">失球</string>
+	<string name="str_group_pts">积分</string>
 	
 </resources>

@@ -38,6 +38,7 @@
 			    android:layout_height="wrap_content"
 			    android:gravity="center"
 			    android:background="@drawable/ic_action_alarms"
+			    android:scaleType="fitCenter"
 			    android:visibility="gone"/>
 	    	
     	</FrameLayout>
@@ -62,7 +63,8 @@
 		   <ImageView 
 		        android:id="@+id/imgFlag1"
 		        android:layout_width="70dp"
-			    android:layout_height="46dp" />
+			    android:layout_height="46dp" 
+			    android:scaleType="fitCenter"/>
 			
 			<TextView
 			    android:id="@+id/txtTeam1"
@@ -95,7 +97,8 @@
 			<ImageView 
 		        android:id="@+id/imgFlag2"
 		        android:layout_width="70dp"
-			    android:layout_height="46dp"  />
+			    android:layout_height="46dp" 
+			    android:scaleType="fitCenter" />
 					
 			<TextView
 			    android:id="@+id/txtTeam2"
