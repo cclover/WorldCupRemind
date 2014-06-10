@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.cc.worldcupremind.MainActivity" >
 
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/menu_update"
+        app:showAsAction="never"/>
+
         
     <item android:id="@+id/action_remind"
       android:title="@string/menu_remind"

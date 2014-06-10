@@ -43,6 +43,7 @@ public class MainActivity extends ActionBarActivity implements
 	ViewPager mViewPager;
 	MatchDataController controller;
 	MatchesFragment matchFragment;
+	GroupFragment mGroupFragment;
 	MenuItem remindItem;
 	MenuItem confirmItem;
 	MenuItem cancelItem;
@@ -199,6 +200,7 @@ public class MainActivity extends ActionBarActivity implements
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
 			matchFragment = new MatchesFragment();
+			mGroupFragment = new GroupFragment();
 		}
 
 		@Override
@@ -208,6 +210,8 @@ public class MainActivity extends ActionBarActivity implements
 			// below).
 			if(position == 0){
 				return matchFragment;
+			}else if(position ==1){
+			    return mGroupFragment;
 			}
 			return PlaceholderFragment.newInstance(position + 1);
 		}
@@ -280,6 +284,7 @@ public class MainActivity extends ActionBarActivity implements
 			@Override
 			public void run() {
 				matchFragment.setData(controller.getMatchesData());	
+				mGroupFragment.setData(controller.getGroupStaticsData());	
 			}
 		});
 	}

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">WorldCup Remind</string>
     <string name="menu_update">Update</string>
     <string name="menu_about">About</string>
@@ -9,45 +10,54 @@
     <string name="tab_mathces">Matches</string>
     <string name="tab_group">Group</string>
     <string name="tab_statistics">Statistics</string>
-    
+
     <!-- National Name -->
-	<string name="bra">"Brazil"</string>
-	<string name="cro">"Croatia"</string>
-	<string name="mex">"Mexico"</string>
-	<string name="cmr">"Cameroon"</string>
-	<string name="esp">"Spain"</string>
-	<string name="ned">"Netherlands"</string>
-	<string name="chi">"Chile"</string>
-	<string name="aus">"Australia"</string>
-	<string name="col">"Columbia"</string>
-	<string name="gre">"Greece"</string>
-	<string name="civ">"Ivory Coast"</string>
-	<string name="jpn">"Japan"</string>
-	<string name="uru">"Uruguay"</string>
-	<string name="crc">"Costa Rica"</string>
-	<string name="eng">"England"</string>
-	<string name="ita">"Italy"</string>
-	<string name="sui">"Switzerland"</string>
-	<string name="ecu">"Ecuador"</string>
-	<string name="fra">"France"</string>
-	<string name="hon">"Honduras"</string>
-	<string name="arg">"Argentina"</string>
-	<string name="bih">"Bosnia and Herzegovina"</string>
-	<string name="irn">"Iran"</string>
-	<string name="nga">"Nigeria"</string>
-	<string name="ger">"Germany"</string>
-	<string name="por">"Portugal"</string>
-	<string name="gha">"Ghana"</string>
-	<string name="usa">"America"</string>
-	<string name="bel">"Belgium"</string>
-	<string name="alg">"Algeria"</string>
-	<string name="rus">"Russia"</string>
-	<string name="kor">"Korea"</string>
-	
-	<!-- Match Info -->
-	<string name="str_stage_group">"GROUP &#037;s"</string>
-	<string name="str_stage_16">"ROUND OF 16"</string>
-	<string name="str_stage_8">"SEMI FINAL"</string>
-	<string name="str_stage_4">"QUARTER FINAL"</string>
-	<string name="str_stage_2">"FINAL"</string>
+    <string name="bra">"Brazil"</string>
+    <string name="cro">"Croatia"</string>
+    <string name="mex">"Mexico"</string>
+    <string name="cmr">"Cameroon"</string>
+    <string name="esp">"Spain"</string>
+    <string name="ned">"Netherlands"</string>
+    <string name="chi">"Chile"</string>
+    <string name="aus">"Australia"</string>
+    <string name="col">"Columbia"</string>
+    <string name="gre">"Greece"</string>
+    <string name="civ">"Ivory Coast"</string>
+    <string name="jpn">"Japan"</string>
+    <string name="uru">"Uruguay"</string>
+    <string name="crc">"Costa Rica"</string>
+    <string name="eng">"England"</string>
+    <string name="ita">"Italy"</string>
+    <string name="sui">"Switzerland"</string>
+    <string name="ecu">"Ecuador"</string>
+    <string name="fra">"France"</string>
+    <string name="hon">"Honduras"</string>
+    <string name="arg">"Argentina"</string>
+    <string name="bih">"Bosnia and Herzegovina"</string>
+    <string name="irn">"Iran"</string>
+    <string name="nga">"Nigeria"</string>
+    <string name="ger">"Germany"</string>
+    <string name="por">"Portugal"</string>
+    <string name="gha">"Ghana"</string>
+    <string name="usa">"America"</string>
+    <string name="bel">"Belgium"</string>
+    <string name="alg">"Algeria"</string>
+    <string name="rus">"Russia"</string>
+    <string name="kor">"Korea"</string>
+
+    <!-- Match Info -->
+    <string name="str_stage_group">"GROUP &#037;s"</string>
+    <string name="str_stage_16">"ROUND OF 16"</string>
+    <string name="str_stage_8">"SEMI FINAL"</string>
+    <string name="str_stage_4">"QUARTER FINAL"</string>
+    <string name="str_stage_2">"FINAL"</string>
+
+    <!-- Match Info -->
+	<string name="str_group_key1">MP</string>
+	<string name="str_group_key2">W</string>
+	<string name="str_group_key3">D</string>
+	<string name="str_group_key4">L</string>
+	<string name="str_group_key5">GF</string>
+	<string name="str_group_key6">GA</string>
+
 </resources>
