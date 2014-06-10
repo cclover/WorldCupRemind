@@ -73,4 +73,9 @@ public class MatchDate {
 		return DateUtils.formatDateTime(context, date.getTime(), DateUtils.FORMAT_SHOW_WEEKDAY);  
 	}
 	
+	public Boolean isOver(){
+		Date nowDate = new Date();
+		return date.getTime() < nowDate.getTime();
+	}
+	
 }

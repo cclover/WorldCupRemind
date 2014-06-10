@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -178,6 +179,11 @@ public class MainActivity extends ActionBarActivity implements
 			isSetAlarm = false;
 			setMeunStatus();
 			matchFragment.setAlarmMode(false);
+		}else if(id == R.id.action_about){
+			
+			//TODO: TEST
+			Intent t = new Intent(this, AlarmActivity.class);
+			startActivity(t);
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -305,14 +311,16 @@ public class MainActivity extends ActionBarActivity implements
 		LogHelper.d(TAG, String.format("isSuccess is %s", isSuccess?"true":"false"));
 		LogHelper.d(TAG, String.format("haveNewVersion is %s", haveNewVersion?"true":"false"));
 		
-		runOnUiThread(new Runnable() {
-			
-			@Override
-			public void run() {
-				matchFragment.setData(controller.getMatchesData());	
-				mGroupFragment.setData(controller.getGroupStaticsData());	
-			}
-		});
+		if(isSuccess && haveNewVersion){
+			runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					matchFragment.setData(controller.getMatchesData());	
+					mGroupFragment.setData(controller.getGroupStaticsData());	
+				}
+			});
+		}
 	}
 
 

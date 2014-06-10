@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" 
+    android:orientation="vertical"
+    android:background="@color/white">
+    
+	<RelativeLayout 
+	    android:layout_width="match_parent"
+    	android:layout_height="40dp" 
+		android:background="@color/green">
+     	<TextView
+	   	    android:layout_width="wrap_content"
+	   	    android:layout_height="match_parent"
+	   	    android:layout_alignParentLeft="true"
+	   	    android:layout_marginLeft="15dp"
+			android:gravity="center_vertical"
+	   	    android:textSize="20sp"
+			android:textStyle="bold"
+			android:textColor="@color/white"
+			android:text="@string/str_alram_remind"/>
+	</RelativeLayout>
+	
+	<ListView 
+	    android:id="@+id/listAlarm"
+	   	android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="15dp"
+	    android:layout_marginRight="15dp"
+	    android:layout_marginTop="5dp"
+		android:layout_marginBottom="5dp" />
+
+	<RelativeLayout
+	   	android:layout_width="match_parent"
+	    android:layout_height="wrap_content" 
+	    android:background="@color/gray">
+	    <Button 
+	       	android:id="@+id/btnAlarmClose"
+		    android:layout_width="match_parent"
+		    android:layout_height="40dp"
+		    android:gravity="center"
+		    android:textSize="18sp" 
+		    android:background="@color/whitesmoke"
+		    android:text="@string/str_alram_close" />
+	</RelativeLayout>
+    
+</LinearLayout>

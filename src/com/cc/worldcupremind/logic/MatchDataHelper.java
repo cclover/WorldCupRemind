@@ -38,6 +38,7 @@ class MatchDataHelper {
 	private static final String DATA_MATCHES_FILE = "matches.json";
 	private static final String DATA_REMIND_FILE = "remind.json";
 	private static final String DATA_STATISTICS_FILE = "statistics.json";
+	private static final String DATA_SECOND_STAGE_PIC = "secondstage.jpge";
 	private static final String FILE_ENCODE_FORMAT = "UTF-8";
 	
 	/** matches.json format */
@@ -276,6 +277,7 @@ class MatchDataHelper {
 			Boolean ret = false; 
 			if(updateFile.equals(DATA_MATCHES_FILE)){
 				ret = loadDataFromNetwork(DATA_MATCHES_FILE);
+				donwloadSecondStagePic();
 			} else if(updateFile.equals(DATA_STATISTICS_FILE)){
 				ret = loadDataFromNetwork(DATA_STATISTICS_FILE);
 			}
@@ -382,6 +384,23 @@ class MatchDataHelper {
 		return true;
 	}
 	
+	private Boolean donwloadSecondStagePic(){
+		
+		LogHelper.d(TAG, "donwloadSecondStagePic()");
+		
+		InputStream picInStream = DataOperateHelper.loadFileFromFTPNetwork(DATA_SECOND_STAGE_PIC);
+		if(picInStream == null){
+			LogHelper.w(TAG, "Fail to donwloadSecondStagePic");
+			return false;
+		}
+		
+		if(!DataOperateHelper.saveStream2LocalFile(context, picInStream, DATA_SECOND_STAGE_PIC)){
+			LogHelper.w(TAG, "Save secondstage pic failed");
+			return false;
+		}
+		
+		return true;
+	}
 	
 	/**
 	 * Save the Remind Data into local file

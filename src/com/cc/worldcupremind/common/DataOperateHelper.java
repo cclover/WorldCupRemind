@@ -3,6 +3,7 @@ package com.cc.worldcupremind.common;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -124,6 +125,54 @@ public class DataOperateHelper {
 			try {
 				if(fileWriter != null){
 					fileWriter.close();
+				}
+			} catch (IOException e) {
+				LogHelper.e(TAG, e);
+				return false;
+			}
+		}
+		
+		LogHelper.d(TAG, "saveStreamToLocalFile Successed!");
+		return true;
+	}
+	
+	
+	/*
+	 * Save the Stream to local file in PRIVATE FILES folder
+	 * 
+	 * @param context
+	 * Context
+	 * 
+	 * @param dataString
+	 * The string want to save
+	 * 
+	 * @param fileName
+	 * The local file name
+	 */
+	public static Boolean saveStream2LocalFile(Context context, InputStream dataStream, String fileName){
+
+		LogHelper.d(TAG, "saveStreamToLocalFile()");
+		
+		File localFile = context.getFileStreamPath(fileName);
+		FileOutputStream fileOutStream = null;
+	
+		int bytesWritten = 0;
+		int byteCount = 0;
+		byte[] bytes = new byte[1024*8];
+		try {
+			fileOutStream = new FileOutputStream(localFile);
+			while((byteCount = dataStream.read(bytes)) != -1)
+			{
+				fileOutStream.write(bytes, bytesWritten, byteCount);
+			    bytesWritten += byteCount;
+			}
+		} catch (IOException e) {
+			LogHelper.e(TAG, e);
+			return false;
+		} finally {
+			try {
+				if(fileOutStream != null){
+					fileOutStream.close();
 				}
 			} catch (IOException e) {
 				LogHelper.e(TAG, e);

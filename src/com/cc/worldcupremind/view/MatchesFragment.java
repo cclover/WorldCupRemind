@@ -191,7 +191,7 @@ public class MatchesFragment extends ListFragment {
 			if(matchDataList == null){
 				return 0;
 			}
-			LogHelper.d(TAG, "getCount--" + String.valueOf(matchDataList.size()));
+//			LogHelper.d(TAG, "getCount--" + String.valueOf(matchDataList.size()));
 			return matchDataList.size();
 		}
 
@@ -283,7 +283,10 @@ public class MatchesFragment extends ListFragment {
 				}
 				
 				//only show the remind image or checkbox when game not start
-				if(model.getMatchStatus() == MatchStatus.MATCH_STATUS_WAIT_START){
+				if(model.getMatchStatus() != MatchStatus.MATCH_STATUS_WAIT_START || model.getMatchTime().isOver()){
+					holder.remind.setVisibility(View.GONE);
+					holder.imgRemind.setVisibility(View.GONE);
+				}else{
 					if(model.getIsRemind()){
 						if(!isAlarmMode){
 							holder.imgRemind.setVisibility(View.VISIBLE);
