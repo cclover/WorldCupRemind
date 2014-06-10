@@ -34,7 +34,7 @@ public class DataOperateHelper {
 	private static final String FTP_USER_NAME = "anonymous";
 	private static final String FTP_USER_PASSWORD = "";
 	private static final int NETWORK_TIMEOUT = 20*1000;
-
+	private static final int BUFFER_SIZE = 1024*8;
 	
 	/*
 	 * Check the file is exist in local private files folder or not
@@ -156,15 +156,12 @@ public class DataOperateHelper {
 		File localFile = context.getFileStreamPath(fileName);
 		FileOutputStream fileOutStream = null;
 	
-		int bytesWritten = 0;
 		int byteCount = 0;
-		byte[] bytes = new byte[1024*8];
+		byte[] bytes = new byte[BUFFER_SIZE];
 		try {
 			fileOutStream = new FileOutputStream(localFile);
-			while((byteCount = dataStream.read(bytes)) != -1)
-			{
-				fileOutStream.write(bytes, bytesWritten, byteCount);
-			    bytesWritten += byteCount;
+			while((byteCount = dataStream.read(bytes)) != -1){
+				fileOutStream.write(bytes, 0, byteCount);
 			}
 		} catch (IOException e) {
 			LogHelper.e(TAG, e);

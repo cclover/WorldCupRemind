@@ -5,41 +5,49 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 
+import com.cc.worldcupremind.common.DataOperateHelper;
+import com.cc.worldcupremind.common.LogHelper;
+
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebSettings.ZoomDensity;
 import android.webkit.WebView;
+import android.widget.RelativeLayout;
 
 public class KonckoutMatchActivity extends Activity {
 
 	private WebView mWebView;
-
+	private RelativeLayout rootLayout;
+	private static final String TAG = "KonckoutMatchActivity";
+	private static final String DATA_SECOND_STAGE_PIC = "secondstage.png";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mWebView = new WebView(this);
-		// Ö§³Öjavascript
-		mWebView.getSettings().setJavaScriptEnabled(true);
-		// ÉèÖÃ¿ÉÒÔÖ§³ÖËõ·Å
+		// Ö§ï¿½ï¿½javascript
+		mWebView.getSettings().setJavaScriptEnabled(false);
+		// ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½Ö§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		mWebView.getSettings().setSupportZoom(true);
-		// ÉèÖÃ³öÏÖËõ·Å¹¤¾ß
+		// ï¿½ï¿½ï¿½Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¹ï¿½ï¿½ï¿½
 		mWebView.getSettings().setBuiltInZoomControls(true);
-		// À©´ó±ÈÀýµÄËõ·Å
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		mWebView.getSettings().setUseWideViewPort(true);
-		// ×ÔÊÊÓ¦ÆÁÄ»
+		// ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½Ä»
 		mWebView.getSettings()
 				.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		mWebView.getSettings().setLoadWithOverviewMode(true);
 		File dir = getFilesDir();
-		File file = new File(dir, "img.png");
+		File file = new File(dir, DATA_SECOND_STAGE_PIC);
 		if (!file.exists()) {
 			FileOutputStream fos = null;
 			try {
 				fos = new FileOutputStream(file);
-				InputStream ios = getAssets().open("img.png");
+				InputStream ios = getAssets().open(DATA_SECOND_STAGE_PIC);
 				byte[] buffer = new byte[1000];
 				int size = ios.read(buffer);
 				while (size > 0) {
@@ -49,12 +57,17 @@ public class KonckoutMatchActivity extends Activity {
 				fos.flush();
 				fos.close();
 			} catch (Exception e) {
-				e.printStackTrace();
+				LogHelper.e(TAG, e);
 			}
 		}
 		String imgPath = Uri.fromFile(file).toString();
 		String html = "<center><img src=\"" + imgPath + "\"></center>";
 		mWebView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", "");
-		setContentView(mWebView);
+		
+		rootLayout = new RelativeLayout(this);
+		RelativeLayout.LayoutParams params =  new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+		rootLayout.addView(mWebView, params);
+		setContentView(rootLayout);
 	}
 }

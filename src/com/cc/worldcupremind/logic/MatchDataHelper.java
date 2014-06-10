@@ -38,7 +38,7 @@ class MatchDataHelper {
 	private static final String DATA_MATCHES_FILE = "matches.json";
 	private static final String DATA_REMIND_FILE = "remind.json";
 	private static final String DATA_STATISTICS_FILE = "statistics.json";
-	private static final String DATA_SECOND_STAGE_PIC = "secondstage.jpge";
+	private static final String DATA_SECOND_STAGE_PIC = "secondstage.png";
 	private static final String FILE_ENCODE_FORMAT = "UTF-8";
 	
 	/** matches.json format */
@@ -399,6 +399,7 @@ class MatchDataHelper {
 			return false;
 		}
 		
+		LogHelper.d(TAG, "Save secondstage pic");
 		return true;
 	}
 	

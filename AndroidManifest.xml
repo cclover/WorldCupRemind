@@ -39,6 +39,7 @@
         </activity>
         <activity
             android:name="com.cc.worldcupremind.view.KonckoutMatchActivity"
+            android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
 
