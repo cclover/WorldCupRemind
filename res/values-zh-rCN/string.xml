@@ -47,4 +47,13 @@
 	<string name="str_stage_4">"1/2"</string>
 	<string name="str_stage_2">"决赛"</string>
 	
+	<!-- Match Info -->
+	<string name="str_group_key1">MP</string>
+	<string name="str_group_key2">W</string>
+	<string name="str_group_key3">D</string>
+	<string name="str_group_key4">L</string>
+	<string name="str_group_key5">GF</string>
+	<string name="str_group_key6">GA</string>
+
+	
 </resources>

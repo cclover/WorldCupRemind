@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import com.cc.worldcupremind.common.LogHelper;
 import com.cc.worldcupremind.common.ResourceHelper;
 import com.cc.worldcupremind.logic.MatchDataHelper.UPDATE_RET;
+import com.cc.worldcupremind.model.GroupStatistics;
 import com.cc.worldcupremind.model.MatchesModel;
+import com.cc.worldcupremind.model.PlayerStatistics;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -83,6 +85,15 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	 */
 	public SparseArray<MatchesModel> getMatchesData() {
 		return dataHelper.getMatchesList();
+	}
+	
+	/**
+	 * Get the GroupStatics info @MatchesModel object
+	 * 
+	 * @return ArrayList<GroupStatistics>
+	 */
+	public ArrayList<GroupStatistics> getGroupStaticsData() {
+	    return dataHelper.getGroupStatisticsList();
 	}
 
 	/**
