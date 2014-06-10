@@ -3,7 +3,6 @@ package com.cc.worldcupremind.view;
 import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.logic.MatchDataController;
 import com.cc.worldcupremind.model.GroupStatistics;
-import com.cc.worldcupremind.model.MatchGroup;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -23,6 +22,7 @@ public class GroupFragment extends ListFragment {
     private ArrayList<GroupStatistics> mGroupStaticsList;
     private ListAdapter mAdapter;
     private LayoutInflater mInflater;
+    
 	
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -48,13 +48,13 @@ public class GroupFragment extends ListFragment {
 
         @Override
         public Object getItem(int position) {
-            // TODO Auto-generated method stub
+
             return null;
         }
 
         @Override
         public long getItemId(int position) {
-            // TODO Auto-generated method stub
+
             return 0;
         }
 

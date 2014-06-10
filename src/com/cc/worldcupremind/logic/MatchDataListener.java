@@ -6,4 +6,5 @@ public interface MatchDataListener {
 	public void onUpdateDone(Boolean haveNewVersion, Boolean isSuccess);
 	public void onSetRemindDone(Boolean isSuccess);
 	public void onTimezoneChanged();
+	public void onLocalChanged();
 }

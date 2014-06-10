@@ -52,6 +52,8 @@ public class MainActivity extends ActionBarActivity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		
+		LogHelper.d(TAG, "onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
@@ -80,9 +82,15 @@ public class MainActivity extends ActionBarActivity implements
 						if(position == 0){
 							setMeunStatus();
 						}else{
-							remindItem.setVisible(false);
-							confirmItem.setVisible(false);
-							cancelItem.setVisible(false);
+							if(remindItem != null){
+								remindItem.setVisible(false);
+							}
+							if(confirmItem != null){
+								confirmItem.setVisible(false);
+							}
+							if(cancelItem != null){
+								cancelItem.setVisible(false);
+							}
 						}
 					}
 				});
@@ -120,6 +128,7 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	protected void onDestroy() 
 	{
+		LogHelper.d(TAG, "onDestroy");
 		super.onDestroy();
 		controller.removeListener(this);
 	}
@@ -127,6 +136,7 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
+		LogHelper.d(TAG, "onCreateOptionsMenu");
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		remindItem = menu.findItem(R.id.action_remind);
@@ -294,6 +304,15 @@ public class MainActivity extends ActionBarActivity implements
 
 		LogHelper.d(TAG, String.format("isSuccess is %s", isSuccess?"true":"false"));
 		LogHelper.d(TAG, String.format("haveNewVersion is %s", haveNewVersion?"true":"false"));
+		
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				matchFragment.setData(controller.getMatchesData());	
+				mGroupFragment.setData(controller.getGroupStaticsData());	
+			}
+		});
 	}
 
 
@@ -324,6 +343,17 @@ public class MainActivity extends ActionBarActivity implements
 				matchFragment.refreshData();
 			}
 		});
+	}
+
+
+	@Override
+	public void onLocalChanged() {
+		
+		//When language changed , the activaty will be destory and create again
+		//But can't show the data. If we set  android:configChanges = "locale | layoutDirection" and refresh 
+		//The action bar language will not change
+		LogHelper.d(TAG, "onLocalChanged");
+		finish();
 	}
 
 }

@@ -21,7 +21,6 @@ import android.util.SparseArray;
 public class MatchDataController extends BroadcastReceiver implements MatchDataListener{
 	
 	private static final String TAG = "MatchDataController";
-	private static final String ACTION_TIMEZONE_CHANGED = "android.intent.action.TIMEZONE_CHANGED";
 	private static MatchDataController instance = new MatchDataController();
 	private Boolean isDataInitDone;
 	private MatchDataHelper dataHelper;	
@@ -116,7 +115,8 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 				dataHelper = new MatchDataHelper(context);
 				resourceHelper = new ResourceHelper(context);
 				IntentFilter filter = new IntentFilter();
-				filter.addAction(ACTION_TIMEZONE_CHANGED);
+				filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+				filter.addAction(Intent.ACTION_LOCALE_CHANGED);
 				context.registerReceiver(this, filter);
 			}
 		}
@@ -296,9 +296,11 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		if(intent.getAction().equals(ACTION_TIMEZONE_CHANGED)){
+		if(intent.getAction().equals(Intent.ACTION_TIMEZONE_CHANGED)){
 			onTimezoneChanged();
-		}	
+		}else if(intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)){
+			onLocalChanged();
+		}
 	}
 	
 	
@@ -341,6 +343,14 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 			}
 		}
 		
+	}
+
+	@Override
+	public void onLocalChanged() {
+
+		for (MatchDataListener listener : listenerList) {
+			listener.onLocalChanged();
+		}
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.cc.worldcupremind.view;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.common.LogHelper;
@@ -40,13 +41,14 @@ public class MatchesFragment extends ListFragment {
 	private Boolean isAlarmMode;
 			
 	public MatchesFragment(){
-        adapter = new MatchesAdapter();  
         matchDataList = new ArrayList<MatchesModel>();
+        adapter = new MatchesAdapter();  
         remindList = new ArrayList<Integer>();
         isAlarmMode = false;
 	}
 	
 	public void setData(SparseArray<MatchesModel> list){
+		LogHelper.d(TAG, "setData()");
 		matchList = list;
 		createMatchesDayMap();
 		adapter.refresh();
@@ -84,6 +86,7 @@ public class MatchesFragment extends ListFragment {
 	
 	private void createMatchesDayMap(){
 		
+		LogHelper.d(TAG, "createMatchesDayMap");
 		ArrayList<Integer> tmpList = new ArrayList<Integer>();
 		ArrayList<Integer> dayIndexList = new ArrayList<Integer>();
 		dayIndexList.clear();
@@ -124,12 +127,13 @@ public class MatchesFragment extends ListFragment {
 			MatchesModel model = new MatchesModel(0, null, null, date, null, null, null, 0, 0, null);
 			matchDataList.add(k, model);
 		}
-
+		LogHelper.d(TAG, "matchDataList size = " + String.valueOf(matchDataList.size()));
 	}
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_matches, container, false);
+		LogHelper.d(TAG, "MatchFragment onCreateView");
+		View view = inflater.inflate(R.layout.fragment_matches, container, false);
         matchesList = (ListView) view.findViewById(android.R.id.list);
         setListAdapter(adapter);    
         return view;
@@ -138,6 +142,8 @@ public class MatchesFragment extends ListFragment {
 	
 	@Override  
     public void onCreate(Bundle savedInstanceState) {  
+		
+		LogHelper.d(TAG, "MatchFragment onCreate");
         super.onCreate(savedInstanceState);  
         
         controller = MatchDataController.getInstance();
@@ -170,9 +176,9 @@ public class MatchesFragment extends ListFragment {
 	}
 	
 	class MatchesAdapter extends BaseAdapter{
-		
+	
 		public MatchesAdapter(){
-
+			
 		}
 		
 		public void refresh(){
@@ -182,8 +188,10 @@ public class MatchesFragment extends ListFragment {
 		@Override
 		public int getCount() {
 
-			if(matchDataList == null)
+			if(matchDataList == null){
 				return 0;
+			}
+			LogHelper.d(TAG, "getCount--" + String.valueOf(matchDataList.size()));
 			return matchDataList.size();
 		}
 
@@ -273,20 +281,24 @@ public class MatchesFragment extends ListFragment {
 				}else{
 					holder.score.setText(String.format("%d:%d", model.getTeam1Score(), model.getTeam2Score()));
 				}
-				if(model.getIsRemind()){
-					if(!isAlarmMode){
-						holder.imgRemind.setVisibility(View.VISIBLE);
+				
+				//only show the remind image or checkbox when game not start
+				if(model.getMatchStatus() == MatchStatus.MATCH_STATUS_WAIT_START){
+					if(model.getIsRemind()){
+						if(!isAlarmMode){
+							holder.imgRemind.setVisibility(View.VISIBLE);
+						}else{
+							holder.imgRemind.setVisibility(View.GONE);
+						}
 					}else{
 						holder.imgRemind.setVisibility(View.GONE);
 					}
-				}else{
-					holder.imgRemind.setVisibility(View.GONE);
-				}
-				holder.remind.setChecked(remindList.contains(model.getMatchNo()));
-				if(isAlarmMode){
-					holder.remind.setVisibility(View.VISIBLE);
-				}else{
-					holder.remind.setVisibility(View.GONE);
+					holder.remind.setChecked(remindList.contains(model.getMatchNo()));
+					if(isAlarmMode){
+						holder.remind.setVisibility(View.VISIBLE);
+					}else{
+						holder.remind.setVisibility(View.GONE);
+					}
 				}
 			}
 			return convertView;
