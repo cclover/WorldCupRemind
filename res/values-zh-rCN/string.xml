@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">世界杯小助手</string>
-    <string name="menu_update">更新</string>
+    <string name="menu_update">检查更新</string>
     <string name="menu_about">关于</string>
-    <string name="menu_remind">提醒</string>
+    <string name="menu_remind">设置提醒</string>
     <string name="menu_confirm">确定</string>
     <string name="menu_cancel">取消</string>
     <string name="tab_mathces">赛程表</string>
