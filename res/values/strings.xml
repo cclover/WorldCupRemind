@@ -3,6 +3,10 @@
 
     <string name="app_name">WorldCup Remind</string>
     <string name="menu_update">Update</string>
+    <string name="menu_about">About</string>
+    <string name="menu_remind">Remind</string>
+    <string name="menu_confirm">Confirm</string>
+    <string name="menu_cancel">Cancel</string>
     <string name="tab_mathces">Matches</string>
     <string name="tab_group">Group</string>
     <string name="tab_statistics">Statistics</string>

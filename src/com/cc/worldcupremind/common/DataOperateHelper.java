@@ -14,7 +14,6 @@ import java.net.SocketException;
 import java.net.URL;
 
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
 import android.content.Context;

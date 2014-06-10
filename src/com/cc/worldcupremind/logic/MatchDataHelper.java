@@ -19,7 +19,6 @@ import com.cc.worldcupremind.model.GroupStatistics;
 import com.cc.worldcupremind.model.MatchDate;
 import com.cc.worldcupremind.model.MatchStage;
 import com.cc.worldcupremind.model.MatchStatus;
-import com.cc.worldcupremind.model.MatchTeam;
 import com.cc.worldcupremind.model.MatchesModel;
 import com.cc.worldcupremind.model.PlayerStatistics;
 import com.cc.worldcupremind.model.PlayerStatistics.STATISTICS_TYPE;
