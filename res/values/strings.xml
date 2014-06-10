@@ -59,6 +59,7 @@
 	<string name="str_group_gf">GF</string>
 	<string name="str_group_ga">GA</string>
 	<string name="str_group_pts">MP</string>
+	<string name="str_konckout_match">Second Stage Matches</string>
 	
 	<!-- Alarm String -->
 	<string name="str_alram_remind">Matches Remind</string>

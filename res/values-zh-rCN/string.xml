@@ -62,5 +62,6 @@
 	<!-- Alarm String -->
 	<string name="str_alram_remind">比赛提醒</string>
 	<string name="str_alram_close">关 闭</string>
+	<string name="str_konckout_match">淘汰赛对阵</string>
 	
 </resources>
