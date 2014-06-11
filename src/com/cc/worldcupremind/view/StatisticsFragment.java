@@ -34,7 +34,7 @@ public class StatisticsFragment extends ListFragment {
 	private MatchDataController controller;
 	private Resources resource;
 	private Button btnSwitch;
-	private Boolean isGoal;
+	private Boolean isGoal = true;
 	private static final int TYPE_TITLE = 0;
 	private static final int TYPE_DATA = 1;
 

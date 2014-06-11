@@ -226,9 +226,15 @@ public class MainActivity extends ActionBarActivity implements
 			
 			@Override
 			public void run() {
-				matchFragment.setData(controller.getMatchesData());	
-				mGroupFragment.setData(controller.getGroupStaticsData());
-				statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
+				if(matchFragment != null){
+					matchFragment.setData(controller.getMatchesData());	
+				}
+				if(mGroupFragment != null){
+					mGroupFragment.setData(controller.getGroupStaticsData());
+				}
+				if(statisticsFragment != null){
+					statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
+				}
 			}
 		});
 	}
@@ -253,8 +259,15 @@ public class MainActivity extends ActionBarActivity implements
 					showToast(R.string.str_update_update_fail);
 	
 				}else if(newVersion && success){	
-					matchFragment.setData(controller.getMatchesData());	
-					mGroupFragment.setData(controller.getGroupStaticsData());
+					if(matchFragment != null){
+						matchFragment.setData(controller.getMatchesData());	
+					}
+					if(mGroupFragment != null){
+						mGroupFragment.setData(controller.getGroupStaticsData());
+					}
+					if(statisticsFragment != null){
+						statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
+					}
 					showToast(R.string.str_update_update_done);
 				}
 			}
