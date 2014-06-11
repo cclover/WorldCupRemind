@@ -8,18 +8,6 @@
       android:icon="@drawable/ic_action_alarms" 
       android:showAsAction="always"/>
     
-   <item android:id="@+id/action_confirm"
-      android:title="@string/menu_confirm"
-      android:icon="@drawable/ic_action_accept" 
-      android:showAsAction="always"
-      android:visible="false"/>
-        
-   <item android:id="@+id/action_cancel"
-      android:title="@string/menu_cancel"
-      android:icon="@drawable/ic_action_cancel" 
-      android:showAsAction="always"
-      android:visible="false"/>
-    
     <item
         android:id="@+id/action_update"
         android:title="@string/menu_update"
