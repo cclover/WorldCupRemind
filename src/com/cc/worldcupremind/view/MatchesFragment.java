@@ -150,7 +150,7 @@ public class MatchesFragment extends ListFragment implements View.OnClickListene
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		LogHelper.d(TAG, "MatchFragment onCreateView");
+
 		View view = inflater.inflate(R.layout.fragment_matches, container, false);
 		remindFooterLayout = (LinearLayout)view.findViewById(R.id.remindFooter);
 		btnConfitm = (Button)view.findViewById(R.id.btnConfirm);
@@ -179,9 +179,7 @@ public class MatchesFragment extends ListFragment implements View.OnClickListene
 	@Override  
     public void onCreate(Bundle savedInstanceState) {  
 		
-		LogHelper.d(TAG, "MatchFragment onCreate");
         super.onCreate(savedInstanceState);  
-        
         controller = MatchDataController.getInstance();
 		context = this.getActivity();
 		resource = context.getResources();
