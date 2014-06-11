@@ -86,12 +86,31 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	}
 	
 	/**
-	 * Get the GroupStatics info @MatchesModel object
+	 * Get the GroupStatics info @GroupStatistics object
 	 * 
-	 * @return ArrayList<GroupStatistics>
+	 * @return @ArrayList<GroupStatistics>
 	 */
 	public ArrayList<GroupStatistics> getGroupStaticsData() {
 	    return dataHelper.getGroupStatisticsList();
+	}
+	
+	
+	/**
+	 * Get the Goal Statics info @PlayerStatistics object
+	 * 
+	 * @return @ArrayList<PlayerStatistics>
+	 */
+	public ArrayList<PlayerStatistics> getGoalStaticsData(){
+		return dataHelper.getGoalStatisticsList();
+	}
+	
+	/**
+	 * Get the Assist Statics info @PlayerStatistics object
+	 * 
+	 * @return @ArrayList<PlayerStatistics>
+	 */
+	public ArrayList<PlayerStatistics> getAssistStaticsData(){
+		return dataHelper.getAssistStatisticsList();
 	}
 
 	/**

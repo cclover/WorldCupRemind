@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">世界杯小助手</string>
-    <string name="menu_update">检查更新</string>
+    <string name="menu_update">更新数据</string>
     <string name="menu_about">关于</string>
     <string name="menu_remind">设置提醒</string>
     <string name="menu_confirm">确定</string>
@@ -64,4 +64,10 @@
 	<string name="str_alram_close">关 闭</string>
 	<string name="str_konckout_match">淘汰赛对阵</string>
 	
+	<!-- Update -->
+	<string name="str_update_check_start">更新数据...</string>
+	<string name="str_update_check_fail">更新失败。</string>
+	<string name="str_update_check_none">没有可用更新。</string>
+	<string name="str_update_update_fail">数据更新失败。</string>
+	<string name="str_update_update_done">更新成功!</string>
 </resources>

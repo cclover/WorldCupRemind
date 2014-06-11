@@ -3,18 +3,14 @@ package com.cc.worldcupremind.view;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.net.URL;
 
-import com.cc.worldcupremind.common.DataOperateHelper;
 import com.cc.worldcupremind.common.LogHelper;
 
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebSettings.LayoutAlgorithm;
-import android.webkit.WebSettings.ZoomDensity;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
 

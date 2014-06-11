@@ -1,7 +1,6 @@
 package com.cc.worldcupremind.view;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.common.LogHelper;
@@ -13,23 +12,27 @@ import com.cc.worldcupremind.model.MatchesModel;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MatchesFragment extends ListFragment {
+public class MatchesFragment extends ListFragment implements View.OnClickListener{
 	
 	private static final String TAG = "MatchesFragment";
-	private ListView matchesList;  
 	private MatchesAdapter adapter;  
 	private Context context;
 	private SparseArray<MatchesModel> matchList;
@@ -39,6 +42,10 @@ public class MatchesFragment extends ListFragment {
 	private LayoutInflater mInflater;
 	private Resources resource;
 	private Boolean isAlarmMode;
+	
+	private LinearLayout remindFooterLayout;
+	private Button btnConfitm;
+	private Button btnCancel;
 			
 	public MatchesFragment(){
         matchDataList = new ArrayList<MatchesModel>();
@@ -55,6 +62,10 @@ public class MatchesFragment extends ListFragment {
 	}
 	
 	public void setAlarmMode(Boolean isOn){
+		if(isAlarmMode == isOn){
+			Log.w(TAG, "setAlarmMode In same mode");
+			return;
+		}
 		isAlarmMode = isOn;
 		if(isOn){
 			remindList.clear();
@@ -65,6 +76,7 @@ public class MatchesFragment extends ListFragment {
 				}
 			}
 		}
+		setFootVisibility(isOn);
 		adapter.refresh();
 	}
 	
@@ -75,6 +87,14 @@ public class MatchesFragment extends ListFragment {
 	public void refreshData(){
 		createMatchesDayMap();
 		adapter.refresh();
+	}
+	
+	public void setFootVisibility(Boolean isShow){
+		if(isShow){
+			remindFooterLayout.setVisibility(View.VISIBLE);
+		}else{
+			remindFooterLayout.setVisibility(View.GONE);
+		}
 	}
 	
 	/**
@@ -134,11 +154,29 @@ public class MatchesFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		LogHelper.d(TAG, "MatchFragment onCreateView");
 		View view = inflater.inflate(R.layout.fragment_matches, container, false);
-        matchesList = (ListView) view.findViewById(android.R.id.list);
-        setListAdapter(adapter);    
+		remindFooterLayout = (LinearLayout)view.findViewById(R.id.remindFooter);
+		btnConfitm = (Button)view.findViewById(R.id.btnConfirm);
+		btnConfitm.setOnClickListener(this);
+		btnCancel = (Button)view.findViewById(R.id.btnCancel);
+		btnCancel.setOnClickListener(this);
+		setListAdapter(adapter);    
         return view;
     }
 	
+	@Override
+	public void onClick(View v) {
+		
+		if(v.getId() == R.id.btnConfirm){
+
+			if(!controller.setMatchRemind(remindList)){
+				LogHelper.w(TAG, "Can't setMatchRemind");
+			}
+
+		}else if(v.getId() == R.id.btnCancel){
+
+		}
+		setAlarmMode(false);
+	}
 	
 	@Override  
     public void onCreate(Bundle savedInstanceState) {  
@@ -239,7 +277,11 @@ public class MatchesFragment extends ListFragment {
 				
 				//set value
 				holder.day.setText(String.format("%s %s", model.getMatchTime().getDateString(), model.getMatchTime().getWeekdayString()));
-				convertView.setBackgroundColor(resource.getColor(R.color.gainsboro));
+				if(model.getMatchTime().isWeekend()){
+					convertView.setBackgroundColor(resource.getColor(R.color.lightsalmon));
+				}else{
+					convertView.setBackgroundColor(resource.getColor(R.color.gainsboro));
+				}
 			}else{
 			
 				ViewHolder holder = null;

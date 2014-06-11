@@ -17,12 +17,17 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.text.Layout;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity implements
 		ActionBar.TabListener , MatchDataListener{
@@ -46,8 +51,6 @@ public class MainActivity extends ActionBarActivity implements
 	MatchesFragment matchFragment;
 	GroupFragment mGroupFragment;
 	MenuItem remindItem;
-	MenuItem confirmItem;
-	MenuItem cancelItem;
 	Boolean isSetAlarm = false;
 	
 
@@ -81,16 +84,10 @@ public class MainActivity extends ActionBarActivity implements
 					public void onPageSelected(int position) {
 						actionBar.setSelectedNavigationItem(position);
 						if(position == 0){
-							setMeunStatus();
+							remindItem.setVisible(true);
 						}else{
 							if(remindItem != null){
 								remindItem.setVisible(false);
-							}
-							if(confirmItem != null){
-								confirmItem.setVisible(false);
-							}
-							if(cancelItem != null){
-								cancelItem.setVisible(false);
 							}
 						}
 					}
@@ -113,18 +110,6 @@ public class MainActivity extends ActionBarActivity implements
 		controller.InitData(this);
 	}
 	
-	
-	private void setMeunStatus(){
-		if(!isSetAlarm){
-			remindItem.setVisible(true);
-			confirmItem.setVisible(false);
-			cancelItem.setVisible(false);
-		}else{
-			remindItem.setVisible(false);
-			confirmItem.setVisible(true);
-			cancelItem.setVisible(true);
-		}
-	}
 
 	@Override
 	protected void onDestroy() 
@@ -141,8 +126,6 @@ public class MainActivity extends ActionBarActivity implements
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		remindItem = menu.findItem(R.id.action_remind);
-		confirmItem = menu.findItem(R.id.action_confirm);
-		cancelItem = menu.findItem(R.id.action_cancel);
 		return true;
 	}
 
@@ -153,32 +136,14 @@ public class MainActivity extends ActionBarActivity implements
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_update) {
+			showToast(R.string.str_update_check_start);
 			if(!controller.updateData()){
-				LogHelper.d(TAG, "Can't update");
+				LogHelper.w(TAG, "Can't update");
+				showToast(R.string.str_update_check_fail);
 			}
 			return true;
 		}else if(id == R.id.action_remind){
-			
-			isSetAlarm = true;
-			setMeunStatus();
 			matchFragment.setAlarmMode(true);
-		}else if(id == R.id.action_confirm){
-			
-			isSetAlarm = false;
-			setMeunStatus();
-			ArrayList<Integer> remindList = matchFragment.getRemindList();
-			for(int i : remindList){
-				LogHelper.d(TAG, "Set Match no:" + String.valueOf(i));
-			}
-			if(!controller.setMatchRemind(remindList)){
-				LogHelper.w(TAG, "Can't setMatchRemind");
-			}
-			matchFragment.setAlarmMode(false);
-		}else if(id == R.id.action_cancel){
-			
-			isSetAlarm = false;
-			setMeunStatus();
-			matchFragment.setAlarmMode(false);
 		}else if(id == R.id.action_about){
 			
 			//TODO: TEST
@@ -311,16 +276,26 @@ public class MainActivity extends ActionBarActivity implements
 		LogHelper.d(TAG, String.format("isSuccess is %s", isSuccess?"true":"false"));
 		LogHelper.d(TAG, String.format("haveNewVersion is %s", haveNewVersion?"true":"false"));
 		
-		if(isSuccess && haveNewVersion){
-			runOnUiThread(new Runnable() {
-				
-				@Override
-				public void run() {
+		final Boolean newVersion = haveNewVersion;
+		final Boolean success = isSuccess;
+		runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				if(!newVersion && !success){
+					showToast(R.string.str_update_check_fail);
+				}else if(!newVersion && success){
+					showToast(R.string.str_update_check_none);
+				}else if(newVersion && !success){
+					showToast(R.string.str_update_update_fail);
+	
+				}else if(newVersion && success){	
 					matchFragment.setData(controller.getMatchesData());	
-					mGroupFragment.setData(controller.getGroupStaticsData());	
+					mGroupFragment.setData(controller.getGroupStaticsData());
+					showToast(R.string.str_update_update_done);
 				}
-			});
-		}
+			}
+		});
 	}
 
 
@@ -362,6 +337,15 @@ public class MainActivity extends ActionBarActivity implements
 		//The action bar language will not change
 		LogHelper.d(TAG, "onLocalChanged");
 		finish();
+	}
+	
+	
+	private void showToast(int id){
+		
+		Toast toast = Toast.makeText(getApplicationContext(),
+			     getResources().getString(id), Toast.LENGTH_SHORT);
+			   toast.setGravity(Gravity.BOTTOM, 0, 0);
+			   toast.show();
 	}
 
 }

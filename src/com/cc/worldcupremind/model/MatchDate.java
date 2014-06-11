@@ -63,7 +63,11 @@ public class MatchDate {
 		if(date == null){
 			return "";
 		}
-		return DateUtils.formatDateTime(context, date.getTime(), DateUtils.FORMAT_SHOW_TIME);  
+		String time = DateUtils.formatDateTime(context, date.getTime(), DateUtils.FORMAT_SHOW_TIME);  
+		if(time.length() < 5){
+			return String.format("0%s", time); //On some device time will show 0:30
+		}
+		return time;
 	}
 
 	public String getWeekdayString(){
@@ -76,6 +80,16 @@ public class MatchDate {
 	public Boolean isOver(){
 		Date nowDate = new Date();
 		return date.getTime() < nowDate.getTime();
+	}
+	
+	public Boolean isWeekend(){
+		 Calendar calendar = Calendar.getInstance();  
+		 calendar.setTime(date);
+         int week = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+         if(week == 0 || week == 6){
+        	 return true;
+         }
+         return false;
 	}
 	
 }

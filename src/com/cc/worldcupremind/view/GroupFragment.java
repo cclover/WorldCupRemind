@@ -5,6 +5,8 @@ import com.cc.worldcupremind.logic.MatchDataController;
 import com.cc.worldcupremind.model.GroupStatistics;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -12,12 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class GroupFragment extends ListFragment {
 		mInflater = LayoutInflater.from(getActivity());
 		mAdapter = new GropStaticsListAdapter();
 		setListAdapter(mAdapter);
-
+		this.getListView().setSelector(new ColorDrawable(Color.TRANSPARENT)); 
 	}
 
 	public void setData(ArrayList<GroupStatistics> groupStaticsData) {
@@ -116,6 +116,7 @@ public class GroupFragment extends ListFragment {
 			TextView value_gf;
 			TextView value_ga;
 			TextView value_pts;
+			ImageView star;
 
 			void setupViews(int position) {
 				GroupStatistics item = getTeamInfo(position);
@@ -147,6 +148,11 @@ public class GroupFragment extends ListFragment {
 							getResources().getString(R.string.str_stage_group),
 							item.getTeamGroup()));
 				}
+				if(item.getPosition() <= 2){
+					star.setVisibility(View.VISIBLE);
+				}else{
+					star.setVisibility(View.INVISIBLE);
+				}
 			}
 
 			public void initViews(View convertView) {
@@ -158,8 +164,7 @@ public class GroupFragment extends ListFragment {
 				key_gf = (TextView) convertView.findViewById(R.id.key_gf);
 				key_ga = (TextView) convertView.findViewById(R.id.key_ga);
 				key_pts = (TextView) convertView.findViewById(R.id.key_pts);
-				value_team = (TextView) convertView
-						.findViewById(R.id.value_team);
+				value_team = (TextView) convertView.findViewById(R.id.value_team);
 				value_w = (TextView) convertView.findViewById(R.id.value_w);
 				value_d = (TextView) convertView.findViewById(R.id.value_d);
 				value_l = (TextView) convertView.findViewById(R.id.value_l);
@@ -167,6 +172,7 @@ public class GroupFragment extends ListFragment {
 				value_ga = (TextView) convertView.findViewById(R.id.value_ga);
 				value_pts = (TextView) convertView.findViewById(R.id.value_pts);
 				title = (LinearLayout) convertView.findViewById(R.id.title);
+				star = (ImageView) convertView.findViewById(R.id.star);
 			}
 
 			/**
