@@ -15,7 +15,7 @@ public class NewsFragment extends Fragment {
 	
 	private static final String TAG = "NewsFragment";
 	private WebView myWebView;
-	private final static String NEWS_URL = "http://m.baidu.com/from=1001560k/bd_page_type=1/ssid=0/uid=0/pu=usm%400%2Csz%401320_1001%2Cta%40iphone_2_4.4_3_537/baiduid=2683510BC40C3F9B1B105B7D76C797A9/w=0_10_2014%E4%B8%96%E7%95%8C%E6%9D%AF%E6%96%B0%E9%97%BB/t=iphone/l=3/tc?ref=www_iphone&lid=13474486478699937440&order=4&vit=osres&tj=www_normal_4_0_10&m=8&srd=1&cltj=cloud_title&dict=21&sec=39178&di=87075c1d2e706286&bdenc=1&nsrc=IlPT2AEptyoA_yixCFOxXnANedT62v3IEQGG_ztO1GjezJnthPXrZQRAEG3eBGiOGkv5wWC0e2VMbj4uQXEobq";
+	private final static String NEWS_URL = "http://3g.163.com/ntes/special/00340H1J/worldcup2014.html?from=index";
   
   	@Override
   	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {

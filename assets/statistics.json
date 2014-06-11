@@ -33,27 +33,27 @@
 {"team":"kor","group":"H","w":0,"d":0,"l":0,"gf":0,"ga":0,"pts":0,"pos":4}],
 "goal":
 [
-{"pos":1,"name":"梅西","eng":"Lionel Messi","team":"arg","count":0,"ext":""},
-{"pos":1,"name":"C罗","eng":"Cristiano Ronaldo","team":"por","count":0,"ext":""},
+{"pos":1,"name":"梅西","eng":"Messi","team":"arg","count":0,"ext":""},
+{"pos":1,"name":"C罗","eng":"C.Ronaldo","team":"por","count":0,"ext":""},
 {"pos":1,"name":"内马尔","eng":"Neymar","team":"bra","count":0,"ext":""},
-{"pos":1,"name":"苏亚雷斯","eng":"Luis Suarez","team":"uru","count":0,"ext":""},
-{"pos":1,"name":"阿奎罗","eng":"Sergio Agüero","team":"arg","count":0,"ext":""},
-{"pos":1,"name":"鲁尼","eng":"Wayne Rooney","team":"eng","count":0,"ext":""},
-{"pos":1,"name":"范佩西","eng":"Robin van Persie","team":"ned","count":0,"ext":""},
-{"pos":1,"name":"本泽马","eng":"Karim Benzema","team":"fra","count":0,"ext":""},
-{"pos":1,"name":"托雷斯","eng":"Fernando Torres","team":"esp","count":0,"ext":""},
-{"pos":1,"name":"巴洛特利","eng":"Mario Balotelli","team":"ita","count":0,"ext":""}
+{"pos":1,"name":"苏亚雷斯","eng":"Suarez","team":"uru","count":0,"ext":""},
+{"pos":1,"name":"阿奎罗","eng":"Agüero","team":"arg","count":0,"ext":""},
+{"pos":1,"name":"鲁尼","eng":"Rooney","team":"eng","count":0,"ext":""},
+{"pos":1,"name":"范佩西","eng":"van Persie","team":"ned","count":0,"ext":""},
+{"pos":1,"name":"本泽马","eng":"Benzema","team":"fra","count":0,"ext":""},
+{"pos":1,"name":"托雷斯","eng":"Torres","team":"esp","count":0,"ext":""},
+{"pos":1,"name":"巴洛特利","eng":"Balotelli","team":"ita","count":0,"ext":""}
 ],
 "assist":
 [
 {"pos":1,"name":"哈维","eng":"Xavi","team":"esp","count":0,"ext":""},
-{"pos":1,"name":"法布雷加斯","eng":"Francesc Fábregas","team":"esp","count":0,"ext":""},
-{"pos":1,"name":"伊涅斯塔","eng":"Andrés Iniesta","team":"esp","count":0,"ext":""},
-{"pos":1,"name":"皮尔洛","eng":"Andrea Pirlo","team":"ita","count":0,"ext":""},
-{"pos":1,"name":"罗本","eng":"Arjen Robben","team":"ned","count":0,"ext":""},
-{"pos":1,"name":"迪马里亚","eng":"Ángel Di María","team":"arg","count":0,"ext":""},
-{"pos":1,"name":"阿扎尔","eng":"Eden Hazard","team":"bel","count":0,"ext":""},
-{"pos":1,"name":"厄齐尔","eng":"Mesut Özil","team":"ger","count":0,"ext":""},
+{"pos":1,"name":"法布雷加斯","eng":"Fábregas","team":"esp","count":0,"ext":""},
+{"pos":1,"name":"伊涅斯塔","eng":"Iniesta","team":"esp","count":0,"ext":""},
+{"pos":1,"name":"皮尔洛","eng":"Pirlo","team":"ita","count":0,"ext":""},
+{"pos":1,"name":"罗本","eng":"Robben","team":"ned","count":0,"ext":""},
+{"pos":1,"name":"迪马里亚","eng":"Di María","team":"arg","count":0,"ext":""},
+{"pos":1,"name":"阿扎尔","eng":"EHazard","team":"bel","count":0,"ext":""},
+{"pos":1,"name":"厄齐尔","eng":"Özil","team":"ger","count":0,"ext":""},
 {"pos":1,"name":"奥斯卡","eng":"Oscar","team":"bra","count":0,"ext":""},
-{"pos":1,"name":"杰拉德","eng":"Steven Gerrard","team":"eng","count":0,"ext":""}
+{"pos":1,"name":"杰拉德","eng":"Gerrard","team":"eng","count":0,"ext":""}
 ]}

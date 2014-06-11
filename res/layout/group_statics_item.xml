@@ -133,6 +133,7 @@
             android:layout_weight="1"
             android:textSize="14sp"
             android:textColor="@color/red"
+            android:textStyle="bold"
             android:gravity="center" />
                 
         <TextView

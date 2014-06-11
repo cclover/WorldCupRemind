@@ -89,7 +89,8 @@ public class DataOperateHelper {
 			while ((line = reader.readLine()) != null) {
 				matchesString.append(line);    
 			}
-			return matchesString.toString().replaceAll( "\\s", ""); //remove newline char,space char
+//			return matchesString.toString().replaceAll("\\s", ""); //remove newline char,space char
+			return matchesString.toString().replaceAll("(\r\n|\r|\n|\n\r)", "");  
 		} catch (IOException e) {    
 			LogHelper.e(TAG, e);
 			return null;
