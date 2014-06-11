@@ -51,6 +51,14 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	}
 	
 	/**
+	 * 
+	 * @return true if data init
+	 */
+	public Boolean isDataInit(){
+		return isDataInitDone;
+	}
+	
+	/**
 	 * set @MatchDataListener listener
 	 * 
 	 * @param listener
@@ -183,6 +191,43 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		}).start();
 	}
 
+	
+	
+	public void InitDataAsync(Context appContext){
+		
+		if(isDataInitDone){
+			LogHelper.d(TAG, "Data had init done!");
+			return;
+		}
+		
+		// Load the necessary data
+		LogHelper.d(TAG, "Load matches data from file");
+		if(!dataHelper.loadMatchesData() || !dataHelper.loadStatisticsData()){
+			
+			LogHelper.w(TAG, "Fail to init the data!");
+			return;
+		}
+		
+		// Load resource id
+		LogHelper.d(TAG, "Load resource id");
+		if(!resourceHelper.Init(dataHelper.getTeamsCount())){
+			
+			LogHelper.w(TAG, "Fail to init the resource!");
+			return;
+		}
+		
+		//Load the remind filed
+		LogHelper.d(TAG, "Load remind data");
+		if(dataHelper.loadRemindData()){
+			LogHelper.d(TAG, "Set remind alarm");
+			MatchRemindHelper.setAlarm(context, dataHelper.getRemindList(), dataHelper.getRemindCancelList());
+		}
+		
+		//Init done
+		LogHelper.d(TAG, "Init Data Done!");
+		isDataInitDone = true;
+	}
+	
 	
 	/**
 	 * Update data from network, receive result from @MatchDataListener

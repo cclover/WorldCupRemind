@@ -1,6 +1,5 @@
 package com.cc.worldcupremind.view;
 
-import java.util.ArrayList;
 import java.util.Locale;
 
 import com.cc.worldcupremind.R;
@@ -17,15 +16,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.text.Layout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 

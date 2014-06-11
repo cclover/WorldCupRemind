@@ -21,10 +21,12 @@ public class MatchDate {
 	
 	private Date date = null;
 	private Context context = null;
+	private String rawString = null;
 	
 	public Date covertString2Date(String dateString){	
 		try
 		{
+			rawString = dateString;
 			SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_24, Locale.CHINA);
 			dateFormat.setTimeZone(TimeZone.getTimeZone(DEFAULT_TIME_ZONE_ID));
 			return dateFormat.parse(dateString);
@@ -77,7 +79,7 @@ public class MatchDate {
 		return DateUtils.formatDateTime(context, date.getTime(), DateUtils.FORMAT_SHOW_WEEKDAY);  
 	}
 	
-	public Boolean isOver(){
+	public Boolean isStart(){
 		Date nowDate = new Date();
 		return date.getTime() < nowDate.getTime();
 	}
@@ -90,6 +92,11 @@ public class MatchDate {
         	 return true;
          }
          return false;
+	}
+	
+	@Override
+	public String toString() {
+		return rawString;
 	}
 	
 }

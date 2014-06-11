@@ -44,8 +44,8 @@ public class MatchRemindHelper {
 			
 			//set the match time
 			MatchesModel match = remindList.valueAt(i);
-			if(match.getMatchTime().isOver()){
-				 LogHelper.d(TAG, String.format("Ignore Alarm(Is Over): [%d][%s-%s][%s %s]",
+			if(match.getMatchTime().isStart()){
+				 LogHelper.d(TAG, String.format("Ignore Alarm(Match is start): [%d][%s-%s][%s %s]",
 	        				match.getMatchNo(), 
 	        				MatchDataController.getInstance().getTeamNationalName(match.getTeam1Code()),
 	        				MatchDataController.getInstance().getTeamNationalName(match.getTeam2Code()),
@@ -60,9 +60,9 @@ public class MatchRemindHelper {
 		    Intent intent = new Intent(context, MatchRemindReceiver.class);
 		    intent.setAction(ACTION_ALARM);
 		    intent.putExtra(REMIND_MATCHES_NO, match.getMatchNo());
-		    intent.putExtra(REMIND_MATCHES_STAGE, match.getMatchStage());
+		    intent.putExtra(REMIND_MATCHES_STAGE, match.getMatchStage().getStageValue());
 		    intent.putExtra(REMIND_MATCHES_GROUP, match.getGroupName());
-		    intent.putExtra(REMIND_MATCHES_TIME, match.getMatchTime().getDate());
+		    intent.putExtra(REMIND_MATCHES_TIME, match.getMatchTime().toString());
 		    intent.putExtra(REMIND_MATCHES_TEAM_1, match.getTeam1Code());
 		    intent.putExtra(REMIND_MATCHES_TEAM_2, match.getTeam2Code());
 		    

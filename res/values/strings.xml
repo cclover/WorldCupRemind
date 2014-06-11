@@ -47,10 +47,11 @@
 
     <!-- Match Info -->
     <string name="str_stage_group">"GROUP &#037;s"</string>
-    <string name="str_stage_16">"ROUND OF 16"</string>
-    <string name="str_stage_8">"SEMI FINAL"</string>
-    <string name="str_stage_4">"QUARTER FINAL"</string>
+    <string name="str_stage_16">"EIGHTH"</string>
+    <string name="str_stage_8">"SEMI"</string>
+    <string name="str_stage_4">"QUARTER"</string>
     <string name="str_stage_2">"FINAL"</string>
+	<string name="str_stage_1">"FINAL"</string>
 
     <!-- Group Info -->
     <string name="str_group_win">W</string>

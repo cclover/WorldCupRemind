@@ -12,8 +12,6 @@ import com.cc.worldcupremind.model.MatchesModel;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -325,7 +323,7 @@ public class MatchesFragment extends ListFragment implements View.OnClickListene
 				}
 				
 				//only show the remind image or checkbox when game not start
-				if(model.getMatchStatus() != MatchStatus.MATCH_STATUS_WAIT_START || model.getMatchTime().isOver()){
+				if(model.getMatchStatus() != MatchStatus.MATCH_STATUS_WAIT_START || model.getMatchTime().isStart()){
 					holder.remind.setVisibility(View.GONE);
 					holder.imgRemind.setVisibility(View.GONE);
 				}else{

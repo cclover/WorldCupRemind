@@ -4,24 +4,38 @@
 package com.cc.worldcupremind.view;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.common.LogHelper;
+import com.cc.worldcupremind.logic.MatchDataController;
+import com.cc.worldcupremind.logic.MatchRemindHelper;
+import com.cc.worldcupremind.model.MatchDate;
+import com.cc.worldcupremind.model.MatchStage;
+import com.cc.worldcupremind.model.MatchStatus;
+import com.cc.worldcupremind.model.MatchesModel;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * @author cc
@@ -34,6 +48,12 @@ public class AlarmActivity extends Activity {
 	private ListView listView = null;
 	private Vibrator vibrator = null;
 	private MediaPlayer alarmPlayer = null;
+	private ArrayList<MatchesModel> alarmList = null;
+	private AlarmAdpater adpater = null;
+	private LayoutInflater mInflater = null;
+	private Resources resource = null;
+	private MatchDataController controller = null;
+	private Context context = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +62,17 @@ public class AlarmActivity extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND, WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 		setContentView(R.layout.activity_alarm);
 		
+		//Set listview
 		listView = (ListView)findViewById(R.id.listAlarm);
+		alarmList = new ArrayList<MatchesModel>();
+		adpater = new AlarmAdpater();
+		listView.setAdapter(adpater);
+		mInflater = LayoutInflater.from(this);
+		resource = getResources();
+		controller = MatchDataController.getInstance();
+		context = this;
 		
+		//Set button
 		btnClose = (Button)findViewById(R.id.btnAlarmClose);
 		btnClose.setOnClickListener(new OnClickListener() {
 			
@@ -53,14 +82,25 @@ public class AlarmActivity extends Activity {
 			}
 		});
 		
+		//Get intent
+		Intent intent = getIntent();
+		if(!parseIntent(intent)){
+			LogHelper.w(TAG, "parse intent failed");
+			finish();
+		}
+		
+		//Play music
 		playMusicAndVibrator();
 	}
 	
 	
 	@Override
 	protected void onNewIntent(Intent intent) {
-		
 		super.onNewIntent(intent);
+		if(!parseIntent(intent)){
+			LogHelper.w(TAG, "parse intent failed");
+			finish();
+		}
 	}
 	
 	@Override
@@ -102,7 +142,116 @@ public class AlarmActivity extends Activity {
 	    
 		//Vibrator
 		vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE); 
-		long[] pattern = {0, 500, 500};          
+		long[] pattern = {500, 500, 500};          
 	    vibrator.vibrate(pattern,0);
 	}
+	
+	private Boolean parseIntent(Intent intent){
+		if(intent != null && intent.getExtras() != null){
+			try{
+				int matchNo = intent.getExtras().getInt(MatchRemindHelper.REMIND_MATCHES_NO);
+				String team1 =  intent.getExtras().getString(MatchRemindHelper.REMIND_MATCHES_TEAM_1);
+				String team2 =  intent.getExtras().getString(MatchRemindHelper.REMIND_MATCHES_TEAM_2);
+				String time = intent.getExtras().getString(MatchRemindHelper.REMIND_MATCHES_TIME);
+			    int stage = intent.getExtras().getInt(MatchRemindHelper.REMIND_MATCHES_STAGE);
+			    String group = intent.getExtras().getString(MatchRemindHelper.REMIND_MATCHES_GROUP);
+				LogHelper.d(TAG, String.format("The remind:[%d][%s VS %s][%s]", 
+						matchNo,team1,team2,time));
+			    MatchesModel model = new MatchesModel(
+			    		matchNo,
+			    		MatchStage.valueOf(stage),
+			    		group,
+			    		new MatchDate(context, time),
+			    		team1,team2,MatchStatus.MATCH_STATUS_WAIT_START,0,0,true);
+			    alarmList.add(model);
+				adpater.refresh();
+			}catch(Exception ex){
+				LogHelper.e(TAG, ex);
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	class AlarmAdpater extends BaseAdapter{
+		
+
+		public void refresh(){
+			notifyDataSetChanged();
+		}
+		
+		@Override
+		public int getCount() {
+			if(alarmList == null)
+				return 0;
+			return alarmList.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return 0;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			
+			ViewHolder holder = null;
+			if (convertView == null) {
+				convertView = mInflater.inflate(R.layout.alarm_item, null);
+			     holder = new ViewHolder();
+			     holder.group = (TextView)convertView.findViewById(R.id.txtGroup);
+			     holder.flag1 = (ImageView)convertView.findViewById(R.id.imgFlag1);
+			     holder.team1 = (TextView)convertView.findViewById(R.id.txtTeam1);
+			     holder.score = (TextView)convertView.findViewById(R.id.txtScore);
+			     holder.team2 = (TextView)convertView.findViewById(R.id.txtTeam2);
+			     holder.flag2 = (ImageView)convertView.findViewById(R.id.imgFlag2);
+			     convertView.setTag(holder);
+			} else {
+			     holder = (ViewHolder)convertView.getTag();
+			}
+			
+			//Set value
+			MatchesModel model = alarmList.get(position);
+			if(model.getMatchStage() == MatchStage.STAGE_GROUP){
+				holder.group.setText(String.format(resource.getString(R.string.str_stage_group),  model.getGroupName()));
+			}else{
+				holder.group.setText(resource.getString(model.getMatchStage().getStringResourceID()));
+			}
+
+			holder.team1.setText(controller.getTeamNationalName(model.getTeam1Code()));
+			Drawable drawable1= controller.getTeamNationalFlag(model.getTeam1Code());
+			if(drawable1 != null){
+				holder.flag1.setImageDrawable(drawable1);
+			}
+			holder.team2.setText(controller.getTeamNationalName(model.getTeam2Code()));
+			Drawable drawable2 = controller.getTeamNationalFlag(model.getTeam2Code());
+			if(drawable2 != null){
+				holder.flag2.setImageDrawable(drawable2);
+			}
+			if(model.getMatchStatus() == MatchStatus.MATCH_STATUS_WAIT_START){
+				holder.score.setText(model.getMatchTime().getTimeString());
+			}else{
+				holder.score.setText(String.format("%d:%d", model.getTeam1Score(), model.getTeam2Score()));
+			}
+			return convertView;
+		}
+		
+	
+		class ViewHolder{
+			TextView group;
+			ImageView flag1;
+			TextView team1;
+			TextView score;
+			TextView team2;
+			ImageView flag2;
+		}
+	}
+	
+	
 }

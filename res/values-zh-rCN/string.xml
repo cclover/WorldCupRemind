@@ -46,10 +46,11 @@
 	
 	<!-- Match Info -->
 	<string name="str_stage_group">"%s组"</string>
-	<string name="str_stage_16">"1/8"</string>
-	<string name="str_stage_8">"1/4"</string>
-	<string name="str_stage_4">"1/2"</string>
-	<string name="str_stage_2">"决赛"</string>
+	<string name="str_stage_16">"十六强"</string>
+	<string name="str_stage_8">"八强"</string>
+	<string name="str_stage_4">"四强"</string>
+	<string name="str_stage_2">"季军"</string>
+	<string name="str_stage_1">"冠军"</string>
 	
 	<!-- Group Info -->
 	<string name="str_group_win">胜</string>

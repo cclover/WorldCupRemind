@@ -50,10 +50,15 @@ public enum MatchStage {
         	case 3:
         		return R.string.str_stage_4;
         	case 4:
-        	case 5:
         		return R.string.str_stage_2;
+        	case 5:
+        		return R.string.str_stage_1;
            	default:
             	return R.string.str_stage_group;
         }
     }
+    
+    public int getStageValue() {
+		return stageValue;
+	}
 }
