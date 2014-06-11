@@ -77,6 +77,8 @@ class MatchDataHelper {
 	private static final String JSON_STATISTICS_PLAYER_NAME= "name";
 	private static final String JSON_STATISTICS_PLAYER_TEAM= "team";
 	private static final String JSON_STATISTICS_PLAYER_COUNT= "count";
+	private static final String JSON_STATISTICS_PLAYER_POS= "pos";
+	private static final String JSON_STATISTICS_PLAYER_ENG_NAME= "eng";
 	
 	/** version.json format */
 	private static final String JSON_VERSION_MATCHES = "matchesVer";		/* Double */
@@ -807,8 +809,9 @@ class MatchDataHelper {
 				String name = goalObj.getString(JSON_STATISTICS_PLAYER_NAME);
 				String team = goalObj.getString(JSON_STATISTICS_PLAYER_TEAM);
 				int count = goalObj.getInt(JSON_STATISTICS_PLAYER_COUNT);
-				LogHelper.d(TAG, String.format("Goal: %s-%s-%s", name,team,count));
-				PlayerStatistics player = new PlayerStatistics(name, team, count, STATISTICS_TYPE.STATISTICS_GOAL);
+				int pos = goalObj.getInt(JSON_STATISTICS_PLAYER_POS);
+				String endName = goalObj.getString(JSON_STATISTICS_PLAYER_ENG_NAME);
+				PlayerStatistics player = new PlayerStatistics(pos, endName, name, team, count, STATISTICS_TYPE.STATISTICS_GOAL);
 				goalStatisticsList.add(player);
 			}
 			
@@ -819,8 +822,9 @@ class MatchDataHelper {
 				String name = assistObj.getString(JSON_STATISTICS_PLAYER_NAME);
 				String team = assistObj.getString(JSON_STATISTICS_PLAYER_TEAM);
 				int count = assistObj.getInt(JSON_STATISTICS_PLAYER_COUNT);
-				LogHelper.d(TAG, String.format("Assit:%s-%s-%s", name,team,count));
-				PlayerStatistics player = new PlayerStatistics(name, team, count, STATISTICS_TYPE.STATISTICS_ASSIST);
+				int pos = assistObj.getInt(JSON_STATISTICS_PLAYER_POS);
+				String endName = assistObj.getString(JSON_STATISTICS_PLAYER_ENG_NAME);
+				PlayerStatistics player = new PlayerStatistics(pos, endName, name, team, count, STATISTICS_TYPE.STATISTICS_ASSIST);
 				assistStatisticsList.add(player);
 			}
 			

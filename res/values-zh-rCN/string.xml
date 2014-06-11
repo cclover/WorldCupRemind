@@ -62,8 +62,10 @@
 	<string name="str_group_pts">积分</string>
 	
 	<!-- Statistics Info -->
-	<string name="str_player_goal">射手榜</string>
-	<string name="str_player_assist">助攻榜</string>
+	<string name="str_player_goal">进球</string>
+	<string name="str_player_assist">助攻</string>
+	<string name="str_player_name">球员名称</string>
+	<string name="str_team_name">球队名称</string>
 	
 	<!-- Alarm String -->
 	<string name="str_alram_remind">比赛提醒</string>

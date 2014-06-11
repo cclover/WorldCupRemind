@@ -86,8 +86,7 @@ public class GroupFragment extends ListFragment {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
-				convertView = mInflater.inflate(R.layout.group_statics_item,
-						parent, false);
+				convertView = mInflater.inflate(R.layout.group_statics_item, parent, false);
 			}
 			ViewHolder holder = (ViewHolder) convertView.getTag();
 			if (holder == null) {

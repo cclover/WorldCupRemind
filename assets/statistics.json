@@ -33,9 +33,11 @@
 {"team":"kor","group":"H","w":0,"d":0,"l":0,"gf":0,"ga":0,"pts":0,"pos":4}],
 "goal":
 [
-{"name":"梅西(Messis)","team":"arg","count":6}
+{"pos":1,"name":"梅西","eng":"Messis","team":"arg","count":6},
+{"pos":2,"name":"C罗","eng":"C.Ronaldo","team":"por","count":5}
 ],
 "assist":
 [
-{"name":"C罗(C.Ronaldo)","team":"por","count":4}
+{"pos":1,"name":"C罗","eng":"C.Ronaldo","team":"por","count":6},
+{"pos":2,"name":"梅西","eng":"Messis","team":"arg","count":4}
 ]}

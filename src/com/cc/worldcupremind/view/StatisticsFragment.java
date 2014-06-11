@@ -1,6 +1,7 @@
 package com.cc.worldcupremind.view;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.common.LogHelper;
@@ -105,6 +106,13 @@ public class StatisticsFragment extends ListFragment {
 	        return -1;
 	    }
 		
+	    private Boolean isChinese(){
+	    	
+	    	Locale l = Locale.getDefault();  
+	    	String language = l.getLanguage();  
+	    	String country = l.getCountry().toLowerCase();  
+	    	return language.equals("zh") && country.equals("cn");
+	    }
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
@@ -120,18 +128,22 @@ public class StatisticsFragment extends ListFragment {
 					if (convertView == null) {
 						convertView = mInflater.inflate(R.layout.statistics_type_item, null);
 						holder = new HolderViewTitle();
-					    holder.type = (TextView)convertView.findViewById(R.id.txtType);
-					    holder.flag = (ImageView)convertView.findViewById(R.id.imgType);
+						holder.imgTitleFlag = (ImageView)convertView.findViewById(R.id.imgStatTitle);
+						holder.txtTitleName = (TextView)convertView.findViewById(R.id.txtStatTitleName);
+						holder.txtTypeName = (TextView)convertView.findViewById(R.id.txtStatTitleCount);
+						holder.txtTemaName = (TextView)convertView.findViewById(R.id.txtStatTitleTeam);
 					    convertView.setTag(holder);
 					} else {
 					     holder = (HolderViewTitle)convertView.getTag();
 					}
 					
 					//Set value
+					holder.txtTitleName.setText(resource.getString(R.string.str_player_name));
+					holder.txtTemaName.setText(resource.getString(R.string.str_team_name));
 					if(type == TYPE_GOGAL_TITLE){
-						holder.type.setText(resource.getString(R.string.str_player_goal));
+						holder.txtTypeName.setText(resource.getString(R.string.str_player_goal));
 					}else if(type == TYPE_ASSIST_TITLE){
-						holder.type.setText(resource.getString(R.string.str_player_assist));
+						holder.txtTypeName.setText(resource.getString(R.string.str_player_assist));
 					}
 				}
 				break;
@@ -143,10 +155,12 @@ public class StatisticsFragment extends ListFragment {
 					if (convertView == null) {
 						convertView = mInflater.inflate(R.layout.statistics_item, null);
 						holder = new HolderView();
-					    holder.name = (TextView)convertView.findViewById(R.id.txtName);
-					    holder.count = (TextView)convertView.findViewById(R.id.txtCount);
-					    holder.flag = (ImageView)convertView.findViewById(R.id.imgStatFlag);
-					    holder.team = (ImageView)convertView.findViewById(R.id.imgNationallag);
+						holder.txtPalyerPos = (TextView)convertView.findViewById(R.id.txtStatPos);
+						holder.imgFlag = (ImageView)convertView.findViewById(R.id.imgStatFlag);
+						holder.txtPalyName = (TextView)convertView.findViewById(R.id.txtStatName);
+						holder.txtCount = (TextView)convertView.findViewById(R.id.txtStatCount);
+						holder.txtTeamName = (TextView)convertView.findViewById(R.id.txtStatNatinoal);
+						holder.imgTeamFlag = (ImageView)convertView.findViewById(R.id.imgStatNationalFlag);
 					    convertView.setTag(holder);
 					} else {
 					     holder = (HolderView)convertView.getTag();
@@ -154,44 +168,68 @@ public class StatisticsFragment extends ListFragment {
 					
 					//Set value
 					if(type == TYPE_GOGAL){
-						PlayerStatistics goal = mGoalStaticsList.get(position-1); 
-						holder.name.setText(goal.getPlayerName());
-						holder.count.setText(String.valueOf(goal.getCount()));
-						LogHelper.d(TAG, "GOAL COUNT :" + String.valueOf(goal.getCount()));
+						PlayerStatistics goal = mGoalStaticsList.get(position-1);
+						if(goal.getPosition() == 1){
+							holder.imgFlag.setVisibility(View.VISIBLE);
+						}else{
+							holder.imgFlag.setVisibility(View.INVISIBLE);
+						}
+						holder.txtPalyerPos.setText(String.valueOf(goal.getPosition()));
+						if(isChinese()){
+							holder.txtPalyName.setText(goal.getPlayerName());
+						}else{
+							holder.txtPalyName.setText(goal.getPlayerEngName());
+						}
+						holder.txtCount.setText(String.valueOf(goal.getCount()));
+						holder.txtTeamName.setText(controller.getTeamNationalName(goal.getPlayerTeamCode()));
 						Drawable drawable= controller.getTeamNationalFlag(goal.getPlayerTeamCode());
 						if(drawable != null){
-							holder.team.setImageDrawable(drawable);
+							holder.imgTeamFlag.setImageDrawable(drawable);
 							LogHelper.d(TAG, "DRAW FLAGE");
 						}
 					}else if(type == TYPE_ASSIST){
-						PlayerStatistics assist = mAssistStaticsList.get(position-2-mGoalStaticsList.size()); 
-						holder.name.setText(assist.getPlayerName());
-						holder.count.setText(String.valueOf(assist.getCount()));
+						PlayerStatistics assist = mAssistStaticsList.get(position-2-mGoalStaticsList.size());
+						if(assist.getPosition() == 1){
+							holder.imgFlag.setVisibility(View.VISIBLE);
+						}else{
+							holder.imgFlag.setVisibility(View.INVISIBLE);
+						}
+						holder.txtPalyerPos.setText(String.valueOf(assist.getPosition()));
+						if(isChinese()){
+							holder.txtPalyName.setText(assist.getPlayerName());
+						}else{
+							holder.txtPalyName.setText(assist.getPlayerEngName());
+						}
+						holder.txtCount.setText(String.valueOf(assist.getCount()));
+						holder.txtTeamName.setText(controller.getTeamNationalName(assist.getPlayerTeamCode()));
 						Drawable drawable= controller.getTeamNationalFlag(assist.getPlayerTeamCode());
 						if(drawable != null){
-							holder.team.setImageDrawable(drawable);
+							holder.imgTeamFlag.setImageDrawable(drawable);
 						}
 					}
 				}
 				break;
 			default:
-				break;
+				return null;
 			}
 			return convertView;
 		}
 		
 		class HolderView{
-			ImageView flag;
-			TextView name;
-			ImageView team;
-			TextView count;
+			TextView txtPalyerPos;
+			ImageView imgFlag;
+			TextView txtPalyName;
+			TextView txtCount;
+			TextView txtTeamName;
+			ImageView imgTeamFlag;
 		}
 		
 		class HolderViewTitle{
-			ImageView flag;
-			TextView type;
+			ImageView imgTitleFlag;
+			TextView txtTitleName;
+			TextView txtTypeName;
+			TextView txtTemaName;
 		}
-		
 	}
 
 }
