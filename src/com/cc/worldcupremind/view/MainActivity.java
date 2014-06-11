@@ -13,7 +13,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
@@ -22,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -141,10 +145,7 @@ public class MainActivity extends ActionBarActivity implements
 		}else if(id == R.id.action_remind){
 			matchFragment.setAlarmMode(true);
 		}else if(id == R.id.action_about){
-			
-			//TODO: TEST
-			Intent t = new Intent(this, AlarmActivity.class);
-			startActivity(t);
+			new AboutDialog(this).show();
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -344,4 +345,44 @@ public class MainActivity extends ActionBarActivity implements
 			   toast.show();
 	}
 
+	
+	 
+	 class AboutDialog extends AlertDialog implements android.view.View.OnClickListener {   
+
+		private Context context;
+		private ImageView btnBlog;
+		private ImageView btnWechat;
+		 
+	    public AboutDialog(Context context) {   
+	        super(context); 
+	        this.context = context;
+	        final View view = getLayoutInflater().inflate(R.layout.dialog_about, null); 
+	        btnBlog = (ImageView)view.findViewById(R.id.btnBlog);
+	        btnWechat = (ImageView)view.findViewById(R.id.btnWechat);
+	        btnBlog.setOnClickListener(this);
+	        btnWechat.setOnClickListener(this);
+	        setIcon(R.drawable.ic_launcher);   
+	        setTitle(context.getResources().getString(R.string.app_name));    
+	        setButton(AlertDialog.BUTTON_NEUTRAL, context.getResources().getString(R.string.str_about_close), (OnClickListener) null);
+	        setView(view);   
+	    }
+
+		@Override
+		public void onClick(View v) {
+			if(v.getId() == R.id.btnBlog){
+		    	Intent intent = new Intent(Intent.ACTION_VIEW);
+		    	intent.setData(Uri.parse("http://blog.csdn.net/cc_net"));
+		    	context.startActivity(intent);
+				this.cancel();
+			}else if(v.getId() == R.id.btnWechat){
+			  android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+			  clipboard.setText("cc287388");
+			  Toast toast = Toast.makeText(context,
+					     getResources().getString(R.string.str_about_wechar), Toast.LENGTH_SHORT);
+					   toast.setGravity(Gravity.BOTTOM, 0, 0);
+					   toast.show();
+			}
+		}   
+	    
+	}  
 }

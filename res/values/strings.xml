@@ -72,4 +72,10 @@
 	<string name="str_update_check_none">There are no updates available.</string>
 	<string name="str_update_update_fail">Fail to update the data.</string>
 	<string name="str_update_update_done">Update Done!</string>
+	
+	<!-- About -->
+	<string name="str_about_close">Close</string>
+	<string name="str_about_wechar">Copy the Wechat Account!</string>
+	<string name="str_about_app">Supply the matches remind, Group info, Matches Statistic and News!</string>
+	<string name="str_about_content">Sacn Or Click To Add Wechat Contact And Visit The Blog</string>
 </resources>

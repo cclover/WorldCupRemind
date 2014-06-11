@@ -71,4 +71,10 @@
 	<string name="str_update_check_none">没有可用更新。</string>
 	<string name="str_update_update_fail">数据更新失败。</string>
 	<string name="str_update_update_done">更新成功!</string>
+	
+	<!-- About -->
+	<string name="str_about_close">关 闭</string>
+	<string name="str_about_wechar">微信账号已复制！</string>
+	<string name="str_about_app">提供世界杯赛程信息，比赛提醒、小组积分、淘汰赛对阵、数据统计、比赛资讯等！作者:cc</string>
+	<string name="str_about_content">扫描或点击添加微信联系人，访问博客！</string>
 </resources>
