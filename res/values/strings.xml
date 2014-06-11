@@ -64,6 +64,8 @@
 	<string name="str_konckout_match">SECOND STAGE MATCHES</string>
 	
 	<!-- Statistics Info -->
+	<string name="str_player_goal">GOAL STATISTICS</string>
+	<string name="str_player_assist">ASSIST STATISTICS</string>
 	
 	<!-- Alarm String -->
 	<string name="str_alram_remind">MATCHES REMIND</string>

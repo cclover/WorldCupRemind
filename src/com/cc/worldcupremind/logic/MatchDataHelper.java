@@ -807,6 +807,7 @@ class MatchDataHelper {
 				String name = goalObj.getString(JSON_STATISTICS_PLAYER_NAME);
 				String team = goalObj.getString(JSON_STATISTICS_PLAYER_TEAM);
 				int count = goalObj.getInt(JSON_STATISTICS_PLAYER_COUNT);
+				LogHelper.d(TAG, String.format("Goal: %s-%s-%s", name,team,count));
 				PlayerStatistics player = new PlayerStatistics(name, team, count, STATISTICS_TYPE.STATISTICS_GOAL);
 				goalStatisticsList.add(player);
 			}
@@ -818,8 +819,9 @@ class MatchDataHelper {
 				String name = assistObj.getString(JSON_STATISTICS_PLAYER_NAME);
 				String team = assistObj.getString(JSON_STATISTICS_PLAYER_TEAM);
 				int count = assistObj.getInt(JSON_STATISTICS_PLAYER_COUNT);
+				LogHelper.d(TAG, String.format("Assit:%s-%s-%s", name,team,count));
 				PlayerStatistics player = new PlayerStatistics(name, team, count, STATISTICS_TYPE.STATISTICS_ASSIST);
-				goalStatisticsList.add(player);
+				assistStatisticsList.add(player);
 			}
 			
 		} catch (JSONException e) {
@@ -837,6 +839,8 @@ class MatchDataHelper {
 		}
 		
 		LogHelper.d(TAG, "parseStatisticsData successed!" + String.valueOf(matchesList.size()));
+		LogHelper.d(TAG, "goalStatisticsList size:" + String.valueOf(goalStatisticsList.size()));
+		LogHelper.d(TAG, "assistStatisticsList size:" + String.valueOf(assistStatisticsList.size()));
 		dataStatisticsVersion = tmpVersion; //if parse failed. The version will not change.
 		return true;
 	}
