@@ -9,6 +9,7 @@
     <string name="tab_mathces">赛程表</string>
     <string name="tab_group">分组对阵</string>
     <string name="tab_statistics">数据统计</string>
+    <string name="tab_news">新闻资讯</string>
     
      <!-- National Name -->
 	<string name="bra">"巴西"</string>
