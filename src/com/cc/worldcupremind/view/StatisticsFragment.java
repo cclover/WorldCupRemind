@@ -183,7 +183,7 @@ public class StatisticsFragment extends ListFragment {
 				
 				//Set value
 				PlayerStatistics data = mDataStaticsList.get(position-1);
-				if(data.getPosition() == 1){
+				if(data.getPosition() == 1 && data.getCount() != 0){
 					holder.imgFlag.setVisibility(View.VISIBLE);
 				}else{
 					holder.imgFlag.setVisibility(View.INVISIBLE);

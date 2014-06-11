@@ -132,22 +132,17 @@ public class GroupFragment extends ListFragment {
 				value_ga.setText(String.valueOf(item.getGoalAgainst()));
 				value_pts.setText(String.valueOf(item.getPoint()));
 				if (item.getTeamGroup().equals(
-						mGroupStaticsList.get(position > 1 ? position - 1 : 0)
-								.getTeamGroup())) {
+						mGroupStaticsList.get(position > 1 ? position - 1 : 0).getTeamGroup())) {
 					title.setVisibility(View.GONE);
 				} else {
 					title.setVisibility(View.VISIBLE);
-					key_group.setText(String.format(
-							getResources().getString(R.string.str_stage_group),
-							item.getTeamGroup()));
+					key_group.setText(String.format(getResources().getString(R.string.str_stage_group),item.getTeamGroup()));
 				}
 				if (position == 0) {
 					title.setVisibility(View.VISIBLE);
-					key_group.setText(String.format(
-							getResources().getString(R.string.str_stage_group),
-							item.getTeamGroup()));
+					key_group.setText(String.format(getResources().getString(R.string.str_stage_group),item.getTeamGroup()));
 				}
-				if(item.getPosition() <= 2){
+				if(item.getPosition() <= 2 && item.getPoint() > 0){
 					star.setVisibility(View.VISIBLE);
 				}else{
 					star.setVisibility(View.INVISIBLE);

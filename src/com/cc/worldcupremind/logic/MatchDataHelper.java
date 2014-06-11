@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.util.Log;
 import android.util.SparseArray;
 
@@ -40,6 +41,8 @@ class MatchDataHelper {
 	private static final String DATA_STATISTICS_FILE = "statistics.json";
 	private static final String DATA_SECOND_STAGE_PIC = "secondstage.png";
 	private static final String FILE_ENCODE_FORMAT = "UTF-8";
+	private static final String JSON_APP_VERSION = "appVersion";
+	private static final String APP_FILE = "WorldCupRemind.apk";
 	
 	/** matches.json format */
 	private static final String JSON_MATCHES_DATA_VERSION = "Version";	/* Double */
@@ -55,6 +58,7 @@ class MatchDataHelper {
 	private static final String JSON_MATCHES_FILED_STATUS= "Status";	/* Eunm*/
 	private static final String JSON_MATCHES_FILED_SCORE_1= "Score1";	/* Int */
 	private static final String JSON_MATCHES_FILED_SCORE_2= "Score2";	/* Int */
+	private static final String JSON_MATCHES_FILED_EXT= "ext";			/* String */
 	
 	/** remind.json format */
 	private static final String JSON_REMIND_LIST = "Remind";			/* Array */
@@ -79,6 +83,7 @@ class MatchDataHelper {
 	private static final String JSON_STATISTICS_PLAYER_COUNT= "count";
 	private static final String JSON_STATISTICS_PLAYER_POS= "pos";
 	private static final String JSON_STATISTICS_PLAYER_ENG_NAME= "eng";
+	private static final String JSON_STATISTICS_PLAYER_EXT= "ext";
 	
 	/** version.json format */
 	private static final String JSON_VERSION_MATCHES = "matchesVer";		/* Double */
@@ -493,6 +498,13 @@ class MatchDataHelper {
 			JSONObject jsonObject = new JSONObject(ver);
 			double newMatchesVer = jsonObject.getDouble(JSON_VERSION_MATCHES);
 			double newStatisticsVer = jsonObject.getDouble(JSON_VERSION_STATISTICS);
+			double appVersion = jsonObject.getDouble(JSON_APP_VERSION);
+			
+			PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);  
+			if(appVersion > Double.parseDouble(info.versionName)){
+				LogHelper.d(TAG, "App need be updated, version:" + appVersion);
+//				updateFileList.add(APP_FILE);
+			}
 			if(newMatchesVer > dataMatchesVersion){
 				LogHelper.d(TAG, "Matches data need be updated, version:" + dataMatchesVersion);
 				updateFileList.add(DATA_MATCHES_FILE);
