@@ -11,6 +11,7 @@
     <string name="tab_group">GROUP</string>
     <string name="tab_statistics">STATISTICS</string>
     <string name="tab_news">NEWS</string>
+    <string name="app_exit">PRESS AGAIN TO EXIT.</string>
 
     <!-- National Name -->
     <string name="bra">"Brazil"</string>
@@ -74,6 +75,7 @@
 	<!-- Alarm String -->
 	<string name="str_alram_remind">MATCHES REMIND</string>
 	<string name="str_alram_close">CLOSE</string>
+	<string name="str_alram_notify">CLICL TO CLOSE.</string>
 	
 	<!-- Update -->
 	<string name="str_update_check_start">Updating date...</string>

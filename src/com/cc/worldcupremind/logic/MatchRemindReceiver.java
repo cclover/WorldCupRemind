@@ -7,12 +7,12 @@ import com.cc.worldcupremind.view.AlarmActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 
 
 public class MatchRemindReceiver extends BroadcastReceiver {
 
 	private static final String TAG = "MatchRemindReceiver";
-	private static final String ACTION_BOOT = "android.intent.action.BOOT_COMPLETED";  
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -22,11 +22,15 @@ public class MatchRemindReceiver extends BroadcastReceiver {
 			return;
 		}
 		
-		if(intent.getAction().equals(ACTION_BOOT)){
+		if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
 			LogHelper.d(TAG, "Receive BOOT_COMPLETED..Load data and set alarm");
 			MatchDataController.getInstance().InitData(context);
 			
-		} else if(intent.getAction().equals(MatchRemindHelper.ACTION_ALARM)){
+		}else if(intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)){
+			
+			LogHelper.d(TAG, "Receive CONNECTIVITY_ACTION..Load data and set alarm");
+			MatchDataController.getInstance().InitData(context);
+		}else if(intent.getAction().equals(MatchRemindHelper.ACTION_ALARM)){
 			LogHelper.d(TAG, "Receive the match alarm");
 			
 			if(intent.getExtras() == null){

@@ -218,6 +218,17 @@ public class DataOperateHelper {
 			return null;
 		}
 	}
+	
+	public static void deleteLoaclFile(Context context, String fileName){
+		
+		LogHelper.d(TAG, "deleteLoaclFile:" + fileName);
+		
+		try {
+			context.deleteFile(fileName);
+		} catch (Exception e) {
+			LogHelper.e(TAG, e);
+		}
+	}
 
 	/*
 	 * Download the data file from network (HTTP)

@@ -84,6 +84,11 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		}
 	}
 	
+	
+	public String getNewsURL(){
+		return dataHelper.getNewsURL();
+	}
+	
 	/**
 	 * Get the Matches info @MatchesModel object
 	 * 
@@ -228,6 +233,17 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		isDataInitDone = true;
 	}
 	
+	public Boolean setRemind(){
+		
+		LogHelper.d(TAG, "setRemind");
+		
+		if(!isDataInitDone){
+			LogHelper.w(TAG, "Please init data first");
+			return false;
+		}
+		MatchRemindHelper.setAlarm(context, dataHelper.getRemindList(), dataHelper.getRemindCancelList());
+		return true;
+	}
 	
 	/**
 	 * Update data from network, receive result from @MatchDataListener
@@ -315,6 +331,32 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		return true;
 	}
 
+	public Boolean deleteMatchRemind(ArrayList<Integer> deleteList){
+		
+		LogHelper.d(TAG, "deleteMatchRemind");
+		
+		if(!isDataInitDone){
+			LogHelper.w(TAG, "Please init data first");
+			return false;
+		}
+		
+		final ArrayList<Integer> delList = deleteList;
+		new Thread(new Runnable() {
+			
+			@Override
+			public synchronized void run() {
+				
+				if(!dataHelper.deleteRemindData(delList)){
+					LogHelper.w(TAG, "Fail to delete the remind data");
+					onSetRemindDone(false);
+					return;
+				}
+				onSetRemindDone(true);
+			}
+		}).start();
+	
+		return true;
+	}
 	
 	/**
 	 * Get the Team's National name

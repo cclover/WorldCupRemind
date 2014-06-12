@@ -10,7 +10,8 @@
     <string name="tab_group">分组对阵</string>
     <string name="tab_statistics">数据统计</string>
     <string name="tab_news">新闻资讯</string>
-    
+    <string name="app_exit">再按一次退出程序</string>
+     
      <!-- National Name -->
 	<string name="bra">"巴西"</string>
 	<string name="cro">"克罗地亚"</string>
@@ -60,6 +61,7 @@
 	<string name="str_group_gf">进球</string>
 	<string name="str_group_ga">失球</string>
 	<string name="str_group_pts">积分</string>
+	<string name="str_konckout_match">淘汰赛对阵</string>
 	
 	<!-- Statistics Info -->
 	<string name="str_player_goal">进球</string>
@@ -72,7 +74,7 @@
 	<!-- Alarm String -->
 	<string name="str_alram_remind">比赛提醒</string>
 	<string name="str_alram_close">关 闭</string>
-	<string name="str_konckout_match">淘汰赛对阵</string>
+	<string name="str_alram_notify">点击关闭</string>
 	
 	<!-- Update -->
 	<string name="str_update_check_start">更新数据...</string>

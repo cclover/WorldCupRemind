@@ -16,6 +16,9 @@ import com.cc.worldcupremind.model.MatchStatus;
 import com.cc.worldcupremind.model.MatchesModel;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -25,9 +28,14 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -54,6 +62,7 @@ public class AlarmActivity extends Activity {
 	private Resources resource = null;
 	private MatchDataController controller = null;
 	private Context context = null;
+	private NotificationManager nm = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +80,7 @@ public class AlarmActivity extends Activity {
 		resource = getResources();
 		controller = MatchDataController.getInstance();
 		context = this;
+		nm = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);     
 		
 		//Set button
 		btnClose = (Button)findViewById(R.id.btnAlarmClose);
@@ -89,6 +99,9 @@ public class AlarmActivity extends Activity {
 			finish();
 		}
 		
+		//Show notification
+		showNotification();
+		
 		//Play music
 		playMusicAndVibrator();
 	}
@@ -106,6 +119,12 @@ public class AlarmActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		
+		if(nm != null){
+			nm.cancel(R.string.app_name);
+			deleteRemind();
+		}
+		
 		if(vibrator != null){
 			vibrator.cancel();
 		}
@@ -113,6 +132,36 @@ public class AlarmActivity extends Activity {
 		if(alarmPlayer != null){
 			alarmPlayer.stop();
 		}
+	}
+	
+	private void deleteRemind(){
+		ArrayList<Integer> cancelList = new ArrayList<Integer>();
+		for(int i = 0; i < alarmList.size(); i++){
+			int no = alarmList.get(i).getMatchNo();
+			cancelList.add(no);
+			LogHelper.d(TAG, "Delete the alarm:" + String.valueOf(no));
+		}
+		controller.deleteMatchRemind(cancelList);
+	}
+	
+	private void showNotification(){
+		
+		//Create intent 
+		Intent i = new Intent(this, AlarmActivity.class);
+		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);          
+		PendingIntent contentIntent = PendingIntent.getActivity(this,R.string.app_name, i, PendingIntent.FLAG_ONE_SHOT);
+		
+		//Create notification
+		NotificationCompat.Builder bulider = new NotificationCompat.Builder(getApplicationContext());
+		bulider.setContentTitle(getResources().getString(R.string.str_alram_remind));
+		bulider.setContentText(getResources().getString(R.string.str_alram_notify));
+		bulider.setContentIntent(contentIntent);
+		bulider.setSmallIcon(R.drawable.ic_launcher);
+		Notification notify = bulider.build();
+		notify.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;  
+		
+		//show notification
+		nm.notify(R.string.app_name, notify);
 	}
 	
 	private void playMusicAndVibrator(){
@@ -173,6 +222,35 @@ public class AlarmActivity extends Activity {
 		}
 		return false;
 	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK)
+        {  
+			return true;
+        }
+		return false;
+	}
+	
+	
+	//Fix issue: click white area close the activity API LEVEL < 11
+	//IF API LEVEL > 11 setFinishOnTouchOutside(false);  
+	@Override  
+    public boolean onTouchEvent(MotionEvent event) {  
+        if (event.getAction() == MotionEvent.ACTION_DOWN && isOutOfBounds(this, event)) {  
+            return true;  
+        }  
+        return super.onTouchEvent(event);  
+    }  
+  
+    private boolean isOutOfBounds(Activity context, MotionEvent event) {  
+        final int x = (int) event.getX();  
+        final int y = (int) event.getY();  
+        final int slop = ViewConfiguration.get(context).getScaledWindowTouchSlop();  
+        final View decorView = context.getWindow().getDecorView();  
+        return (x < -slop) || (y < -slop)|| (x > (decorView.getWidth() + slop))|| (y > (decorView.getHeight() + slop));  
+    }  
+
 	
 	class AlarmAdpater extends BaseAdapter{
 		

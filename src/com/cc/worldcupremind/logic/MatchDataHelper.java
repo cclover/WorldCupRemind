@@ -59,6 +59,7 @@ class MatchDataHelper {
 	private static final String JSON_MATCHES_FILED_SCORE_1= "Score1";	/* Int */
 	private static final String JSON_MATCHES_FILED_SCORE_2= "Score2";	/* Int */
 	private static final String JSON_MATCHES_FILED_EXT= "ext";			/* String */
+	private static final String JSON_NEWS_URL = "newsURL";				/* String */
 	
 	/** remind.json format */
 	private static final String JSON_REMIND_LIST = "Remind";			/* Array */
@@ -120,6 +121,10 @@ class MatchDataHelper {
 	/** Teams Count */
 	private int teamsCount;
 	
+	/** News URL */
+	private String newsURL;
+
+
 	/** Return value of updateAllDataFiles*/
 	public enum UPDATE_RET{
 		
@@ -144,6 +149,13 @@ class MatchDataHelper {
 		this.context = context;
 		matchesCount = 0;
 		teamsCount = 0;
+	}
+	
+	/**
+	 * @return the newsURL
+	 */
+	public String getNewsURL() {
+		return newsURL;
 	}
 	
 	/**
@@ -391,6 +403,40 @@ class MatchDataHelper {
 		return true;
 	}
 	
+	public Boolean deleteRemindData(ArrayList<Integer> deleteList){
+		
+		LogHelper.d(TAG, "deleteRemindData()");
+		
+		// renew the remind list
+		if(deleteList == null){
+			LogHelper.w(TAG, "The delete remind list is null");
+			return false;
+		}
+		
+		//Renew the remind data
+		for(int matchNo : deleteList){
+			remindList.remove(matchNo);
+			MatchesModel model = matchesList.get(matchNo);
+			model.setIsRemind(false);
+			LogHelper.d(TAG, "Remove matchNo from remindList and modify matchesmodel flag" + String.valueOf(matchNo));
+		}
+		
+		//create new remind matchNo list
+		ArrayList<Integer> newList = new ArrayList<Integer>();
+		for(int i = 0; i < remindList.size(); i++){
+			newList.add(remindList.keyAt(i));
+		}
+		
+		//Save new rmind list
+		LogHelper.d(TAG, "Save the newList size" + String.valueOf(newList.size()));
+		if(!saveRemindData(newList)){
+			LogHelper.w(TAG, "Fail to save the remind data");
+			return false;
+		}
+		
+		return true;
+	}
+	
 	private Boolean donwloadSecondStagePic(){
 		
 		LogHelper.d(TAG, "donwloadSecondStagePic()");
@@ -424,6 +470,7 @@ class MatchDataHelper {
 		if(list == null || list.size() == 0){
 			
 			LogHelper.d(TAG, "No remind data to save");
+			DataOperateHelper.deleteLoaclFile(context, DATA_REMIND_FILE);
 			return true;
 		}
 		
@@ -734,6 +781,7 @@ class MatchDataHelper {
 			tmpVersion = rootObj.getDouble(JSON_MATCHES_DATA_VERSION);
 			matchesCount = rootObj.getInt(JSON_MATCHES_COUNT);
 			teamsCount = rootObj.getInt(JSON_TEAMS_COUNT);
+			newsURL = rootObj.optString(JSON_NEWS_URL);
 	    	LogHelper.d(TAG, "The match data version is:" + String.valueOf(tmpVersion));
 	    	
 	    	//parse match data

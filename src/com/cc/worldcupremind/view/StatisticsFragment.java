@@ -9,8 +9,6 @@ import com.cc.worldcupremind.logic.MatchDataController;
 import com.cc.worldcupremind.model.PlayerStatistics;
 
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -20,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class StatisticsFragment extends ListFragment {
@@ -78,6 +75,7 @@ public class StatisticsFragment extends ListFragment {
     }
 	
 	public void setData(ArrayList<PlayerStatistics> goalStaticsData, ArrayList<PlayerStatistics> assistStaticsData) {
+		LogHelper.d(TAG, "setData");
 		mGoalStaticsList = goalStaticsData;
 		mAssistStaticsList = assistStaticsData;
 		if(isGoal){
@@ -132,7 +130,7 @@ public class StatisticsFragment extends ListFragment {
 	    	
 	    	Locale l = Locale.getDefault();  
 	    	String language = l.getLanguage();  
-	    	String country = l.getCountry().toLowerCase();  
+	    	String country = l.getCountry().toLowerCase(l);
 	    	return language.equals("zh") && country.equals("cn");
 	    }
 

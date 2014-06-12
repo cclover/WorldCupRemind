@@ -1,6 +1,7 @@
 package com.cc.worldcupremind.view;
 
-import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.common.LogHelper;
@@ -20,6 +21,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,6 +52,7 @@ public class MainActivity extends ActionBarActivity implements
 	StatisticsFragment statisticsFragment;
 	NewsFragment newsFragment;
 	MenuItem remindItem;
+	Boolean isExit;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,7 @@ public class MainActivity extends ActionBarActivity implements
 		LogHelper.d(TAG, "onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		isExit = false;
 
 		// Set up the action bar.
 		final ActionBar actionBar = getSupportActionBar();
@@ -114,6 +118,35 @@ public class MainActivity extends ActionBarActivity implements
 		LogHelper.d(TAG, "onDestroy");
 		super.onDestroy();
 		controller.removeListener(this);
+	}
+
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK)
+        {  
+            exitBy2Click();
+        }
+		return false;
+	}
+
+	private void exitBy2Click() {
+		Timer tExit = null;
+		if (isExit == false) {
+			isExit = true; 
+			showToast(R.string.app_exit);
+			tExit = new Timer();
+			tExit.schedule(new TimerTask() {
+				@Override
+				public void run() {
+					isExit = false; // cancel exit
+				}
+			}, 2000); //cancel
+
+		} else {
+			finish();//exit
+//			System.exit(0);
+		}
 	}
 
 	@Override
@@ -317,11 +350,10 @@ public class MainActivity extends ActionBarActivity implements
 	
 	
 	private void showToast(int id){
-		
+
 		Toast toast = Toast.makeText(getApplicationContext(),
 			     getResources().getString(id), Toast.LENGTH_SHORT);
-			   toast.setGravity(Gravity.BOTTOM, 0, 0);
-			   toast.show();
+		toast.show();
 	}
 
 	
