@@ -30,12 +30,12 @@ public class DataOperateHelper {
 	private static final String TAG = "DataOperateHelper";
 	
 	/* FTP Server info*/
-//	private static final String FTP_SERVER_URL = "cclover.free3v.net";
-//	private static final String FTP_USER_NAME = "cclover";
-//	private static final String FTP_USER_PASSWORD = "2014worldcup";
-	private static final String FTP_SERVER_URL = "174.129.246.208";
-	private static final String FTP_USER_NAME = "anonymous";
-	private static final String FTP_USER_PASSWORD = "";
+	private static final String FTP_SERVER_URL = "cclover.free3v.net";
+	private static final String FTP_USER_NAME = "cclover";
+	private static final String FTP_USER_PASSWORD = "2014worldcup";
+//	private static final String FTP_SERVER_URL = "174.129.246.208";
+//	private static final String FTP_USER_NAME = "anonymous";
+//	private static final String FTP_USER_PASSWORD = "";
 	private static final int FTP_SERVER_PORT = 21;
 	private static final int NETWORK_TIMEOUT = 20*1000;
 	private static final int BUFFER_SIZE = 1024*8;

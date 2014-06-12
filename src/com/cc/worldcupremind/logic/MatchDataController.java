@@ -277,11 +277,16 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 				}else if(updateList.size() == 0){
 					LogHelper.d(TAG, "Current date is latest version");
 					onUpdateDone(UPDATE_STATE_CHECK_NONE, null);
-				}else if(updateList.contains("http://")){
-					LogHelper.d(TAG, "Have new APK version!!!!");
-					String url = updateList.get(0);
-					onUpdateDone(UPDATE_STATE_CHECK_NEW_APK, url);
 				}else{
+	
+					//Check
+					String url = updateList.get(0);
+					if(url.contains("http://")){
+						LogHelper.d(TAG, "Have new APK version!!!!");
+						onUpdateDone(UPDATE_STATE_CHECK_NEW_APK, url);
+						return;
+					}
+						
 					LogHelper.d(TAG, "Have new DATA version!!!!");
 					onUpdateDone(UPDATE_STATE_UPDATE_START, null);
 					if(!dataHelper.updateAllDataFiles(updateList)){

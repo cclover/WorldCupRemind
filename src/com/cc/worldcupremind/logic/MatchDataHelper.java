@@ -727,7 +727,7 @@ class MatchDataHelper {
 		}
 
 		//Save network file to local file
-		if(!DataOperateHelper.saveData2LocalFile(context, matchesString, DATA_MATCHES_FILE)){
+		if(!DataOperateHelper.saveData2LocalFile(context, matchesString, fileName)){
 			Log.w(TAG, "save data failed:" + fileName);
 			return false;
 		}

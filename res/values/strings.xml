@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">WorldCup Remind</string>
-    <string name="menu_update">UPDATE DATA</string>
+    <string name="menu_update">UPDATE</string>
     <string name="menu_about">ABOUT</string>
     <string name="menu_remind">SET REMIND</string>
    	<string name="menu_remind_enable">REMIND ENABLE</string>

@@ -361,7 +361,7 @@ public class MainActivity extends ActionBarActivity implements
 							//open browser to download
 							Intent intent = new Intent(Intent.ACTION_VIEW);
 					    	intent.setData(Uri.parse(url));
-					    	getApplicationContext().startActivity(intent);
+					    	tmpContext.startActivity(intent);
 						}
 					});
 					builder.setNegativeButton(android.R.string.cancel, null);
