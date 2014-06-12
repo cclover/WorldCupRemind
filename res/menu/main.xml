@@ -9,8 +9,18 @@
       android:showAsAction="always"/>
     
     <item
+        android:id="@+id/action_remind_flag"
+        android:title="@string/menu_remind_disable"
+        app:showAsAction="never"/>
+        
+    <item
         android:id="@+id/action_update"
         android:title="@string/menu_update"
+        app:showAsAction="never"/>
+    
+    <item
+        android:id="@+id/action_reset"
+        android:title="@string/menu_reset"
         app:showAsAction="never"/>
     
      <item

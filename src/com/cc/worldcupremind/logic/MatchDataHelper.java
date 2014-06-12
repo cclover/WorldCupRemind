@@ -437,6 +437,16 @@ class MatchDataHelper {
 		return true;
 	}
 	
+	public Boolean removeData(){
+		
+		LogHelper.d(TAG, "donwloadSecondStagePic()");
+//		DataOperateHelper.deleteLoaclFile(context, DATA_REMIND_FILE);
+		Boolean ret1 = DataOperateHelper.deleteLoaclFile(context, DATA_MATCHES_FILE);
+		Boolean ret2 = DataOperateHelper.deleteLoaclFile(context, DATA_STATISTICS_FILE);
+		Boolean ret3 = DataOperateHelper.deleteLoaclFile(context, DATA_SECOND_STAGE_PIC);
+		return ret1 && ret2 && ret3;
+	}
+	
 	private Boolean donwloadSecondStagePic(){
 		
 		LogHelper.d(TAG, "donwloadSecondStagePic()");

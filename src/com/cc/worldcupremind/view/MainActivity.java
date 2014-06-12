@@ -16,6 +16,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -52,6 +54,7 @@ public class MainActivity extends ActionBarActivity implements
 	StatisticsFragment statisticsFragment;
 	NewsFragment newsFragment;
 	MenuItem remindItem;
+	MenuItem remindFlagItem;
 	Boolean isExit;
 
 	@Override
@@ -162,6 +165,14 @@ public class MainActivity extends ActionBarActivity implements
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		remindItem = menu.findItem(R.id.action_remind);
+		remindFlagItem = menu.findItem(R.id.action_remind_flag);
+		if(controller.isRemindEnable()){
+			remindFlagItem.setTitle(R.string.menu_remind_disable);
+			remindItem.setEnabled(true);
+		}else{
+			remindFlagItem.setTitle(R.string.menu_remind_enable);
+			remindItem.setEnabled(false);
+		}
 		return true;
 	}
 
@@ -180,8 +191,40 @@ public class MainActivity extends ActionBarActivity implements
 			return true;
 		}else if(id == R.id.action_remind){
 			matchFragment.setAlarmMode(true);
+		}else if(id == R.id.action_reset){
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(R.string.menu_reset);
+			builder.setMessage(R.string.str_update_data_reset);
+			builder.setIcon(R.drawable.error);
+			builder.setPositiveButton(android.R.string.ok, new OnClickListener() {	
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					LogHelper.d(TAG, "Reset data");
+					controller.resetData();
+				}
+			});
+			builder.setNegativeButton(android.R.string.cancel, null);
+			builder.show();
 		}else if(id == R.id.action_about){
 			new AboutDialog(this).show();
+		}else if(id == R.id.action_remind_flag){
+			if(controller.isRemindEnable()){
+				if(controller.setRemindEnabl(false)){
+					remindFlagItem.setTitle(R.string.menu_remind_enable);
+					showToast(R.string.str_remind_disable);
+					remindItem.setEnabled(false);
+				}else{
+					showToast(R.string.str_remind_fail);
+				}
+			}else{
+				if(controller.setRemindEnabl(true)){
+					remindFlagItem.setTitle(R.string.menu_remind_disable);
+					showToast(R.string.str_remind_enable);
+					remindItem.setEnabled(true);
+				}else{
+					showToast(R.string.str_remind_fail);
+				}
+			}
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -361,6 +404,23 @@ public class MainActivity extends ActionBarActivity implements
 		finish();
 	}
 	
+	@Override
+	public void onResetDone(Boolean issBoolean) {
+		
+		LogHelper.d(TAG, String.format("onResetDone is %s", issBoolean?"true":"false"));
+//		controller.InitData(this);
+		final Boolean ret = issBoolean;
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if(ret){
+					showToast(R.string.str_update_data_reset_success);
+				}else{
+					showToast(R.string.str_update_data_reset_fail);
+				}
+			}
+		});
+	}  
 	
 	private void showToast(int id){
 
@@ -369,9 +429,7 @@ public class MainActivity extends ActionBarActivity implements
 		toast.show();
 	}
 
-	
-	 
-	 class AboutDialog extends AlertDialog implements android.view.View.OnClickListener {   
+	class AboutDialog extends AlertDialog implements android.view.View.OnClickListener {   
 
 		private Context context;
 		private ImageView btnBlog;
@@ -406,5 +464,5 @@ public class MainActivity extends ActionBarActivity implements
 			}
 		}   
 	    
-	}  
+	}
 }

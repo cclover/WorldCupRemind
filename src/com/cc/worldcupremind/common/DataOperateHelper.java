@@ -219,7 +219,7 @@ public class DataOperateHelper {
 		}
 	}
 	
-	public static void deleteLoaclFile(Context context, String fileName){
+	public static Boolean deleteLoaclFile(Context context, String fileName){
 		
 		LogHelper.d(TAG, "deleteLoaclFile:" + fileName);
 		
@@ -227,7 +227,9 @@ public class DataOperateHelper {
 			context.deleteFile(fileName);
 		} catch (Exception e) {
 			LogHelper.e(TAG, e);
+			return false;
 		}
+		return true;
 	}
 
 	/*

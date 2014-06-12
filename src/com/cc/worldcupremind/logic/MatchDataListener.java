@@ -7,4 +7,5 @@ public interface MatchDataListener {
 	public void onSetRemindDone(Boolean isSuccess);
 	public void onTimezoneChanged();
 	public void onLocalChanged();
+	public void onResetDone(Boolean issBoolean);
 }

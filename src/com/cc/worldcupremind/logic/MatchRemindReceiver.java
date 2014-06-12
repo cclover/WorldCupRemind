@@ -38,6 +38,12 @@ public class MatchRemindReceiver extends BroadcastReceiver {
 				return;
 			}
 			
+			//Check remind status
+			if(!MatchDataController.getInstance().isRemindEnable()){
+				LogHelper.d(TAG, "Remind is disable");
+				return;
+			}
+			
 			//Init data
 			if(!MatchDataController.getInstance().isDataInit()){
 				LogHelper.d(TAG, "Init Data First");

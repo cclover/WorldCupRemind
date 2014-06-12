@@ -13,14 +13,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.util.SparseArray;
 
 
 public class MatchDataController extends BroadcastReceiver implements MatchDataListener{
 	
 	private static final String TAG = "MatchDataController";
+	private static final String REMIND_STATUS = "remindstatus";
+	private static final String PRE_FILE_NAME = "data.xml";
 	private static MatchDataController instance = new MatchDataController();
 	private Boolean isDataInitDone;
 	private MatchDataHelper dataHelper;	
@@ -198,11 +202,11 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 
 	
 	
-	public void InitDataAsync(Context appContext){
+	public Boolean InitDataAsync(Context appContext){
 		
 		if(isDataInitDone){
 			LogHelper.d(TAG, "Data had init done!");
-			return;
+			return false;
 		}
 		
 		// Load the necessary data
@@ -210,7 +214,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		if(!dataHelper.loadMatchesData() || !dataHelper.loadStatisticsData()){
 			
 			LogHelper.w(TAG, "Fail to init the data!");
-			return;
+			return false;
 		}
 		
 		// Load resource id
@@ -218,7 +222,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		if(!resourceHelper.Init(dataHelper.getTeamsCount())){
 			
 			LogHelper.w(TAG, "Fail to init the resource!");
-			return;
+			return false;
 		}
 		
 		//Load the remind filed
@@ -231,6 +235,8 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		//Init done
 		LogHelper.d(TAG, "Init Data Done!");
 		isDataInitDone = true;
+		
+		return true;
 	}
 	
 	public Boolean setRemind(){
@@ -410,6 +416,62 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	}
 	
 	
+	/**
+	 * 
+	 * @param status
+	 * set true means remind enable
+	 */
+	public Boolean setRemindEnabl(Boolean status){
+		SharedPreferences share = context.getSharedPreferences(PRE_FILE_NAME, Context.MODE_PRIVATE);   
+		if(share != null){
+			SharedPreferences.Editor edit = share.edit();  
+			edit.putBoolean(REMIND_STATUS, status);
+			edit.commit();
+			return true;
+		}
+		return false;
+	}
+	
+	
+	public Boolean resetData(){
+		
+		LogHelper.d(TAG, "resetData");
+		
+		if(!isDataInitDone){
+			LogHelper.w(TAG, "Please init data first");
+			return false;
+		}
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public synchronized void run() {
+				if(!dataHelper.removeData()){
+					Log.d(TAG, "Fail to reset data");
+					onResetDone(false);
+					return;
+				}
+				isDataInitDone = false;
+				InitDataAsync(context);
+				onResetDone(true);
+			}
+		}).start();
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @return true if remind enable, otherwise return false;
+	 */
+	public Boolean isRemindEnable(){
+		SharedPreferences share =  context.getSharedPreferences(PRE_FILE_NAME, Context.MODE_PRIVATE);
+		if(share != null){
+			return share.getBoolean(REMIND_STATUS, true);
+		}
+		return true;
+	}
+	
+	
 	@Override
 	public void onInitDone(Boolean isSuccess) {
 
@@ -456,6 +518,14 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 
 		for (MatchDataListener listener : listenerList) {
 			listener.onLocalChanged();
+		}
+	}
+
+	@Override
+	public void onResetDone(Boolean issBoolean) {
+
+		for (MatchDataListener listener : listenerList) {
+			listener.onResetDone(issBoolean);
 		}
 	}
 
