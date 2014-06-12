@@ -12,6 +12,7 @@
     <string name="tab_statistics">STATISTICS</string>
     <string name="tab_news">NEWS</string>
     <string name="app_exit">PRESS AGAIN TO EXIT.</string>
+    <string name="data_fail">FAIL TO PARSE THE DATA!</string>
 
     <!-- National Name -->
     <string name="bra">"Brazil"</string>

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.common.LogHelper;
+import com.cc.worldcupremind.common.ResourceHelper;
 import com.cc.worldcupremind.logic.MatchDataController;
 import com.cc.worldcupremind.model.MatchDate;
 import com.cc.worldcupremind.model.MatchStage;
@@ -314,11 +315,19 @@ public class MatchesFragment extends ListFragment implements View.OnClickListene
 				if(drawable2 != null){
 					holder.flag2.setImageDrawable(drawable2);
 				}
+				Drawable flag = null;
 				if(model.getMatchStatus() == MatchStatus.MATCH_STATUS_WAIT_START){
 					holder.score.setText(model.getMatchTime().getTimeString());
+					holder.score.setTextColor(resource.getColor(R.color.gray));
+					flag = resource.getDrawable(R.drawable.ic_match_wait);
 				}else{
 					holder.score.setText(String.format("%d:%d", model.getTeam1Score(), model.getTeam2Score()));
+					holder.score.setTextColor(resource.getColor(R.color.royalblue));
+					flag = resource.getDrawable(R.drawable.ic_match_over);
 				}
+				int px = ResourceHelper.dip2px(context,10);
+				flag.setBounds(0, 0, px, px);  
+				holder.score.setCompoundDrawables(null, flag, null, null);
 				
 				//only show the remind image or checkbox when game not start
 				if(model.getMatchStatus() != MatchStatus.MATCH_STATUS_WAIT_START || model.getMatchTime().isStart()){
@@ -343,7 +352,7 @@ public class MatchesFragment extends ListFragment implements View.OnClickListene
 				}
 			}
 			return convertView;
-		}
+		}	
 		
 		
 		class ViewHolder{

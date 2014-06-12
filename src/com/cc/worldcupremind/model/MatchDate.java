@@ -15,7 +15,7 @@ import com.cc.worldcupremind.common.LogHelper;
 public class MatchDate {
 
 	private static final String TAG = "DateHelper";
-	private static final String DATE_FORMAT_24 = "yyyy-MM-ddHH:mm:ss";
+	private static final String DATE_FORMAT_24 = "yyyy-MM-dd HH:mm:ss";
 	private static final int REMIND_AHEAD_MIN = -15;
 	private static final String DEFAULT_TIME_ZONE_ID = "GMT+8"; 
 	

@@ -889,15 +889,15 @@ class MatchDataHelper {
 			}
 			
 		} catch (JSONException e) {
-			LogHelper.w(TAG, "Parse the matches.json failed");
+			LogHelper.w(TAG, "Parse the statistics.json failed");
 			LogHelper.e(TAG, e);
 			return false;
 		} catch (ClassCastException ex){ //If string format error, will throw ClassCastException
-			LogHelper.w(TAG, "Parse the matches.json failed");
+			LogHelper.w(TAG, "Parse the statistics.json failed");
 			LogHelper.e(TAG, ex);
 			return false;
 		} catch (Exception ex){
-			LogHelper.w(TAG, "Parse the matches.json failed");
+			LogHelper.w(TAG, "Parse the statistics.json failed");
 			LogHelper.e(TAG, ex);
 			return false;
 		}

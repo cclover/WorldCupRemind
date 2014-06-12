@@ -108,6 +108,12 @@ public class MainActivity extends ActionBarActivity implements
 		LogHelper.d(TAG, "Load data!");
 		controller = MatchDataController.getInstance();
 		controller.setListener(this);
+		
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
 		controller.InitData(this);
 	}
 	
@@ -255,21 +261,25 @@ public class MainActivity extends ActionBarActivity implements
 	public void onInitDone(Boolean isSuccess) {
 		
 		LogHelper.d(TAG, String.format("onInitDone result is %s", isSuccess?"true":"false"));
+		final Boolean ret = isSuccess;
 		runOnUiThread(new Runnable() {
-			
 			@Override
 			public void run() {
-				if(matchFragment != null){
-					matchFragment.setData(controller.getMatchesData());	
-				}
-				if(mGroupFragment != null){
-					mGroupFragment.setData(controller.getGroupStaticsData());
-				}
-				if(statisticsFragment != null){
-					statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
-				}
-				if(newsFragment != null){
-					newsFragment.load();
+				if(ret){
+					if(matchFragment != null){
+						matchFragment.setData(controller.getMatchesData());	
+					}
+					if(mGroupFragment != null){
+						mGroupFragment.setData(controller.getGroupStaticsData());
+					}
+					if(statisticsFragment != null){
+						statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
+					}
+					if(newsFragment != null){
+						newsFragment.load();
+					}
+				}else{
+					showToast(R.string.data_fail);
 				}
 			}
 		});

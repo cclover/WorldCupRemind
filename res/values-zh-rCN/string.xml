@@ -11,6 +11,7 @@
     <string name="tab_statistics">数据统计</string>
     <string name="tab_news">新闻资讯</string>
     <string name="app_exit">再按一次退出程序</string>
+    <string name="data_fail">数据解析失败！</string>
      
      <!-- National Name -->
 	<string name="bra">"巴西"</string>
