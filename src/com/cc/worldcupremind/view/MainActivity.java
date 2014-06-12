@@ -18,6 +18,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -483,7 +485,14 @@ public class MainActivity extends ActionBarActivity implements
 	        btnBlog.setOnClickListener(this);
 	        btnWechat.setOnClickListener(this);
 	        setIcon(R.drawable.ic_launcher);   
-	        setTitle(context.getResources().getString(R.string.app_name));    
+	        PackageInfo info = null;
+			try {
+				info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+			} catch (NameNotFoundException e) {
+				LogHelper.e(TAG, e);
+			} 
+			String ver = info != null ? info.versionName : "";
+	        setTitle(context.getResources().getString(R.string.app_name) + ver);    
 	        setButton(AlertDialog.BUTTON_NEUTRAL, context.getResources().getString(R.string.str_about_close), (OnClickListener) null);
 	        setView(view);   
 	    }
