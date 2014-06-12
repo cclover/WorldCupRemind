@@ -327,7 +327,7 @@ public class MatchesFragment extends ListFragment implements View.OnClickListene
 				}
 				int px = ResourceHelper.dip2px(context,10);
 				flag.setBounds(0, 0, px, px);  
-				holder.score.setCompoundDrawables(null, flag, null, null);
+				holder.group.setCompoundDrawables(null, flag, null, null);
 				
 				//only show the remind image or checkbox when game not start
 				if(model.getMatchStatus() != MatchStatus.MATCH_STATUS_WAIT_START || model.getMatchTime().isStart()){

@@ -309,6 +309,7 @@ public class MainActivity extends ActionBarActivity implements
 			@Override
 			public void run() {
 				if(ret){
+					LogHelper.d(TAG, "Init done!");
 					if(matchFragment != null){
 						matchFragment.setData(controller.getMatchesData());	
 					}
@@ -329,25 +330,50 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	@Override
-	public void onUpdateDone(Boolean haveNewVersion, Boolean isSuccess) {
+	public void onUpdateDone(int status, String appURL) {
 
-		LogHelper.d(TAG, String.format("isSuccess is %s", isSuccess?"true":"false"));
-		LogHelper.d(TAG, String.format("haveNewVersion is %s", haveNewVersion?"true":"false"));
+		LogHelper.d(TAG, String.format("The update status is %d", status));
 		
-		final Boolean newVersion = haveNewVersion;
-		final Boolean success = isSuccess;
+		final int sta = status;
+		final String url = appURL;
+		final Context tmpContext = this;
 		runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
-				if(!newVersion && !success){
-					showToast(R.string.str_update_check_fail);
-				}else if(!newVersion && success){
-					showToast(R.string.str_update_check_none);
-				}else if(newVersion && !success){
+				
+				if(sta == UPDATE_STATE_CHECK_ERROR){
+					LogHelper.w(TAG, "UPDATE_STATE_CHECK_ERROR");
+					showToastLong(R.string.str_update_check_fail);
+				}else if(sta == UPDATE_STATE_CHECK_NONE){
+					LogHelper.d(TAG, "UPDATE_STATE_CHECK_NONE");
+					showToastLong(R.string.str_update_check_none);
+				}else if(sta == UPDATE_STATE_CHECK_NEW_APK){
+					LogHelper.d(TAG, "UPDATE_STATE_CHECK_NEW_APK");
+					//Show aleart message
+					AlertDialog.Builder builder = new AlertDialog.Builder(tmpContext);
+					builder.setTitle(R.string.str_update_apk_title);
+					builder.setMessage(R.string.str_update_apk_message);
+					builder.setIcon(R.drawable.ic_launcher);
+					builder.setPositiveButton(R.string.str_update_apk_download, new OnClickListener() {	
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							//open browser to download
+							Intent intent = new Intent(Intent.ACTION_VIEW);
+					    	intent.setData(Uri.parse(url));
+					    	getApplicationContext().startActivity(intent);
+						}
+					});
+					builder.setNegativeButton(android.R.string.cancel, null);
+					builder.show();
+				}else if(sta == UPDATE_STATE_UPDATE_START){
+					LogHelper.d(TAG, "UPDATE_STATE_UPDATE_START");
+					showToast(R.string.str_update_update_start);
+				}else if(sta == UPDATE_STATE_UPDATE_ERROR){
+					LogHelper.w(TAG, "UPDATE_STATE_UPDATE_ERROR");
 					showToast(R.string.str_update_update_fail);
-	
-				}else if(newVersion && success){	
+				}else if(sta == UPDATE_STATE_UPDATE_DONE){
+					LogHelper.d(TAG, "UPDATE_STATE_UPDATE_DONE");
 					if(matchFragment != null){
 						matchFragment.setData(controller.getMatchesData());	
 					}
@@ -357,7 +383,7 @@ public class MainActivity extends ActionBarActivity implements
 					if(statisticsFragment != null){
 						statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
 					}
-					showToast(R.string.str_update_update_done);
+					showToastLong(R.string.str_update_update_done);
 				}
 			}
 		});
@@ -410,11 +436,17 @@ public class MainActivity extends ActionBarActivity implements
 		LogHelper.d(TAG, String.format("onResetDone is %s", issBoolean?"true":"false"));
 //		controller.InitData(this);
 		final Boolean ret = issBoolean;
+		final Context tmpContext = this;
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				if(ret){
-					showToast(R.string.str_update_data_reset_success);
+					AlertDialog.Builder builder = new AlertDialog.Builder(tmpContext);
+					builder.setTitle(R.string.menu_reset);
+					builder.setMessage(R.string.str_update_data_reset_success);
+					builder.setIcon(R.drawable.ic_launcher);
+					builder.setPositiveButton(android.R.string.ok, null);
+					builder.show();
 				}else{
 					showToast(R.string.str_update_data_reset_fail);
 				}
@@ -426,6 +458,13 @@ public class MainActivity extends ActionBarActivity implements
 
 		Toast toast = Toast.makeText(getApplicationContext(),
 			     getResources().getString(id), Toast.LENGTH_SHORT);
+		toast.show();
+	}
+	
+	private void showToastLong(int id){
+
+		Toast toast = Toast.makeText(getApplicationContext(),
+			     getResources().getString(id), Toast.LENGTH_LONG);
 		toast.show();
 	}
 

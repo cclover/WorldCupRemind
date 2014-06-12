@@ -313,10 +313,10 @@ public class DataOperateHelper {
 			LogHelper.d(TAG, "Connect to FTP Server Success");		
 			ftpClient.changeWorkingDirectory("pub");
 			
-			FTPFile[] files = ftpClient.listFiles();
-			for(FTPFile file : files){
-				LogHelper.d(TAG, "File:" + file.getName());
-			}
+//			FTPFile[] files = ftpClient.listFiles();
+//			for(FTPFile file : files){
+//				LogHelper.d(TAG, "File:" + file.getName());
+//			}
 			
 			// Download
 			LogHelper.d(TAG, "Start to download:" + fileName);

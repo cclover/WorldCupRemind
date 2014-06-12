@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.cc.worldcupremind.common.LogHelper;
 import com.cc.worldcupremind.common.ResourceHelper;
-import com.cc.worldcupremind.logic.MatchDataHelper.UPDATE_RET;
 import com.cc.worldcupremind.model.GroupStatistics;
 import com.cc.worldcupremind.model.MatchesModel;
 import com.cc.worldcupremind.model.PlayerStatistics;
@@ -271,20 +270,27 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 			@Override
 			public synchronized void run() {
 
-				// Check version
-				UPDATE_RET ret = dataHelper.updateAllDataFiles();
-				if(ret ==  UPDATE_RET.RET_CHECK_UPDATE_ERROR){
+				ArrayList<String> updateList = dataHelper.checkNewVersion();
+				if(updateList == null){
 					LogHelper.w(TAG, "Check version failed");
-					onUpdateDone(false,false);
-				} else if (ret == UPDATE_RET.RET_NO_NEED_UPDATE){
+					onUpdateDone(UPDATE_STATE_CHECK_ERROR, null);
+				}else if(updateList.size() == 0){
 					LogHelper.d(TAG, "Current date is latest version");
-					onUpdateDone(false,true);
-				} else if(ret == UPDATE_RET.RET_UPDATE_ERROR){
-					LogHelper.d(TAG, String.format("updateData data failed"));
-					onUpdateDone(true, false);
-				} else if(ret == UPDATE_RET.RET_OK){
-					LogHelper.d(TAG, String.format("updateData data success"));
-					onUpdateDone(true, true);
+					onUpdateDone(UPDATE_STATE_CHECK_NONE, null);
+				}else if(updateList.contains("http://")){
+					LogHelper.d(TAG, "Have new APK version!!!!");
+					String url = updateList.get(0);
+					onUpdateDone(UPDATE_STATE_CHECK_NEW_APK, url);
+				}else{
+					LogHelper.d(TAG, "Have new DATA version!!!!");
+					onUpdateDone(UPDATE_STATE_UPDATE_START, null);
+					if(!dataHelper.updateAllDataFiles(updateList)){
+						LogHelper.w(TAG, "Update Data failed!");
+						onUpdateDone(UPDATE_STATE_UPDATE_ERROR, null);
+					}else{
+						LogHelper.d(TAG, "Update Data success!");
+						onUpdateDone(UPDATE_STATE_UPDATE_DONE, null);
+					}
 				}
 			}
 		}).start();
@@ -436,12 +442,6 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	public Boolean resetData(){
 		
 		LogHelper.d(TAG, "resetData");
-		
-		if(!isDataInitDone){
-			LogHelper.w(TAG, "Please init data first");
-			return false;
-		}
-		
 		new Thread(new Runnable() {
 			
 			@Override
@@ -483,11 +483,11 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	}
 
 	@Override
-	public void onUpdateDone(Boolean haveNewVersion, Boolean isSuccess) {
+	public void onUpdateDone(int status, String appURL) {
 
 		if(listenerList != null && listenerList.size() > 0){
 			for (MatchDataListener listener : listenerList) {
-				listener.onUpdateDone(haveNewVersion, isSuccess);
+				listener.onUpdateDone(status, appURL);
 			}
 		}
 	}

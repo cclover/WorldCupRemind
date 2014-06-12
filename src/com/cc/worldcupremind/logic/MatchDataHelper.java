@@ -41,8 +41,6 @@ class MatchDataHelper {
 	private static final String DATA_STATISTICS_FILE = "statistics.json";
 	private static final String DATA_SECOND_STAGE_PIC = "secondstage.png";
 	private static final String FILE_ENCODE_FORMAT = "UTF-8";
-	private static final String JSON_APP_VERSION = "appVersion";
-	private static final String APP_FILE = "WorldCupRemind.apk";
 	
 	/** matches.json format */
 	private static final String JSON_MATCHES_DATA_VERSION = "Version";	/* Double */
@@ -60,6 +58,7 @@ class MatchDataHelper {
 	private static final String JSON_MATCHES_FILED_SCORE_2= "Score2";	/* Int */
 	private static final String JSON_MATCHES_FILED_EXT= "ext";			/* String */
 	private static final String JSON_NEWS_URL = "newsURL";				/* String */
+	private static final String JSON_MATCHES_STAGE = "stage";			/* Int */
 	
 	/** remind.json format */
 	private static final String JSON_REMIND_LIST = "Remind";			/* Array */
@@ -89,6 +88,9 @@ class MatchDataHelper {
 	/** version.json format */
 	private static final String JSON_VERSION_MATCHES = "matchesVer";		/* Double */
 	private static final String JSON_VERSION_STATISTICS = "statisticsVer";	/* Double */
+	private static final String JSON_VERSION_APP_VERSION = "appVersion";
+	private static final String JSON_VERSION_APP_APK = "appURL";
+	private static final String JSON_VERSION_APP_EXT = "ext";
 	
 	
 	/** MatchesModel list */
@@ -123,16 +125,9 @@ class MatchDataHelper {
 	
 	/** News URL */
 	private String newsURL;
-
-
-	/** Return value of updateAllDataFiles*/
-	public enum UPDATE_RET{
-		
-		RET_CHECK_UPDATE_ERROR,
-		RET_NO_NEED_UPDATE,
-		RET_UPDATE_ERROR,
-		RET_OK,
-	}
+	
+	/** Match stage */
+	private MatchStage matchStage;
 	
 	/**
 	 * Construct
@@ -268,24 +263,97 @@ class MatchDataHelper {
 	}
 	
 	/**
+	 * Check the data version
+	 * 
+	 * @return
+	 * Return the need update file name list, return null when error
+	 */
+	public ArrayList<String> checkNewVersion(){
+		
+		LogHelper.d(TAG, "checkNewVersion()");
+		ArrayList<String> updateFileList = new ArrayList<String>();
+		
+		//Get Download file stream
+		InputStream verStream = DataOperateHelper.loadFileFromFTPNetwork(DATA_VERSION_FILE);
+		if(verStream == null){
+			LogHelper.w(TAG, "Download version file filed");
+			return null;
+		}
+		
+		//Get the version
+		LogHelper.d(TAG, "Download success!");
+		String ver = DataOperateHelper.covertStream2String(verStream, FILE_ENCODE_FORMAT);
+		try {
+			verStream.close(); //close stream
+		} catch (IOException e) {
+			LogHelper.e(TAG, e);
+			return null;
+		}
+		
+		if(ver == null){
+			LogHelper.w(TAG, "covertStream2String filed");
+			return null;
+		}
+		
+		//Check the version
+		LogHelper.d(TAG, "Network version is :" + ver);
+		try {
+			JSONObject jsonObject = new JSONObject(ver);
+			double newMatchesVer = jsonObject.getDouble(JSON_VERSION_MATCHES);
+			double newStatisticsVer = jsonObject.getDouble(JSON_VERSION_STATISTICS);
+			double appVersion = jsonObject.getDouble(JSON_VERSION_APP_VERSION);
+			
+			//Check APP version
+			PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);  
+			if(appVersion > Double.parseDouble(info.versionName)){
+				LogHelper.d(TAG, "App need be updated, version:" + appVersion);
+				String appURL = jsonObject.getString(JSON_VERSION_APP_APK);
+				updateFileList.add(appURL);
+				return updateFileList;
+			}
+			
+			//Check data version
+			if(newMatchesVer > dataMatchesVersion){
+				LogHelper.d(TAG, "Matches data need be updated, version:" + dataMatchesVersion);
+				updateFileList.add(DATA_MATCHES_FILE);
+			}
+			if(newStatisticsVer > dataStatisticsVersion){
+				LogHelper.d(TAG, "Statisstics data need be updated, version:" + dataStatisticsVersion);
+				updateFileList.add(DATA_STATISTICS_FILE);
+			}
+			return updateFileList;
+		} catch (JSONException e1) {
+			LogHelper.w(TAG, "Parse the version.json failed");
+			LogHelper.e(TAG, e1);
+		}catch (ClassCastException ex){ //If string format error, will throw ClassCastException
+			LogHelper.w(TAG, "Parse the version.json failed");
+			LogHelper.e(TAG, ex);
+		} catch (Exception ex){
+			LogHelper.w(TAG, "Parse the version.json failed");
+			LogHelper.e(TAG, ex);
+		}
+		return null;
+	}
+
+	
+	/**
 	 * Update the all data files from network
 	 * 
 	 * @return
-	 * return @UPDATE_RESUT
+	 * return true if update success, otherwise false.
 	 */
-	public UPDATE_RET updateAllDataFiles(){
+	public Boolean updateAllDataFiles(ArrayList<String> updateList){
 		
 		LogHelper.d(TAG, "updateAllData()");
 
 		// Check update.
 		LogHelper.d(TAG, "Check version file");
-		ArrayList<String> updateList = checkNewVersion();
 		if(updateList == null){
 			LogHelper.w(TAG, "Fail to check the new version");
-			return UPDATE_RET.RET_CHECK_UPDATE_ERROR;
+			return false;
 		} else if(updateList.size() == 0){
 			 LogHelper.d(TAG, "current is latest version");
-			 return UPDATE_RET.RET_NO_NEED_UPDATE;
+			 return false;
 		}
 		 
 		// Update each data
@@ -296,19 +364,23 @@ class MatchDataHelper {
 			Boolean ret = false; 
 			if(updateFile.equals(DATA_MATCHES_FILE)){
 				ret = loadDataFromNetwork(DATA_MATCHES_FILE);
-				donwloadSecondStagePic();
 			} else if(updateFile.equals(DATA_STATISTICS_FILE)){
 				ret = loadDataFromNetwork(DATA_STATISTICS_FILE);
 			}
-			
+
 			if(!ret){
 				LogHelper.w(TAG, "update failed!");
-				return UPDATE_RET.RET_UPDATE_ERROR;
+				return false;
 			}
 		}
-		
+		if(matchStage != MatchStage.STAGE_GROUP){
+			LogHelper.d(TAG, "update the second stage pic");
+			donwloadSecondStagePic();
+		}else{
+			LogHelper.d(TAG, "Current in GROUP stage, no need update the pic");
+		}
 		LogHelper.d(TAG, "all update success!");
-		return UPDATE_RET.RET_OK;
+		return true;
 	}
 	
 	
@@ -450,7 +522,7 @@ class MatchDataHelper {
 	private Boolean donwloadSecondStagePic(){
 		
 		LogHelper.d(TAG, "donwloadSecondStagePic()");
-		
+				
 		InputStream picInStream = DataOperateHelper.loadFileFromFTPNetwork(DATA_SECOND_STAGE_PIC);
 		if(picInStream == null){
 			LogHelper.w(TAG, "Fail to donwloadSecondStagePic");
@@ -513,75 +585,6 @@ class MatchDataHelper {
 		
 		LogHelper.d(TAG, "saveRemindData Successed!");
 		return true;
-	}
-	
-	
-	/**
-	 * Check the data version
-	 * 
-	 * @return
-	 * Return the need update file name list, return null when error
-	 */
-	private ArrayList<String> checkNewVersion(){
-		
-		LogHelper.d(TAG, "checkNewVersion()");
-		ArrayList<String> updateFileList = new ArrayList<String>();
-		
-		//Get Download file stream
-		InputStream verStream = DataOperateHelper.loadFileFromFTPNetwork(DATA_VERSION_FILE);
-		if(verStream == null){
-			LogHelper.w(TAG, "Download version file filed");
-			return null;
-		}
-		
-		//Get the version
-		LogHelper.d(TAG, "Download success!");
-		String ver = DataOperateHelper.covertStream2String(verStream, FILE_ENCODE_FORMAT);
-		try {
-			verStream.close(); //close stream
-		} catch (IOException e) {
-			LogHelper.e(TAG, e);
-			return null;
-		}
-		
-		if(ver == null){
-			LogHelper.w(TAG, "covertStream2String filed");
-			return null;
-		}
-		
-		//Check the version
-		LogHelper.d(TAG, "Network version is :" + ver);
-		try {
-			JSONObject jsonObject = new JSONObject(ver);
-			double newMatchesVer = jsonObject.getDouble(JSON_VERSION_MATCHES);
-			double newStatisticsVer = jsonObject.getDouble(JSON_VERSION_STATISTICS);
-			double appVersion = jsonObject.getDouble(JSON_APP_VERSION);
-			
-			PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);  
-			if(appVersion > Double.parseDouble(info.versionName)){
-				LogHelper.d(TAG, "App need be updated, version:" + appVersion);
-//				updateFileList.add(APP_FILE);
-			}
-			if(newMatchesVer > dataMatchesVersion){
-				LogHelper.d(TAG, "Matches data need be updated, version:" + dataMatchesVersion);
-				updateFileList.add(DATA_MATCHES_FILE);
-			}
-			if(newStatisticsVer > dataStatisticsVersion){
-				LogHelper.d(TAG, "Statisstics data need be updated, version:" + dataStatisticsVersion);
-				updateFileList.add(DATA_STATISTICS_FILE);
-			}
-			return updateFileList;
-		} catch (JSONException e1) {
-			LogHelper.w(TAG, "Parse the version.json failed");
-			LogHelper.e(TAG, e1);
-		}catch (ClassCastException ex){ //If string format error, will throw ClassCastException
-			LogHelper.w(TAG, "Parse the version.json failed");
-			LogHelper.e(TAG, ex);
-		} catch (Exception ex){
-			LogHelper.w(TAG, "Parse the version.json failed");
-			LogHelper.e(TAG, ex);
-		}
-		return null;
 	}
 	
 
@@ -792,6 +795,7 @@ class MatchDataHelper {
 			matchesCount = rootObj.getInt(JSON_MATCHES_COUNT);
 			teamsCount = rootObj.getInt(JSON_TEAMS_COUNT);
 			newsURL = rootObj.optString(JSON_NEWS_URL);
+			matchStage = MatchStage.valueOf(rootObj.getInt(JSON_MATCHES_STAGE));
 	    	LogHelper.d(TAG, "The match data version is:" + String.valueOf(tmpVersion));
 	    	
 	    	//parse match data

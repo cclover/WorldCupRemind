@@ -87,14 +87,20 @@
 	<string name="str_alram_notify">CLICK TO CLOSE.</string>
 	
 	<!-- Update -->
-	<string name="str_update_check_start">UPDATING DATE...</string>
+	<string name="str_update_check_start">CHECK NEW UPDATES...</string>
 	<string name="str_update_check_fail">FAIL TO CHECK THE UPDATES.</string>
 	<string name="str_update_check_none">THERE ARE NO UPDATES AVAILABLE.</string>
+	<string name="str_update_update_start">START TO DOWNLOAD AND UPDATE.</string>
 	<string name="str_update_update_fail">FAIL TO UPDATE THE DATA.</string>
-	<string name="str_update_update_done">Update Done!</string>
+	<string name="str_update_update_done">UPDATE DONE!</string>
+	<string name="str_update_apk_title">APP UPDATES AVAILABLE</string>
+	<string name="str_update_apk_message">PLEASE UPDATE IT!\r\nPLEASE RESET DATE IF THE DATA INCORRECT AFTER INSTALL THE NEW VERSION!</string>
+	<string name="str_update_apk_download">UPDATE</string>
+	
+	<!-- Reset data -->
 	<string name="str_update_data_reset">YOU WILL LOSE ALL DATA. CONTINUE?</string>
 	<string name="str_update_data_reset_fail">FAIL TO RESET DATA.</string>
-	<string name="str_update_data_reset_success">RESET DATA DONE!</string>
+	<string name="str_update_data_reset_success">RESET DATA DONE!PLEASE RESTART APPLICATION IF DATA INCORRECT!</string>
 	
 	<!-- About -->
 	<string name="str_about_close">CLOSE</string>
