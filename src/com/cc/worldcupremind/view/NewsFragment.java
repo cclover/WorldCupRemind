@@ -14,7 +14,7 @@ import android.webkit.WebView;
 public class NewsFragment extends Fragment {
 	
 	private static final String TAG = "NewsFragment";
-	private WebView myWebView;
+	private WebView myWebView = null;
 	private final static String NEWS_URL = "http://3g.163.com/ntes/special/00340H1J/worldcup2014.html?from=index";
   
   	@Override
@@ -27,14 +27,7 @@ public class NewsFragment extends Fragment {
 //	 	myWebView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 //		myWebView.getSettings().setLoadWithOverviewMode(true);
 //	 	myWebView.setWebViewClient(new WebViewClient());
-	  	String url = MatchDataController.getInstance().getNewsURL();
-	  	if(url == null || url.length() == 0){
-	  		LogHelper.d(TAG, "Visit default url");
-	  		myWebView.loadUrl(NEWS_URL);
-	 	}else{
-	 		LogHelper.d(TAG, "Visit config url");
-	 		myWebView.loadUrl(url);
-	 	}
+	 	load();
       	return view;
   	}
   
@@ -43,6 +36,21 @@ public class NewsFragment extends Fragment {
   	public void onActivityCreated(Bundle savedInstanceState) {
   		super.onActivityCreated(savedInstanceState);
   		setRetainInstance(true);
+  	}
+  	
+  	public void load(){
+  		if(myWebView != null){
+  			myWebView.loadUrl(getURL());
+  		}
+  	}
+  	
+  	private String getURL(){
+  	  	String url = MatchDataController.getInstance().getNewsURL();
+	  	if(url == null || url.length() == 0){
+		 	LogHelper.w(TAG, "Visit default url");
+	  		url = NEWS_URL; 
+	 	}
+	  	return url;
   	}
   	
 }

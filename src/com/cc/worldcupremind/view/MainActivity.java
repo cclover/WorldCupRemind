@@ -90,7 +90,7 @@ public class MainActivity extends ActionBarActivity implements
 							if(remindItem != null){
 								remindItem.setVisible(false);
 							}
-						}
+						}						
 					}
 				});
 
@@ -268,6 +268,9 @@ public class MainActivity extends ActionBarActivity implements
 				if(statisticsFragment != null){
 					statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
 				}
+				if(newsFragment != null){
+					newsFragment.load();
+				}
 			}
 		});
 	}
@@ -388,10 +391,8 @@ public class MainActivity extends ActionBarActivity implements
 			}else if(v.getId() == R.id.btnWechat){
 			  android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 			  clipboard.setText("cc287388");
-			  Toast toast = Toast.makeText(context,
-					     getResources().getString(R.string.str_about_wechar), Toast.LENGTH_SHORT);
-					   toast.setGravity(Gravity.BOTTOM, 0, 0);
-					   toast.show();
+			  Toast toast = Toast.makeText(context,getResources().getString(R.string.str_about_wechar), Toast.LENGTH_SHORT);
+			  toast.show();
 			}
 		}   
 	    
