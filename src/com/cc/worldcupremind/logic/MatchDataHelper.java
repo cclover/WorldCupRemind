@@ -783,6 +783,7 @@ class MatchDataHelper {
 		
 		LogHelper.d(TAG, "parseMatchData()");
 		double tmpVersion = 0;
+		matchesList.clear();
 		
 		// Convert the json string to match object
 		JSONTokener jsonParser  = new JSONTokener(matchesString);
@@ -846,6 +847,8 @@ class MatchDataHelper {
 		
 		LogHelper.d(TAG, "parseStatisticsData()");
 		double tmpVersion = 0;
+		goalStatisticsList.clear();
+		assistStatisticsList.clear();
 		
 		// Convert the json string to match object
 		JSONTokener jsonParser  = new JSONTokener(statisticsString);
