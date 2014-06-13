@@ -39,6 +39,7 @@ public class DataOperateHelper {
 	private static final int FTP_SERVER_PORT = 21;
 	private static final int NETWORK_TIMEOUT = 20*1000;
 	private static final int BUFFER_SIZE = 1024*8;
+
 	
 	/*
 	 * Check the file is exist in local private files folder or not
@@ -236,43 +237,74 @@ public class DataOperateHelper {
 		return true;
 	}
 
-	/*
-	 * Download the data file from network (HTTP)
+
+	/**
+	 * connect to HTTP Server
 	 * 
-	 * @param fileList
+	 * @param fileURL 
 	 * file URL list want to donwload on HTTP Server
 	 * 
-	 * @return 
-	 * The file input stream List if successes. return NULL if fail.
+	 * @return @HttpURLConnection object
 	 */
-	public static InputStream loadFileFromHTTPNetwork(String fileURL){
+	public static HttpURLConnection conectHTTPServer(String fileURL){
 		
-		LogHelper.d(TAG, "loadFileFromNetwork: HTTP" + fileURL);
-			
-		//download from http server
-		InputStream istream = null;
+		LogHelper.d(TAG, "conectHTTPServer: " + fileURL);
     	URL url = null;
     	HttpURLConnection httpConn = null;
-    	try {
-    			//Get update file stream
-				url = new URL(fileURL);
-				httpConn = (HttpURLConnection)url.openConnection();
-			    HttpURLConnection.setFollowRedirects(true);
-			    httpConn.setConnectTimeout(NETWORK_TIMEOUT);
-			    httpConn.setReadTimeout(NETWORK_TIMEOUT);
-	 		    httpConn.setRequestMethod("GET");
-			    httpConn.setRequestProperty("User-Agent", "Mozilla/4.0(compatible;MSIE 6.0;Windows 2000)");
-			    istream = httpConn.getInputStream();
-			    return istream;
-
-		}  catch (MalformedURLException e) {
+		try {
+			//Get update file stream
+			url = new URL(fileURL);
+			httpConn = (HttpURLConnection)url.openConnection();
+		    HttpURLConnection.setFollowRedirects(true);
+		    httpConn.setConnectTimeout(NETWORK_TIMEOUT);
+		    httpConn.setReadTimeout(NETWORK_TIMEOUT);
+ 		    httpConn.setRequestMethod("GET");
+		    httpConn.setRequestProperty("User-Agent", "Mozilla/4.0(compatible;MSIE 6.0;Windows 2000)");
+		    return httpConn;
+		}catch (MalformedURLException e) {
 			LogHelper.e(TAG, e);
-		} catch (IOException e) {
+		}catch (IOException e) {
 			LogHelper.e(TAG, e);
 		} finally {
 			if(httpConn != null){
 				httpConn.disconnect();
 			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Close the http connect 
+	 * @param httpConn @HttpURLConnection object
+	 */
+	public static void disconnectHTTPServer(HttpURLConnection httpConn){
+		if(httpConn != null){
+			httpConn.disconnect();
+		}
+	}
+	
+	
+	/**
+	 * Download the data file from network (HTTP)
+	 * 
+	 * @param httpConn @HttpURLConnection object
+	 * 
+	 * @return 
+	 * The file input stream List if successes. return NULL if fail.
+	 */
+	public static InputStream loadFileFromHTTPNetwork(HttpURLConnection httpConn){
+		
+		LogHelper.d(TAG, "loadFileFromHTTPNetwork");
+			
+		//download from http server
+		InputStream istream = null;
+
+    	try {
+			//Get update file stream
+		    istream = httpConn.getInputStream();
+		    return istream;
+		} catch (IOException e) {
+			LogHelper.e(TAG, e);
 		}
 		return null;
 	}
