@@ -58,11 +58,11 @@ public class StatisticsFragment extends ListFragment {
 			public void onClick(View v) {
 				if(isGoal){
 					mDataStaticsList  = mAssistStaticsList;
-					btnSwitch.setText(R.string.str_stat_goal);
+					btnSwitch.setText(R.string.str_stat_assist);
 					isGoal = false;
 				}else{
 					mDataStaticsList = mGoalStaticsList;
-					btnSwitch.setText(R.string.str_stat_assist);
+					btnSwitch.setText(R.string.str_stat_goal);
 					isGoal = true;
 				}
 				if (mAdapter != null) {

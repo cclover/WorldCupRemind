@@ -43,14 +43,6 @@ class MatchDataHelper {
 	private static final String DATA_SECOND_STAGE_PIC = "secondstage.png";
 	private static final String FILE_ENCODE_FORMAT = "UTF-8";
 	
-	/**
-	 * HTTP URL
-	 */
-	private static final String VERSION_HTTP_URL = "https://raw.githubusercontent.com/cclover/store/master/version.json";
-	private static final String MATCH_HTTP_URL= "https://raw.githubusercontent.com/cclover/store/master/matches.json";
-	private static final String STATISTICS_HTTP_URL  = "https://raw.githubusercontent.com/cclover/store/master/statistics.json";
-	private static final String PIC_HTTP_URL = "https://raw.githubusercontent.com/cclover/store/master/secondstage.png";
-	
 	/** matches.json format */
 	private static final String JSON_MATCHES_DATA_VERSION = "Version";	/* Double */
 	private static final String JSON_TEAMS_COUNT = "TeamsCount";		/* Int */
@@ -285,7 +277,7 @@ class MatchDataHelper {
 		//Get Download file stream
 //		InputStream verStream = DataOperateHelper.loadFileFromFTPNetwork(DATA_VERSION_FILE);
 		
-		HttpURLConnection conn = DataOperateHelper.conectHTTPServer(VERSION_HTTP_URL);
+		HttpURLConnection conn = DataOperateHelper.conectHTTPServer(DATA_VERSION_FILE);
 		if(conn == null){
 			LogHelper.w(TAG, "Fail to connect server");
 			return null;
@@ -542,7 +534,7 @@ class MatchDataHelper {
 		LogHelper.d(TAG, "donwloadSecondStagePic()");	
 		//InputStream picInStream = DataOperateHelper.loadFileFromFTPNetwork(DATA_SECOND_STAGE_PIC);
 		
-		HttpURLConnection conn = DataOperateHelper.conectHTTPServer(PIC_HTTP_URL);
+		HttpURLConnection conn = DataOperateHelper.conectHTTPServer(DATA_SECOND_STAGE_PIC);
 		if(conn == null){
 			LogHelper.w(TAG, "Fail to donwloadSecondStagePic");
 			return false;
@@ -729,7 +721,7 @@ class MatchDataHelper {
 		//Load data from network
 //		InputStream matchesStream = DataOperateHelper.loadFileFromFTPNetwork(fileName);
 		
-		HttpURLConnection conn = DataOperateHelper.conectHTTPServer(getHTTPURL(fileName));
+		HttpURLConnection conn = DataOperateHelper.conectHTTPServer(fileName);
 		if(conn == null){
 			LogHelper.w(TAG, "loadFileFromNetwork failed:" + fileName);
 			return false;
@@ -1006,19 +998,5 @@ class MatchDataHelper {
 		
 		LogHelper.d(TAG, "parseRemindData successed! remindList size:" + String.valueOf(remindList.size()));
 		return true;
-	}
-	
-	private String getHTTPURL(String fileName){
-		String fileURL = "";
-		if(fileName == DATA_VERSION_FILE){
-			fileURL = VERSION_HTTP_URL;
-		}else if(fileName == DATA_MATCHES_FILE){
-			fileURL = MATCH_HTTP_URL;
-		}else if(fileName == DATA_STATISTICS_FILE){
-			fileURL = STATISTICS_HTTP_URL;
-		}else if(fileName == DATA_SECOND_STAGE_PIC){
-			fileURL = PIC_HTTP_URL;
-		}
-		return fileURL;
 	}
 }

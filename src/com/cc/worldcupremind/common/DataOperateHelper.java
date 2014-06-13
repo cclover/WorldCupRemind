@@ -28,6 +28,8 @@ import android.content.res.AssetManager;
 public class DataOperateHelper {
 	
 	private static final String TAG = "DataOperateHelper";
+	//private static final String HTTP_URL_BASE = "https://raw.githubusercontent.com/cclover/store/master/";
+	private static final String HTTP_URL_BASE = "http://liu2.sinaapp.com/static/cc/";
 	
 	/* FTP Server info*/
 	private static final String FTP_SERVER_URL = "cclover.free3v.net";
@@ -246,14 +248,14 @@ public class DataOperateHelper {
 	 * 
 	 * @return @HttpURLConnection object
 	 */
-	public static HttpURLConnection conectHTTPServer(String fileURL){
+	public static HttpURLConnection conectHTTPServer(String fileName){
 		
-		LogHelper.d(TAG, "conectHTTPServer: " + fileURL);
+		LogHelper.d(TAG, "conectHTTPServer: " + fileName);
     	URL url = null;
     	HttpURLConnection httpConn = null;
 		try {
 			//Get update file stream
-			url = new URL(fileURL);
+			url = new URL(HTTP_URL_BASE+fileName);
 			httpConn = (HttpURLConnection)url.openConnection();
 		    HttpURLConnection.setFollowRedirects(true);
 		    httpConn.setConnectTimeout(NETWORK_TIMEOUT);
