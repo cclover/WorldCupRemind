@@ -28,8 +28,8 @@ import android.content.res.AssetManager;
 public class DataOperateHelper {
 	
 	private static final String TAG = "DataOperateHelper";
-	//private static final String HTTP_URL_BASE = "https://raw.githubusercontent.com/cclover/store/master/";
-	private static final String HTTP_URL_BASE = "http://liu2.sinaapp.com/static/cc/";
+	private static final String HTTP_URL_BASE = "https://raw.githubusercontent.com/cclover/store/master/";
+	//private static final String HTTP_URL_BASE = "http://liu2.sinaapp.com/static/cc/";
 	
 	/* FTP Server info*/
 	private static final String FTP_SERVER_URL = "cclover.free3v.net";

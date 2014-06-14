@@ -7,6 +7,7 @@ import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.common.LogHelper;
 import com.cc.worldcupremind.logic.MatchDataController;
 import com.cc.worldcupremind.model.PlayerStatistics;
+import com.cc.worldcupremind.model.PlayerStatistics.STATISTICS_TYPE;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -192,7 +193,13 @@ public class StatisticsFragment extends ListFragment {
 				}else{
 					holder.txtPalyName.setText(data.getPlayerEngName());
 				}
-				holder.txtCount.setText(String.valueOf(data.getCount()));
+				
+				int penCount = data.getPenGoalCount();
+				if(data.getType() == STATISTICS_TYPE.STATISTICS_GOAL && penCount > 0){
+					holder.txtCount.setText(String.format("%d(%d)", data.getCount(), penCount));
+				}else{
+					holder.txtCount.setText(String.valueOf(data.getCount()));
+				}
 				holder.txtTeamName.setText(controller.getTeamNationalName(data.getPlayerTeamCode()));
 				Drawable drawable= controller.getTeamNationalFlag(data.getPlayerTeamCode());
 				if(drawable != null){

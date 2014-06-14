@@ -1,12 +1,12 @@
-{"version":1.1,"groups":[
+{"version":1.2,"groups":[
 {"team":"bra","group":"A","w":1,"d":0,"l":0,"gf":3,"ga":1,"pts":3,"pos":1},
 {"team":"cro","group":"A","w":0,"d":0,"l":1,"gf":1,"ga":3,"pts":0,"pos":4},
-{"team":"mex","group":"A","w":0,"d":0,"l":0,"gf":0,"ga":0,"pts":0,"pos":2},
-{"team":"cmr","group":"A","w":0,"d":0,"l":0,"gf":0,"ga":0,"pts":0,"pos":3},
-{"team":"esp","group":"B","w":0,"d":0,"l":0,"gf":0,"ga":0,"pts":0,"pos":1},
-{"team":"ned","group":"B","w":0,"d":0,"l":0,"gf":0,"ga":0,"pts":0,"pos":2},
-{"team":"chi","group":"B","w":0,"d":0,"l":0,"gf":0,"ga":0,"pts":0,"pos":3},
-{"team":"aus","group":"B","w":0,"d":0,"l":0,"gf":0,"ga":0,"pts":0,"pos":4},
+{"team":"mex","group":"A","w":1,"d":0,"l":0,"gf":1,"ga":0,"pts":3,"pos":2},
+{"team":"cmr","group":"A","w":0,"d":0,"l":1,"gf":0,"ga":1,"pts":0,"pos":3},
+{"team":"esp","group":"B","w":0,"d":0,"l":1,"gf":1,"ga":5,"pts":0,"pos":4},
+{"team":"ned","group":"B","w":1,"d":0,"l":0,"gf":5,"ga":1,"pts":3,"pos":1},
+{"team":"chi","group":"B","w":1,"d":0,"l":0,"gf":3,"ga":1,"pts":3,"pos":2},
+{"team":"aus","group":"B","w":0,"d":0,"l":1,"gf":1,"ga":3,"pts":0,"pos":3},
 {"team":"col","group":"C","w":0,"d":0,"l":0,"gf":0,"ga":0,"pts":0,"pos":1},
 {"team":"gre","group":"C","w":0,"d":0,"l":0,"gf":0,"ga":0,"pts":0,"pos":2},
 {"team":"civ","group":"C","w":0,"d":0,"l":0,"gf":0,"ga":0,"pts":0,"pos":3},
@@ -33,29 +33,24 @@
 {"team":"kor","group":"H","w":0,"d":0,"l":0,"gf":0,"ga":0,"pts":0,"pos":4}],
 "goal":
 [
-{"pos":1,"name":"内马尔","eng":"Neymar","team":"bra","count":2,"ext":""},
-{"pos":2,"name":"奥斯卡","eng":"Oscar","team":"bra","count":1,"ext":""},
-{"pos":3,"name":"梅西","eng":"Messi","team":"arg","count":0,"ext":""},
-{"pos":3,"name":"C罗","eng":"C.Ronaldo","team":"por","count":0,"ext":""},
-{"pos":3,"name":"苏亚雷斯","eng":"Suarez","team":"uru","count":0,"ext":""},
-{"pos":3,"name":"阿奎罗","eng":"Agüero","team":"arg","count":0,"ext":""},
-{"pos":3,"name":"鲁尼","eng":"Rooney","team":"eng","count":0,"ext":""},
-{"pos":3,"name":"范佩西","eng":"van Persie","team":"ned","count":0,"ext":""},
-{"pos":3,"name":"本泽马","eng":"Benzema","team":"fra","count":0,"ext":""},
-{"pos":3,"name":"托雷斯","eng":"Torres","team":"esp","count":0,"ext":""},
-{"pos":3,"name":"巴洛特利","eng":"Balotelli","team":"ita","count":0,"ext":""}
+{"pos":1,"name":"范佩西","eng":"van Persie","team":"ned","count":2,"ext":""},
+{"pos":1,"name":"罗本","eng":"Robben","team":"ned","count":2,"ext":""},
+{"pos":3,"name":"内马尔","eng":"Neymar","team":"bra","count":2,"ext":"1"},
+{"pos":4,"name":"奥斯卡","eng":"Oscar","team":"bra","count":1,"ext":""},
+{"pos":4,"name":"佩拉尔塔","eng":"Peralta","team":"mex","count":1,"ext":""},
+{"pos":4,"name":"德弗里","eng":"De Vrij","team":"ned","count":1,"ext":""},
+{"pos":4,"name":"桑切斯","eng":"Sanchez","team":"chi","count":1,"ext":""},
+{"pos":4,"name":"巴尔迪比亚","eng":"Valdivia","team":"chi","count":1,"ext":""},
+{"pos":4,"name":"波塞茹尔","eng":"Beausejour","team":"chi","count":1,"ext":""},
+{"pos":4,"name":"卡希尔","eng":"Cahill","team":"aus","count":1,"ext":""},
+{"pos":11,"name":"阿隆索","eng":"Alonso","team":"esp","count":1,"ext":"1"}
 ],
 "assist":
 [
-{"pos":1,"name":"奥斯卡","eng":"Oscar","team":"bra","count":1,"ext":""},
-{"pos":1,"name":"拉米雷斯","eng":"Ramires","team":"bra","count":1,"ext":""},
-{"pos":2,"name":"哈维","eng":"Xavi","team":"esp","count":0,"ext":""},
-{"pos":2,"name":"法布雷加斯","eng":"Fábregas","team":"esp","count":0,"ext":""},
-{"pos":2,"name":"伊涅斯塔","eng":"Iniesta","team":"esp","count":0,"ext":""},
-{"pos":2,"name":"皮尔洛","eng":"Pirlo","team":"ita","count":0,"ext":""},
-{"pos":2,"name":"罗本","eng":"Robben","team":"ned","count":0,"ext":""},
-{"pos":2,"name":"迪马里亚","eng":"Di María","team":"arg","count":0,"ext":""},
-{"pos":2,"name":"阿扎尔","eng":"EHazard","team":"bel","count":0,"ext":""},
-{"pos":2,"name":"厄齐尔","eng":"Özil","team":"ger","count":0,"ext":""},
-{"pos":2,"name":"杰拉德","eng":"Gerrard","team":"eng","count":0,"ext":""}
+{"pos":1,"name":"布林德","eng":"Blind","team":"ned","count":2,"ext":""},
+{"pos":2,"name":"奥斯卡","eng":"Oscar","team":"bra","count":1,"ext":""},
+{"pos":2,"name":"拉米雷斯","eng":"Ramires","team":"bra","count":1,"ext":""},
+{"pos":2,"name":"斯内德","eng":"Sneijder","team":"ned","count":1,"ext":""},
+{"pos":2,"name":"桑切斯","eng":"Sanchez","team":"chi","count":1,"ext":""},
+{"pos":2,"name":"弗兰季奇","eng":"Franjic","team":"aus","count":1,"ext":""}
 ]}

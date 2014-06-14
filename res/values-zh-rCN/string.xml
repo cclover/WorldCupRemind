@@ -68,7 +68,7 @@
 	<string name="str_konckout_match">淘汰赛对阵</string>
 	
 	<!-- Statistics Info -->
-	<string name="str_player_goal">进球</string>
+	<string name="str_player_goal">进球(点球)</string>
 	<string name="str_player_assist">助攻</string>
 	<string name="str_player_name">球员名称</string>
 	<string name="str_team_name">球队名称</string>

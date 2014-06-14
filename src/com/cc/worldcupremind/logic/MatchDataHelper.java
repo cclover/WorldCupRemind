@@ -917,7 +917,9 @@ class MatchDataHelper {
 				int count = goalObj.getInt(JSON_STATISTICS_PLAYER_COUNT);
 				int pos = goalObj.getInt(JSON_STATISTICS_PLAYER_POS);
 				String endName = goalObj.getString(JSON_STATISTICS_PLAYER_ENG_NAME);
+				String ext = goalObj.getString(JSON_STATISTICS_PLAYER_EXT);
 				PlayerStatistics player = new PlayerStatistics(pos, endName, name, team, count, STATISTICS_TYPE.STATISTICS_GOAL);
+				player.setExt(ext);
 				goalStatisticsList.add(player);
 			}
 			

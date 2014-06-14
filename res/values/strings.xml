@@ -69,7 +69,7 @@
 	<string name="str_konckout_match">SECOND STAGE MATCHES</string>
 	
 	<!-- Statistics Info -->
-	<string name="str_player_goal">GOAL</string>
+	<string name="str_player_goal">GOAL(Pen)</string>
 	<string name="str_player_assist">ASSIST</string>
 	<string name="str_player_name">PALYER</string>
 	<string name="str_team_name">TEAM</string>

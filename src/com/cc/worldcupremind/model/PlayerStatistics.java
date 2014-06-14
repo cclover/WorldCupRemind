@@ -12,6 +12,7 @@ public class PlayerStatistics {
 	private String playerEngName;
 	private String playerTeamCode;
 	private int count;
+	private String ext;
 	private STATISTICS_TYPE type;
 	
 	public PlayerStatistics(int pos, String engName, String name, String team, int count, STATISTICS_TYPE type){
@@ -21,6 +22,7 @@ public class PlayerStatistics {
 		this.playerTeamCode = team;
 		this.count = count;
 		this.type = type;
+		this.ext = null;
 	}
 	
 	/**
@@ -63,5 +65,23 @@ public class PlayerStatistics {
 	 */
 	public STATISTICS_TYPE getType() {
 		return type;
+	}
+	
+	/**
+	 * @param ext the ext to set
+	 */
+	public void setExt(String ext) {
+		this.ext = ext;
+	}
+	
+	public int getPenGoalCount(){
+		if(ext == null || ext.length() == 0 || type == STATISTICS_TYPE.STATISTICS_ASSIST){
+			return 0;
+		}
+		try{
+			return Integer.parseInt(ext);
+		}catch(NumberFormatException e){
+			return 0;
+		}
 	}
 }
