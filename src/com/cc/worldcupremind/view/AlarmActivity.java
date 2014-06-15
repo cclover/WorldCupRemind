@@ -16,6 +16,7 @@ import com.cc.worldcupremind.model.MatchStatus;
 import com.cc.worldcupremind.model.MatchesModel;
 
 import android.app.Activity;
+import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -27,6 +28,7 @@ import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
@@ -63,13 +65,25 @@ public class AlarmActivity extends Activity {
 	private MatchDataController controller = null;
 	private Context context = null;
 	private NotificationManager nm = null;
+	private AudioManager audioManager = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND, WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON 
+				| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON );
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED 
+				| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+		
+		//Show in lock screen 
+		KeyguardManager manager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+		if( manager.inKeyguardRestrictedInputMode()){
+			setTheme(android.R.style.Theme_Wallpaper_NoTitleBar);
+		}
 		setContentView(R.layout.activity_alarm);
+		
+	    audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 		
 		//Set listview
 		listView = (ListView)findViewById(R.id.listAlarm);
@@ -88,6 +102,7 @@ public class AlarmActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
+				stopMusicAndVibrator();
 				finish();
 			}
 		});
@@ -120,17 +135,15 @@ public class AlarmActivity extends Activity {
 	protected void onDestroy() {
 		super.onDestroy();
 		
+		stopMusicAndVibrator();
+		
+	    if(audioManager != null){
+		    audioManager.abandonAudioFocus(null);
+	    }
+	    
 		if(nm != null){
 			nm.cancel(R.string.app_name);
 			deleteRemind();
-		}
-		
-		if(vibrator != null){
-			vibrator.cancel();
-		}
-		
-		if(alarmPlayer != null){
-			alarmPlayer.stop();
 		}
 	}
 	
@@ -166,21 +179,22 @@ public class AlarmActivity extends Activity {
 	
 	private void playMusicAndVibrator(){
 		
-	    //play music
-	    alarmPlayer = new MediaPlayer();
-	    
+	    //Set audio 
 	    setVolumeControlStream(AudioManager.STREAM_ALARM); 
-	    AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-	    if(audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0){
-	    	alarmPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-	    	alarmPlayer.setLooping(true);
+	    if(audioManager != null){
+		    audioManager.requestAudioFocus(null, AudioManager.STREAM_ALARM, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
 	    }
 
+	    //Create media player
+	    alarmPlayer = new MediaPlayer();
+    	alarmPlayer.setLooping(true);
+	    alarmPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+	    
+	    //Get music 
 	    AssetFileDescriptor file = getResources().openRawResourceFd(R.raw.alarm_ring); 
 	    try { 
 	    	alarmPlayer.setDataSource(file.getFileDescriptor(), file.getStartOffset(), file.getLength()); 
 	    	file.close(); 
-//	    	alarmPlayer.setVolume(BEEP_VOLUME, BEEP_VOLUME); 
 	    	alarmPlayer.prepare(); 
 	    } catch (IOException e) { 
 	    	LogHelper.e(TAG, e);
@@ -193,6 +207,17 @@ public class AlarmActivity extends Activity {
 		vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE); 
 		long[] pattern = {500, 500, 500};          
 	    vibrator.vibrate(pattern,0);
+	}
+	
+	private void stopMusicAndVibrator(){
+		
+		if(vibrator != null){
+			vibrator.cancel();
+		}
+		
+		if(alarmPlayer != null && alarmPlayer.isPlaying()){
+			alarmPlayer.stop();
+		}
 	}
 	
 	private Boolean parseIntent(Intent intent){
@@ -250,8 +275,7 @@ public class AlarmActivity extends Activity {
         final View decorView = context.getWindow().getDecorView();  
         return (x < -slop) || (y < -slop)|| (x > (decorView.getWidth() + slop))|| (y > (decorView.getHeight() + slop));  
     }  
-
-	
+    
 	class AlarmAdpater extends BaseAdapter{
 		
 
@@ -330,6 +354,5 @@ public class AlarmActivity extends Activity {
 			ImageView flag2;
 		}
 	}
-	
-	
+
 }

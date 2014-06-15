@@ -27,6 +27,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	private static final String REMIND_STATUS = "remindstatus";
 	private static final String APP_VERSION = "appversiom";
 	private static final String PRE_FILE_NAME = "data.xml";
+	private static final String APP_APK_NAME = "WorldCupRemind.apk";
 	private static MatchDataController instance = new MatchDataController();
 	private Boolean isDataInitDone;
 	private MatchDataHelper dataHelper;	
@@ -288,7 +289,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	
 					//Check
 					String url = updateList.get(0);
-					if(url.contains("http://")){
+					if(url.contains(APP_APK_NAME)){
 						LogHelper.d(TAG, "Have new APK version!!!!");
 						onUpdateDone(UPDATE_STATE_CHECK_NEW_APK, url);
 						return;

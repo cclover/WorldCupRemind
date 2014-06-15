@@ -1,12 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:TabsWithSwipeGesture="http://schemas.android.com/apk/res-auto"
     tools:context="com.cc.worldcupremind.MainActivity" >
        
     <item android:id="@+id/action_remind"
       android:title="@string/menu_remind"
       android:icon="@drawable/ic_action_alarms" 
-      android:showAsAction="always"/>
+      android:showAsAction="ifRoom"/>
     
     <item
         android:id="@+id/action_remind_flag"

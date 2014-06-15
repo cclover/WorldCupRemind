@@ -362,10 +362,11 @@ public class MainActivity extends ActionBarActivity implements
 					builder.setPositiveButton(R.string.str_update_apk_download, new OnClickListener() {	
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							//open browser to download
+							//download and install apk					
 							Intent intent = new Intent(Intent.ACTION_VIEW);
-					    	intent.setData(Uri.parse(url));
-					    	tmpContext.startActivity(intent);
+		                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		                    intent.setData(Uri.parse(url));
+		                    tmpContext.startActivity(intent);
 						}
 					});
 					builder.setNegativeButton(android.R.string.cancel, null);

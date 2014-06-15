@@ -22,7 +22,7 @@ public class NewsFragment extends Fragment {
    
   		View view = inflater.inflate(R.layout.fragment_news, container, false);
 	 	myWebView = (WebView)view.findViewById(R.id.webview);
-//	 	myWebView.getSettings().setJavaScriptEnabled(true);
+	 	myWebView.getSettings().setJavaScriptEnabled(true);
 //	 	myWebView.getSettings().setUseWideViewPort(true);
 //	 	myWebView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 //		myWebView.getSettings().setLoadWithOverviewMode(true);

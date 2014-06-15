@@ -30,6 +30,10 @@ public class MatchRemindReceiver extends BroadcastReceiver {
 			
 			LogHelper.d(TAG, "Receive CONNECTIVITY_ACTION..Load data and set alarm");
 			MatchDataController.getInstance().InitData(context);
+		}else if(intent.getAction().equals(Intent.ACTION_MY_PACKAGE_REPLACED)){
+			
+			LogHelper.d(TAG, "Receive MY_PACKAGE_REPLACED..Load data and set alarm");
+			MatchDataController.getInstance().InitData(context);
 		}else if(intent.getAction().equals(MatchRemindHelper.ACTION_ALARM)){
 			LogHelper.d(TAG, "Receive the match alarm");
 			
