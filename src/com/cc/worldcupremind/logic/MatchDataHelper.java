@@ -148,6 +148,13 @@ class MatchDataHelper {
 	}
 	
 	/**
+	 * @return the dataMatchesVersion
+	 */
+	public double getDataMatchesVersion() {
+		return dataMatchesVersion;
+	}
+	
+	/**
 	 * @return the newsURL
 	 */
 	public String getNewsURL() {

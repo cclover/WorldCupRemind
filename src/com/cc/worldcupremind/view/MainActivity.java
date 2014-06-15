@@ -30,6 +30,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity implements
@@ -385,7 +386,8 @@ public class MainActivity extends ActionBarActivity implements
 					if(statisticsFragment != null){
 						statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
 					}
-					showToastLong(R.string.str_update_update_done);
+					showToastLong(String.format(tmpContext.getResources().getString(R.string.str_update_update_done),
+							controller.getDataVersion()));
 				}
 			}
 		});
@@ -469,12 +471,19 @@ public class MainActivity extends ActionBarActivity implements
 			     getResources().getString(id), Toast.LENGTH_LONG);
 		toast.show();
 	}
+	
+	private void showToastLong(String msg){
+
+		Toast toast = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG);
+		toast.show();
+	}
 
 	class AboutDialog extends AlertDialog implements android.view.View.OnClickListener {   
 
 		private Context context;
 		private ImageView btnBlog;
 		private ImageView btnWechat;
+		private TextView txtContent;
 		 
 	    public AboutDialog(Context context) {   
 	        super(context); 
@@ -482,6 +491,8 @@ public class MainActivity extends ActionBarActivity implements
 	        final View view = getLayoutInflater().inflate(R.layout.dialog_about, null); 
 	        btnBlog = (ImageView)view.findViewById(R.id.btnBlog);
 	        btnWechat = (ImageView)view.findViewById(R.id.btnWechat);
+	        txtContent = (TextView)view.findViewById(R.id.txtAbout);
+	        txtContent.setText(String.format(context.getResources().getString(R.string.str_about_app), controller.getDataVersion()));
 	        btnBlog.setOnClickListener(this);
 	        btnWechat.setOnClickListener(this);
 	        setIcon(R.drawable.ic_launcher);   

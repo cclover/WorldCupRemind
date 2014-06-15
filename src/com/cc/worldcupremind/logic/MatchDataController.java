@@ -88,6 +88,10 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	}
 	
 	
+	public double getDataVersion(){
+		return dataHelper.getDataMatchesVersion();
+	}
+	
 	public String getNewsURL(){
 		return dataHelper.getNewsURL();
 	}
