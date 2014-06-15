@@ -39,6 +39,10 @@ public class GroupFragment extends ListFragment {
 
 	public void setData(ArrayList<GroupStatistics> groupStaticsData) {
 		mGroupStaticsList = groupStaticsData;
+		refresh();
+	}
+	
+	public void refresh(){
 		if (mAdapter != null) {
 			mAdapter.notifyDataSetChanged();
 		}

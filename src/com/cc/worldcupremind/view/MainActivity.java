@@ -7,6 +7,7 @@ import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.common.LogHelper;
 import com.cc.worldcupremind.logic.MatchDataController;
 import com.cc.worldcupremind.logic.MatchDataListener;
+import com.cc.worldcupremind.model.GroupStatistics;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -445,6 +446,15 @@ public class MainActivity extends ActionBarActivity implements
 			@Override
 			public void run() {
 				if(ret){
+					if(matchFragment != null){
+						matchFragment.setData(controller.getMatchesData());	
+					}
+					if(mGroupFragment != null){
+						mGroupFragment.setData(controller.getGroupStaticsData());
+					}
+					if(statisticsFragment != null){
+						statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
+					}
 					AlertDialog.Builder builder = new AlertDialog.Builder(tmpContext);
 					builder.setTitle(R.string.menu_reset);
 					builder.setMessage(R.string.str_update_data_reset_success);

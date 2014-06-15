@@ -56,8 +56,7 @@ public class MatchesFragment extends ListFragment implements View.OnClickListene
 	public void setData(SparseArray<MatchesModel> list){
 		LogHelper.d(TAG, "setData()");
 		matchList = list;
-		createMatchesDayMap();
-		adapter.refresh();
+		refreshData();
 	}
 	
 	public void setAlarmMode(Boolean isOn){
@@ -76,16 +75,18 @@ public class MatchesFragment extends ListFragment implements View.OnClickListene
 			}
 		}
 		setFootVisibility(isOn);
-		adapter.refresh();
+		refresh();
 	}
 	
 	public void refresh(){
-		adapter.refresh();
+		if(adapter != null){
+			adapter.notifyDataSetChanged();
+		}
 	}
 	
 	public void refreshData(){
 		createMatchesDayMap();
-		adapter.refresh();
+		refresh();
 	}
 	
 	public void setFootVisibility(Boolean isShow){
@@ -214,10 +215,6 @@ public class MatchesFragment extends ListFragment implements View.OnClickListene
 	
 		public MatchesAdapter(){
 			
-		}
-		
-		public void refresh(){
-			notifyDataSetChanged();
 		}
 
 		@Override

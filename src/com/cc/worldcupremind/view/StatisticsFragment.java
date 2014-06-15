@@ -84,6 +84,10 @@ public class StatisticsFragment extends ListFragment {
 		}else{
 			mDataStaticsList = mAssistStaticsList;
 		}
+		refresh();
+	}
+	
+	public void refresh(){
 		if (mAdapter != null) {
 			mAdapter.notifyDataSetChanged();
 		}
