@@ -13,6 +13,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -23,6 +25,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	
 	private static final String TAG = "MatchDataController";
 	private static final String REMIND_STATUS = "remindstatus";
+	private static final String APP_VERSION = "appversiom";
 	private static final String PRE_FILE_NAME = "data.xml";
 	private static MatchDataController instance = new MatchDataController();
 	private Boolean isDataInitDone;
@@ -479,6 +482,32 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		}
 		return true;
 	}
+	
+	private Boolean isNewVersionLaunch(){
+		SharedPreferences share =  context.getSharedPreferences(PRE_FILE_NAME, Context.MODE_PRIVATE);
+		if(share != null){
+			double version = share.getFloat(APP_VERSION, 1.0f);
+			PackageInfo info;
+			try {
+				info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+			} catch (NameNotFoundException e) {
+				LogHelper.e(TAG, e);
+				return false;
+			}  
+			float appVersion = Float.parseFloat(info.versionName);
+			if(appVersion > version){
+				//new app first launch
+				LogHelper.d(TAG, "New version app launch:" + info.versionName);
+				SharedPreferences.Editor edit = share.edit();  
+				edit.putFloat(APP_VERSION, appVersion);
+				edit.commit();
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
 	
 	
 	@Override
