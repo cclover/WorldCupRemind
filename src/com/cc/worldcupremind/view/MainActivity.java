@@ -92,7 +92,9 @@ public class MainActivity extends ActionBarActivity implements
 					public void onPageSelected(int position) {
 						actionBar.setSelectedNavigationItem(position);
 						if(position == 0){
-							remindItem.setVisible(true);
+							if(controller.isRemindEnable()){
+								remindItem.setVisible(true);
+							}
 						}else{
 							if(remindItem != null){
 								remindItem.setVisible(false);
@@ -172,10 +174,10 @@ public class MainActivity extends ActionBarActivity implements
 		remindFlagItem = menu.findItem(R.id.action_remind_flag);
 		if(controller.isRemindEnable()){
 			remindFlagItem.setTitle(R.string.menu_remind_disable);
-			remindItem.setEnabled(true);
+			remindItem.setVisible(true);
 		}else{
 			remindFlagItem.setTitle(R.string.menu_remind_enable);
-			remindItem.setEnabled(false);
+			remindItem.setVisible(false);
 		}
 		return true;
 	}
@@ -195,6 +197,7 @@ public class MainActivity extends ActionBarActivity implements
 			return true;
 		}else if(id == R.id.action_remind){
 			matchFragment.setAlarmMode(true);
+			remindItem.setVisible(false);
 		}else if(id == R.id.action_reset){
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.menu_reset);
@@ -216,7 +219,7 @@ public class MainActivity extends ActionBarActivity implements
 				if(controller.setRemindEnabl(false)){
 					remindFlagItem.setTitle(R.string.menu_remind_enable);
 					showToast(R.string.str_remind_disable);
-					remindItem.setEnabled(false);
+					remindItem.setVisible(false);
 				}else{
 					showToast(R.string.str_remind_fail);
 				}
@@ -224,10 +227,13 @@ public class MainActivity extends ActionBarActivity implements
 				if(controller.setRemindEnabl(true)){
 					remindFlagItem.setTitle(R.string.menu_remind_disable);
 					showToast(R.string.str_remind_enable);
-					remindItem.setEnabled(true);
+					remindItem.setVisible(true);
 				}else{
 					showToast(R.string.str_remind_fail);
 				}
+			}
+			if(matchFragment != null){
+				matchFragment.refresh();
 			}
 		}
 		return super.onOptionsItemSelected(item);

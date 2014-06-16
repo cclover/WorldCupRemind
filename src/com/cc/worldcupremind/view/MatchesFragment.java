@@ -319,20 +319,27 @@ public class MatchesFragment extends ListFragment implements View.OnClickListene
 					flag = resource.getDrawable(R.drawable.ic_match_wait);
 				}else{
 					holder.score.setText(String.format("%d:%d", model.getTeam1Score(), model.getTeam2Score()));
-					holder.score.setTextColor(resource.getColor(R.color.royalblue));
+					holder.score.setTextColor(resource.getColor(R.color.score));
 					flag = resource.getDrawable(R.drawable.ic_match_over);
 				}
 				int px = ResourceHelper.dip2px(context,10);
 				flag.setBounds(0, 0, px, px);  
-				holder.group.setCompoundDrawables(null, flag, null, null);
+				holder.score.setCompoundDrawables(null, flag, null, null);
 				
 				//only show the remind image or checkbox when game not start
 				if(model.getMatchStatus() != MatchStatus.MATCH_STATUS_WAIT_START || model.getMatchTime().isStart()){
 					holder.remind.setVisibility(View.GONE);
 					holder.imgRemind.setVisibility(View.GONE);
 				}else{
+					
+					//Set remind image					
 					if(model.getIsRemind()){
 						if(!isAlarmMode){
+							if(controller.isRemindEnable()){
+								holder.imgRemind.setBackgroundResource(R.drawable.ic_audio_alarm);
+							}else{
+								holder.imgRemind.setBackgroundResource(R.drawable.ic_audio_alarm_muted);
+							}
 							holder.imgRemind.setVisibility(View.VISIBLE);
 						}else{
 							holder.imgRemind.setVisibility(View.GONE);

@@ -1,33 +1,33 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:TabsWithSwipeGesture="http://schemas.android.com/apk/res-auto"
+	xmlns:cc="http://schemas.android.com/apk/res-auto"
     tools:context="com.cc.worldcupremind.MainActivity" >
        
     <item android:id="@+id/action_remind"
       android:title="@string/menu_remind"
-      android:icon="@drawable/ic_action_alarms" 
-      android:showAsAction="ifRoom"/>
+      android:icon="@drawable/ic_action_stat_notify_alarm_alert"
+      cc:showAsAction="always|withText"/>
+    
+    <item
+        android:id="@+id/action_update"
+        android:title="@string/menu_update"
+        android:icon="@drawable/ic_action_av_download" 
+        cc:showAsAction="always|withText"/>
     
     <item
         android:id="@+id/action_remind_flag"
         android:title="@string/menu_remind_disable"
-        app:showAsAction="never"/>
+        cc:showAsAction="never"/>
         
-    <item
-        android:id="@+id/action_update"
-        android:title="@string/menu_update"
-        app:showAsAction="never"/>
-    
     <item
         android:id="@+id/action_reset"
         android:title="@string/menu_reset"
-        app:showAsAction="never"/>
+        cc:showAsAction="never"/>
     
      <item
         android:id="@+id/action_about"
         android:title="@string/menu_about"
-        app:showAsAction="never"/>
-
-    
+        cc:showAsAction="never"/>
+     
 </menu>
