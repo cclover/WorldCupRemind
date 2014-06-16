@@ -62,7 +62,7 @@ public class GroupFragment extends ListFragment {
 				startActivity(intent);
 			}
 		});
-		getListView().addFooterView(footView);
+		getListView().addHeaderView(footView);
 	}
 
 	class GropStaticsListAdapter extends BaseAdapter {

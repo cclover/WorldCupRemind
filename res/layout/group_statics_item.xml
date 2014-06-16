@@ -124,6 +124,7 @@
             android:layout_height="wrap_content"
             android:visibility="invisible"
             android:layout_weight="1" 
+            android:scaleType="centerInside"
             android:src="@drawable/ic_star" />
 
         <TextView
