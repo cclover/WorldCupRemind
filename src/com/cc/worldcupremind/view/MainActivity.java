@@ -3,8 +3,6 @@ package com.cc.worldcupremind.view;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.crypto.spec.PSource;
-
 import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.common.LogHelper;
 import com.cc.worldcupremind.logic.MatchDataController;
@@ -54,7 +52,7 @@ public class MainActivity extends ActionBarActivity implements
 	ViewPager mViewPager;
 	MatchDataController controller;
 	MatchesFragment matchFragment;
-	GroupFragment mGroupFragment;
+	GroupFragment groupFragment;
 	StatisticsFragment statisticsFragment;
 	NewsFragment newsFragment;
 	MenuItem remindItem;
@@ -99,6 +97,11 @@ public class MainActivity extends ActionBarActivity implements
 						if(position == 0){
 							if(controller.isRemindEnable()){
 								remindItem.setVisible(true);
+								if(!matchFragment.hasFragmentShown()){
+									LogHelper.d(TAG, "First show matchFragment! Need show data!");
+									matchFragment.showFragment();
+									matchFragment.showData();
+								}
 							}
 						}else{
 							if(remindItem != null){
@@ -107,16 +110,27 @@ public class MainActivity extends ActionBarActivity implements
 						}
 						if(position == 1){
 							secondStageItem.setVisible(true);
+							if(!groupFragment.hasFragmentShown()){
+								LogHelper.d(TAG, "First show groupFragment! Need show data!");
+								groupFragment.showFragment();
+								groupFragment.showData();
+							}
 						}else{
 							secondStageItem.setVisible(false);
 						}
 						if(position == 2){
 							statisticsItem.setVisible(true);
+							if(!statisticsFragment.hasFragmentShown()){
+								LogHelper.d(TAG, "First show statisticsFragment! Need show data!");
+								statisticsFragment.showFragment();
+								statisticsFragment.showData();
+							}
 						}else{
 							statisticsItem.setVisible(false);
 						}
 						if(position == 3){
 							newsItem.setVisible(true);
+							newsFragment.showData();
 						}else{
 							newsItem.setVisible(false);
 						}
@@ -137,13 +151,13 @@ public class MainActivity extends ActionBarActivity implements
 		LogHelper.d(TAG, "Load data!");
 		controller = MatchDataController.getInstance();
 		controller.setListener(this);
-		
+		matchFragment.showFragment(); //Default Tabl show
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		controller.InitData(this);
+		controller.InitData(this, true);
 	}
 	
 
@@ -196,7 +210,7 @@ public class MainActivity extends ActionBarActivity implements
 		statisticsItem = menu.findItem(R.id.action_statistics);
 		newsItem = menu.findItem(R.id.action_refresh);
 		
-		//init remindflagitem
+		//init remind flag item
 		if(controller.isRemindEnable()){
 			remindFlagItem.setTitle(R.string.menu_remind_disable);
 			remindItem.setVisible(true);
@@ -278,7 +292,7 @@ public class MainActivity extends ActionBarActivity implements
 				}
 			}
 			if(matchFragment != null){
-				matchFragment.refresh();
+				matchFragment.showData();
 			}
 		}
 		return super.onOptionsItemSelected(item);
@@ -312,7 +326,7 @@ public class MainActivity extends ActionBarActivity implements
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
 			matchFragment = new MatchesFragment();
-			mGroupFragment = new GroupFragment();
+			groupFragment = new GroupFragment();
 			statisticsFragment = new StatisticsFragment();
 			newsFragment = new NewsFragment();
 		}
@@ -325,7 +339,7 @@ public class MainActivity extends ActionBarActivity implements
 			if(position == 0){
 				return matchFragment;
 			}else if(position == 1){
-			    return mGroupFragment;
+			    return groupFragment;
 			}else if(position == 2){
 				return statisticsFragment;
 			}else if(position == 3){
@@ -360,21 +374,39 @@ public class MainActivity extends ActionBarActivity implements
 		
 		LogHelper.d(TAG, String.format("onInitDone result is %s", isSuccess?"true":"false"));
 		final Boolean ret = isSuccess;
+		
+		LogHelper.d(TAG, "Set match data to each tab");
+		if(ret){
+			if(matchFragment != null){
+				matchFragment.setData(controller.getMatchesData());	
+			}
+			if(groupFragment != null){
+				groupFragment.setData(controller.getGroupStaticsData());
+			}
+			if(statisticsFragment != null){
+				statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
+			}
+		}
+
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				if(ret){
 					LogHelper.d(TAG, "Init done!");
-					if(matchFragment != null){
-						matchFragment.setData(controller.getMatchesData());	
+					if(matchFragment != null && matchFragment.hasFragmentShown()){
+						LogHelper.d(TAG, "matchFragment has shown before data init done, need show data");
+						matchFragment.showData();
 					}
-					if(mGroupFragment != null){
-						mGroupFragment.setData(controller.getGroupStaticsData());
+					if(groupFragment != null && groupFragment.hasFragmentShown()){
+						LogHelper.d(TAG, "groupFragment has shown before data init done, need show data");
+						groupFragment.showData();
 					}
-					if(statisticsFragment != null){
-						statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
+					if(statisticsFragment != null && statisticsFragment.hasFragmentShown()){
+						LogHelper.d(TAG, "statisticsFragment has shown before data init done, need show data");
+						statisticsFragment.showData();
 					}
 				}else{
+					LogHelper.d(TAG, "Init fail!");
 					showToast(R.string.data_fail);
 				}
 			}
@@ -389,6 +421,20 @@ public class MainActivity extends ActionBarActivity implements
 		final int sta = status;
 		final String url = appURL;
 		final Context tmpContext = this;
+		
+		 if(sta == UPDATE_STATE_UPDATE_DONE){
+			LogHelper.d(TAG, "UPDATE_STATE_UPDATE_DONE--setData to each Tab");
+			if(matchFragment != null){
+				matchFragment.setData(controller.getMatchesData());	
+			}
+			if(groupFragment != null){
+				groupFragment.setData(controller.getGroupStaticsData());
+			}
+			if(statisticsFragment != null){
+				statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
+			}
+		 }
+		
 		runOnUiThread(new Runnable() {
 
 			@Override
@@ -428,13 +474,13 @@ public class MainActivity extends ActionBarActivity implements
 				}else if(sta == UPDATE_STATE_UPDATE_DONE){
 					LogHelper.d(TAG, "UPDATE_STATE_UPDATE_DONE");
 					if(matchFragment != null){
-						matchFragment.setData(controller.getMatchesData());	
+						matchFragment.showData();
 					}
-					if(mGroupFragment != null){
-						mGroupFragment.setData(controller.getGroupStaticsData());
+					if(groupFragment != null){
+						groupFragment.showData();
 					}
 					if(statisticsFragment != null){
-						statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
+						statisticsFragment.showData();
 					}
 					showToastLong(String.format(tmpContext.getResources().getString(R.string.str_update_update_done),
 							controller.getDataVersion()));
@@ -468,7 +514,7 @@ public class MainActivity extends ActionBarActivity implements
 			
 			@Override
 			public void run() {
-				matchFragment.refreshData();
+				matchFragment.showData();
 			}
 		});
 	}
@@ -491,18 +537,31 @@ public class MainActivity extends ActionBarActivity implements
 //		controller.InitData(this);
 		final Boolean ret = issBoolean;
 		final Context tmpContext = this;
+		
+		if(ret){
+			if(matchFragment != null){
+				matchFragment.setData(controller.getMatchesData());	
+			}
+			if(groupFragment != null){
+				groupFragment.setData(controller.getGroupStaticsData());
+			}
+			if(statisticsFragment != null){
+				statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
+			}
+		}
+		
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				if(ret){
 					if(matchFragment != null){
-						matchFragment.setData(controller.getMatchesData());	
+						matchFragment.showData();
 					}
-					if(mGroupFragment != null){
-						mGroupFragment.setData(controller.getGroupStaticsData());
+					if(groupFragment != null){
+						groupFragment.showData();
 					}
 					if(statisticsFragment != null){
-						statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
+						statisticsFragment.showData();
 					}
 					AlertDialog.Builder builder = new AlertDialog.Builder(tmpContext);
 					builder.setTitle(R.string.menu_reset);

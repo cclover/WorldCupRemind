@@ -5,14 +5,11 @@ import java.util.Locale;
 
 import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.common.LogHelper;
-import com.cc.worldcupremind.logic.MatchDataController;
 import com.cc.worldcupremind.model.PlayerStatistics;
 import com.cc.worldcupremind.model.PlayerStatistics.STATISTICS_TYPE;
 
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,50 +17,70 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class StatisticsFragment extends ListFragment {
+public class StatisticsFragment extends BaseFragment {
 
 	private static final String TAG = "StatisticsFragment";
 	private ArrayList<PlayerStatistics> mGoalStaticsList;
 	private ArrayList<PlayerStatistics> mAssistStaticsList;
 	private ArrayList<PlayerStatistics> mDataStaticsList;
-	private PlayerStaticsListAdapter mAdapter;
-	private LayoutInflater mInflater;
-	private MatchDataController controller;
-	private Resources resource;
-	private TextView txtHeaderType = null;
-	private ImageView imgHeaderFlag = null;
-	private Boolean isGoal = true;
-	
+	private TextView txtHeaderType;
+	private ImageView imgHeaderFlag;
+	private Boolean isGoal;
 
-	@Override  
-    public void onCreate(Bundle savedInstanceState) {  
-        super.onCreate(savedInstanceState);  
-		mInflater = LayoutInflater.from(getActivity());
-		mAdapter = new PlayerStaticsListAdapter();
-		controller = MatchDataController.getInstance();
-		resource = getActivity().getResources();
-		isGoal = true;
-    } 
 	
+	public StatisticsFragment(){
+		
+		adapter = new PlayerStaticsListAdapter();
+		txtHeaderType = null;
+		imgHeaderFlag = null;
+		isGoal = true;
+	}
+
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
 		View view = inflater.inflate(R.layout.fragment_statistics, container, false);
 		imgHeaderFlag = (ImageView)view.findViewById(R.id.imgStatTitle);
 		txtHeaderType = (TextView)view.findViewById(R.id.txtStatTitleCount);
-		setListAdapter(mAdapter);   
-		refresh();
+		imgHeaderFlag.setBackgroundResource(R.drawable.ic_title_goal);
+		txtHeaderType.setText(resource.getString(R.string.str_player_goal));
+		super.onCreateView(inflater, container, savedInstanceState);
         return view;
     }
 	
 	public void setData(ArrayList<PlayerStatistics> goalStaticsData, ArrayList<PlayerStatistics> assistStaticsData) {
-		LogHelper.d(TAG, "setData");
+		
+		LogHelper.d(TAG, "StatisticsFragment::setData");
 		mGoalStaticsList = goalStaticsData;
 		mAssistStaticsList = assistStaticsData;
-		refresh();
+		super.setData();
 	}
 	
-	public void refresh(){
+	
+	@Override
+	protected void refresh() {
+		setGoalAssistList();
+		super.refresh();
+	}
+	
+	public Boolean setGoalAssistList(){
+		
+		LogHelper.d(TAG, "StatisticsFragment::setGoalAssistList");
+		if(isGoal){
+			mDataStaticsList  = mAssistStaticsList;
+			isGoal = false;
+		}else{
+			mDataStaticsList = mGoalStaticsList;
+			isGoal = true;
+		}
+		switchView();
+		return isGoal;
+	}
+	
+	
+	private void switchView(){
+		
+		LogHelper.d(TAG, "StatisticsFragment::showData");
 		if(isGoal){
 			mDataStaticsList = mGoalStaticsList;
 			if(txtHeaderType != null){
@@ -81,23 +98,9 @@ public class StatisticsFragment extends ListFragment {
 				imgHeaderFlag.setBackgroundResource(R.drawable.ic_title_assist);
 			}
 		}
-		if (mAdapter != null) {
-			mAdapter.notifyDataSetChanged();
-		}
+		super.refresh();
 	}
 	
-	public Boolean setGoalAssistList(){
-		if(isGoal){
-			mDataStaticsList  = mAssistStaticsList;
-			isGoal = false;
-			refresh();
-		}else{
-			mDataStaticsList = mGoalStaticsList;
-			isGoal = true;
-			refresh();
-		}
-		return isGoal;
-	}
 		
 	class PlayerStaticsListAdapter extends BaseAdapter {
 

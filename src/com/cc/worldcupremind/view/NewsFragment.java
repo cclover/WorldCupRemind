@@ -14,8 +14,14 @@ import android.webkit.WebView;
 public class NewsFragment extends Fragment {
 	
 	private static final String TAG = "NewsFragment";
-	private WebView myWebView = null;
 	private final static String NEWS_URL = "http://3g.163.com/ntes/special/00340H1J/worldcup2014.html?from=index";
+	private WebView myWebView;
+	private Boolean isShow;
+	
+	public NewsFragment(){
+		myWebView = null;
+		isShow = false;
+	}
   
   	@Override
   	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -27,7 +33,6 @@ public class NewsFragment extends Fragment {
 //	 	myWebView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 //		myWebView.getSettings().setLoadWithOverviewMode(true);
 //	 	myWebView.setWebViewClient(new WebViewClient());
-	 	load();
       	return view;
   	}
   
@@ -38,12 +43,16 @@ public class NewsFragment extends Fragment {
   		setRetainInstance(true);
   	}
   	
-  	public void load(){
-  		if(myWebView != null){
+  	public void showData(){
+  		
+  		LogHelper.d(TAG, "NewsFragment::showData");
+  		if(!isShow && myWebView != null){
+  			LogHelper.d(TAG, "NewsFragment::loadUrl");
+  			isShow = true;
   			myWebView.loadUrl(getURL());
   		}
   	}
-  	
+
   	private String getURL(){
   	  	String url = MatchDataController.getInstance().getNewsURL();
 	  	if(url == null || url.length() == 0){
@@ -52,9 +61,10 @@ public class NewsFragment extends Fragment {
 	 	}
 	  	return url;
   	}
-  	
+
   	public void refresh(){
   		if(myWebView != null){
+  			LogHelper.d(TAG, "NewsFragment::reload");
   			myWebView.reload();
   		}
   	}

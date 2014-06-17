@@ -5,17 +5,13 @@ import java.util.ArrayList;
 import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.common.LogHelper;
 import com.cc.worldcupremind.common.ResourceHelper;
-import com.cc.worldcupremind.logic.MatchDataController;
 import com.cc.worldcupremind.model.MatchDate;
 import com.cc.worldcupremind.model.MatchStage;
 import com.cc.worldcupremind.model.MatchStatus;
 import com.cc.worldcupremind.model.MatchesModel;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -29,38 +25,91 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MatchesFragment extends ListFragment implements View.OnClickListener{
+public class MatchesFragment extends BaseFragment implements View.OnClickListener{
 	
 	private static final String TAG = "MatchesFragment";
 	private static final int ITEM_DAY = 0;
 	private static final int ITEM_MATCH = 1;
-	private MatchesAdapter adapter;  
-	private Context context;
 	private SparseArray<MatchesModel> matchList;
 	private ArrayList<MatchesModel> matchDataList;
 	private ArrayList<Integer> remindList;
-	private MatchDataController controller;
-	private LayoutInflater mInflater;
-	private Resources resource;
 	private Boolean isAlarmMode;
 	private LinearLayout remindFooterLayout;
 	private Button btnConfitm;
 	private Button btnCancel;
 			
 	public MatchesFragment(){
+		
+        adapter = new MatchesAdapter(); 
         matchDataList = new ArrayList<MatchesModel>();
-        adapter = new MatchesAdapter();  
         remindList = new ArrayList<Integer>();
         isAlarmMode = false;
+        remindFooterLayout = null;
+        btnConfitm = null;
+        btnCancel = null;
+	}
+	
+	@Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+		View view = inflater.inflate(R.layout.fragment_matches, container, false);
+		remindFooterLayout = (LinearLayout)view.findViewById(R.id.remindFooter);
+		btnConfitm = (Button)view.findViewById(R.id.btnConfirm);
+		btnCancel = (Button)view.findViewById(R.id.btnCancel);
+		btnConfitm.setOnClickListener(this);
+		btnCancel.setOnClickListener(this);
+		super.onCreateView(inflater, container, savedInstanceState); 
+        return view;
+    }
+	
+	@Override
+	public void onClick(View v) {
+		
+		if(v.getId() == R.id.btnConfirm){
+
+			if(!controller.setMatchRemind(remindList)){
+				LogHelper.w(TAG, "Can't setMatchRemind");
+			}
+		}else if(v.getId() == R.id.btnCancel){
+		}
+		setAlarmMode(false);
+	}
+	
+
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {  
+		super.onListItemClick(l, v, position, id); 
+
+		if(isAlarmMode && matchDataList.get(position).getMatchNo() != 0){
+			CheckBox box = (CheckBox)v.findViewById(R.id.chkRemind);
+			if(box != null){
+				int matchNo = matchDataList.get(position).getMatchNo();
+				if(box.isChecked()){
+					box.setChecked(false);
+					if(remindList.remove((Object)matchNo)){
+						LogHelper.d(TAG, "Unselect match " + String.valueOf(matchNo));
+					}
+				}else{
+					box.setChecked(true);
+					if(remindList.add(matchNo)){
+						LogHelper.d(TAG, "Select match " + String.valueOf(matchNo));
+					}
+				}
+			}
+		}
 	}
 	
 	public void setData(SparseArray<MatchesModel> list){
-		LogHelper.d(TAG, "setData()");
+		
+		LogHelper.d(TAG, "MatchesFragment::setData");
 		matchList = list;
-		refreshData();
+		createMatchesDayMap();
+		setData();
 	}
 	
 	public void setAlarmMode(Boolean isOn){
+		
+		LogHelper.d(TAG, "MatchesFragment::setAlarmMode");
 		if(isAlarmMode == isOn){
 			Log.w(TAG, "setAlarmMode In same mode");
 			return;
@@ -87,15 +136,14 @@ public class MatchesFragment extends ListFragment implements View.OnClickListene
 						model.getMatchStatus() == MatchStatus.MATCH_STATUS_WAIT_START)){
 					startIndex = i;
 				}
-				
-				LogHelper.d(TAG, String.format("Visible index is %d, must index is %d",
-						getListView().getFirstVisiblePosition(), startIndex));
 			}
+			LogHelper.d(TAG, String.format("Visible index is %d, must index is %d",
+					getListView().getFirstVisiblePosition(), startIndex));
 		}
 		setFootVisibility(isOn);
-		refresh();
+		super.refresh();
 		
-		//Show position at the start index.
+		//Scoll the list  position to the start index.
 		final int index = startIndex-1;
 		if(index > 0 && getListView().getFirstVisiblePosition() < index){
 			LogHelper.d(TAG, "Scorll to the startIndex:" + index);
@@ -111,28 +159,17 @@ public class MatchesFragment extends ListFragment implements View.OnClickListene
 		}
 	}
 	
-	public void refresh(){
-		if(adapter != null){
-			adapter.notifyDataSetChanged();
-		}
-	}
-	
-	public void refreshData(){
-		createMatchesDayMap();
-		refresh();
-	}
-	
 	public void setFootVisibility(Boolean isShow){
+		
+		LogHelper.d(TAG, "MatchesFragment::setFootVisibility");
 		if(isShow){
 			remindFooterLayout.setVisibility(View.VISIBLE);
 		}else{
 			remindFooterLayout.setVisibility(View.GONE);
 		}
 	}
+
 	
-	/**
-	 * @return the remindList
-	 */
 	public ArrayList<Integer> getRemindList() {
 		return remindList;
 	}
@@ -184,67 +221,7 @@ public class MatchesFragment extends ListFragment implements View.OnClickListene
 		LogHelper.d(TAG, "matchDataList size = " + String.valueOf(matchDataList.size()));
 	}
 	
-	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_matches, container, false);
-		remindFooterLayout = (LinearLayout)view.findViewById(R.id.remindFooter);
-		btnConfitm = (Button)view.findViewById(R.id.btnConfirm);
-		btnConfitm.setOnClickListener(this);
-		btnCancel = (Button)view.findViewById(R.id.btnCancel);
-		btnCancel.setOnClickListener(this);
-		setListAdapter(adapter);   
-        return view;
-    }
-	
-	@Override
-	public void onClick(View v) {
-		
-		if(v.getId() == R.id.btnConfirm){
-
-			if(!controller.setMatchRemind(remindList)){
-				LogHelper.w(TAG, "Can't setMatchRemind");
-			}
-
-		}else if(v.getId() == R.id.btnCancel){
-
-		}
-		setAlarmMode(false);
-	}
-	
-	@Override  
-    public void onCreate(Bundle savedInstanceState) {  
-		
-        super.onCreate(savedInstanceState);  
-        controller = MatchDataController.getInstance();
-		context = this.getActivity();
-		resource = context.getResources();
-        mInflater = LayoutInflater.from(context);
-    }  
-
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {  
-		super.onListItemClick(l, v, position, id); 
-
-		if(isAlarmMode && matchDataList.get(position).getMatchNo() != 0){
-			CheckBox box = (CheckBox)v.findViewById(R.id.chkRemind);
-			if(box != null){
-				int matchNo = matchDataList.get(position).getMatchNo();
-				if(box.isChecked()){
-					box.setChecked(false);
-					if(remindList.remove((Object)matchNo)){
-						LogHelper.d(TAG, "Unselect mathc " + String.valueOf(matchNo));
-					}
-				}else{
-					box.setChecked(true);
-					if(remindList.add(matchNo)){
-						LogHelper.d(TAG, "Select mathc " + String.valueOf(matchNo));
-					}
-				}
-			}
-		}
-	}
-	
 	class MatchesAdapter extends BaseAdapter{
 	
 		public MatchesAdapter(){

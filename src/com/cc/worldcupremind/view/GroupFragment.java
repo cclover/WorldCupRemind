@@ -1,15 +1,11 @@
 package com.cc.worldcupremind.view;
 
 import com.cc.worldcupremind.R;
+import com.cc.worldcupremind.common.LogHelper;
 import com.cc.worldcupremind.logic.MatchDataController;
 import com.cc.worldcupremind.model.GroupStatistics;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.support.v4.app.ListFragment;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -19,30 +15,21 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class GroupFragment extends ListFragment {
+public class GroupFragment extends BaseFragment {
 
+	private static final String TAG = "GroupFragment";
 	private ArrayList<GroupStatistics> mGroupStaticsList;
-	private GropStaticsListAdapter mAdapter;
-	private LayoutInflater mInflater;
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		mInflater = LayoutInflater.from(getActivity());
-		mAdapter = new GropStaticsListAdapter();
-		setListAdapter(mAdapter);
-		this.getListView().setSelector(new ColorDrawable(Color.TRANSPARENT)); 
-	}
-
-	public void setData(ArrayList<GroupStatistics> groupStaticsData) {
-		mGroupStaticsList = groupStaticsData;
-		refresh();
+	public GroupFragment(){
+		mGroupStaticsList = null;
+		adapter = new GropStaticsListAdapter();
 	}
 	
-	public void refresh(){
-		if (mAdapter != null) {
-			mAdapter.notifyDataSetChanged();
-		}
+	public void setData(ArrayList<GroupStatistics> groupStaticsData) {
+		
+		LogHelper.d(TAG, "GroupFragment::setData");
+		mGroupStaticsList = groupStaticsData;
+		super.setData();
 	}
 	
 	class GropStaticsListAdapter extends BaseAdapter {
@@ -57,13 +44,11 @@ public class GroupFragment extends ListFragment {
 
 		@Override
 		public Object getItem(int position) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public long getItemId(int position) {
-			// TODO Auto-generated method stub
 			return 0;
 		}
 

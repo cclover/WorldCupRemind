@@ -142,13 +142,15 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	 * Must invoke this must at first.
 	 *
 	 */
-	public void InitData(Context appContext){
+	public void InitData(Context appContext, Boolean needCallbak){
 		
 		LogHelper.d(TAG, "Init Data");
 		
 		if(isDataInitDone){
 			LogHelper.d(TAG, "Data had init done!");
-			onInitDone(true);
+			if(needCallbak){
+				onInitDone(true);
+			}
 			return;
 		}
 		
