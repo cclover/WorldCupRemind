@@ -53,16 +53,10 @@ public class StatisticsFragment extends BaseFragment {
 		LogHelper.d(TAG, "StatisticsFragment::setData");
 		mGoalStaticsList = goalStaticsData;
 		mAssistStaticsList = assistStaticsData;
-		super.setData();
-	}
-	
-	
-	@Override
-	protected void refresh() {
 		setGoalAssistList();
-		super.refresh();
 	}
 	
+
 	public Boolean setGoalAssistList(){
 		
 		LogHelper.d(TAG, "StatisticsFragment::setGoalAssistList");

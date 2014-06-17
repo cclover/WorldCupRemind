@@ -61,35 +61,13 @@ public class BaseFragment extends ListFragment {
 		listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 	}
 	
-	protected void refresh(){
+	public void refresh(){
 		
 		LogHelper.d(TAG, this.getClass().getName() + "::refresh");
 		if(adapter != null){
 			adapter.notifyDataSetChanged();
 		}
 	}
-	
-	/**
-	 * When receive onUpdateDone or onInitDone need invoke this method
-	 */
-	protected void setData(){
-		
-		if(!isDataInit){
-			LogHelper.d(TAG, this.getClass().getName() + "--The date init!");
-			isDataInit = true;
-		}
-	}
-	
-	public void showData(){
-		LogHelper.d(TAG, this.getClass().getName() + "::showData");
-		LogHelper.d(TAG, String.format("isDataInit:%b, isFragmentShow:%b", 
-				isDataInit, isFragmentShow));
-		//only when fragment shown and data init done or need refresh to invoke refresh
-		if(isDataInit && isFragmentShow){ 
-			refresh();
-		}
-	}
-	
 	
 	/**
 	 * When tab switch to fragment need invoke this method
@@ -101,8 +79,23 @@ public class BaseFragment extends ListFragment {
 		}
 	}
 	
+	/**
+	 * When receive onInitDone need invoke this method
+	 */
+	public void setDataInit(){
+		
+		if(!isDataInit){
+			LogHelper.d(TAG, this.getClass().getName() + "--The date init!");
+			isDataInit = true;
+		}
+	}
+	
+
 	public Boolean hasFragmentShown(){
 		return isFragmentShow;
 	}
-
+	
+	public Boolean isDataInit(){
+		return isDataInit;
+	}
 }

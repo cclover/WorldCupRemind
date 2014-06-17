@@ -98,9 +98,12 @@ public class MainActivity extends ActionBarActivity implements
 							if(controller.isRemindEnable()){
 								remindItem.setVisible(true);
 								if(!matchFragment.hasFragmentShown()){
-									LogHelper.d(TAG, "First show matchFragment! Need show data!");
+									LogHelper.d(TAG, "First show matchFragment!");
 									matchFragment.showFragment();
-									matchFragment.showData();
+									if(matchFragment.isDataInit()){
+										LogHelper.d(TAG, "Data init done! show matchFragment!");
+										matchFragment.setData(controller.getMatchesData());
+									}
 								}
 							}
 						}else{
@@ -111,9 +114,12 @@ public class MainActivity extends ActionBarActivity implements
 						if(position == 1){
 							secondStageItem.setVisible(true);
 							if(!groupFragment.hasFragmentShown()){
-								LogHelper.d(TAG, "First show groupFragment! Need show data!");
+								LogHelper.d(TAG, "First show groupFragment! Load data to show!");
 								groupFragment.showFragment();
-								groupFragment.showData();
+								if(groupFragment.isDataInit()){
+									LogHelper.d(TAG, "Data init done! show groupFragment!");
+									groupFragment.setData(controller.getGroupStaticsData());
+								}
 							}
 						}else{
 							secondStageItem.setVisible(false);
@@ -121,9 +127,12 @@ public class MainActivity extends ActionBarActivity implements
 						if(position == 2){
 							statisticsItem.setVisible(true);
 							if(!statisticsFragment.hasFragmentShown()){
-								LogHelper.d(TAG, "First show statisticsFragment! Need show data!");
+								LogHelper.d(TAG, "First show statisticsFragment! Load data to show!");
 								statisticsFragment.showFragment();
-								statisticsFragment.showData();
+								if(statisticsFragment.isDataInit()){
+									LogHelper.d(TAG, "Data init done! show statisticsFragment!");
+									statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
+								}
 							}
 						}else{
 							statisticsItem.setVisible(false);
@@ -147,17 +156,17 @@ public class MainActivity extends ActionBarActivity implements
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
 		}
-		
+		matchFragment.showFragment();
 		LogHelper.d(TAG, "Load data!");
 		controller = MatchDataController.getInstance();
 		controller.setListener(this);
-		matchFragment.showFragment(); //Default Tabl show
+		controller.InitData(this, true);
 	}
 	
 	@Override
 	protected void onResume() {
+		LogHelper.d(TAG, "onResume");
 		super.onResume();
-		controller.InitData(this, true);
 	}
 	
 
@@ -292,7 +301,7 @@ public class MainActivity extends ActionBarActivity implements
 				}
 			}
 			if(matchFragment != null){
-				matchFragment.showData();
+				matchFragment.refresh();
 			}
 		}
 		return super.onOptionsItemSelected(item);
@@ -369,22 +378,42 @@ public class MainActivity extends ActionBarActivity implements
 		}
 	}
 	
+	
+	/**
+	 * If the fragment has visited, load data and show
+	 * If the fragment has not visited, will load and show in ViewPage.setOnPageChangeListener
+	 */
+	private void loadDataIfFragmentShown(){
+		if(matchFragment != null && matchFragment.hasFragmentShown()){
+			LogHelper.d(TAG, "matchFragment has shown before data (init/update/reset), Load data and show!");
+			matchFragment.setData(controller.getMatchesData());
+		}
+		if(groupFragment != null && groupFragment.hasFragmentShown()){
+			LogHelper.d(TAG, "groupFragment has shown before data (init/update/reset), Load data and show!");
+			groupFragment.setData(controller.getGroupStaticsData());
+		}
+		if(statisticsFragment != null && statisticsFragment.hasFragmentShown()){
+			LogHelper.d(TAG, "statisticsFragment has shown before data (init/update/reset), Load data and show!");
+			statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
+		}
+	}
+	
 	@Override
 	public void onInitDone(Boolean isSuccess) {
 		
 		LogHelper.d(TAG, String.format("onInitDone result is %s", isSuccess?"true":"false"));
 		final Boolean ret = isSuccess;
 		
-		LogHelper.d(TAG, "Set match data to each tab");
+		LogHelper.d(TAG, "Tell fragment Data Init DONE");
 		if(ret){
 			if(matchFragment != null){
-				matchFragment.setData(controller.getMatchesData());	
+				matchFragment.setDataInit();
 			}
 			if(groupFragment != null){
-				groupFragment.setData(controller.getGroupStaticsData());
+				groupFragment.setDataInit();
 			}
 			if(statisticsFragment != null){
-				statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
+				statisticsFragment.setDataInit();
 			}
 		}
 
@@ -393,18 +422,7 @@ public class MainActivity extends ActionBarActivity implements
 			public void run() {
 				if(ret){
 					LogHelper.d(TAG, "Init done!");
-					if(matchFragment != null && matchFragment.hasFragmentShown()){
-						LogHelper.d(TAG, "matchFragment has shown before data init done, need show data");
-						matchFragment.showData();
-					}
-					if(groupFragment != null && groupFragment.hasFragmentShown()){
-						LogHelper.d(TAG, "groupFragment has shown before data init done, need show data");
-						groupFragment.showData();
-					}
-					if(statisticsFragment != null && statisticsFragment.hasFragmentShown()){
-						LogHelper.d(TAG, "statisticsFragment has shown before data init done, need show data");
-						statisticsFragment.showData();
-					}
+					loadDataIfFragmentShown();
 				}else{
 					LogHelper.d(TAG, "Init fail!");
 					showToast(R.string.data_fail);
@@ -421,19 +439,6 @@ public class MainActivity extends ActionBarActivity implements
 		final int sta = status;
 		final String url = appURL;
 		final Context tmpContext = this;
-		
-		 if(sta == UPDATE_STATE_UPDATE_DONE){
-			LogHelper.d(TAG, "UPDATE_STATE_UPDATE_DONE--setData to each Tab");
-			if(matchFragment != null){
-				matchFragment.setData(controller.getMatchesData());	
-			}
-			if(groupFragment != null){
-				groupFragment.setData(controller.getGroupStaticsData());
-			}
-			if(statisticsFragment != null){
-				statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
-			}
-		 }
 		
 		runOnUiThread(new Runnable() {
 
@@ -473,15 +478,7 @@ public class MainActivity extends ActionBarActivity implements
 					showToast(R.string.str_update_update_fail);
 				}else if(sta == UPDATE_STATE_UPDATE_DONE){
 					LogHelper.d(TAG, "UPDATE_STATE_UPDATE_DONE");
-					if(matchFragment != null){
-						matchFragment.showData();
-					}
-					if(groupFragment != null){
-						groupFragment.showData();
-					}
-					if(statisticsFragment != null){
-						statisticsFragment.showData();
-					}
+					loadDataIfFragmentShown();
 					showToastLong(String.format(tmpContext.getResources().getString(R.string.str_update_update_done),
 							controller.getDataVersion()));
 				}
@@ -514,7 +511,7 @@ public class MainActivity extends ActionBarActivity implements
 			
 			@Override
 			public void run() {
-				matchFragment.showData();
+				matchFragment.refresh();
 			}
 		});
 	}
@@ -537,32 +534,12 @@ public class MainActivity extends ActionBarActivity implements
 //		controller.InitData(this);
 		final Boolean ret = issBoolean;
 		final Context tmpContext = this;
-		
-		if(ret){
-			if(matchFragment != null){
-				matchFragment.setData(controller.getMatchesData());	
-			}
-			if(groupFragment != null){
-				groupFragment.setData(controller.getGroupStaticsData());
-			}
-			if(statisticsFragment != null){
-				statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
-			}
-		}
-		
+
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				if(ret){
-					if(matchFragment != null){
-						matchFragment.showData();
-					}
-					if(groupFragment != null){
-						groupFragment.showData();
-					}
-					if(statisticsFragment != null){
-						statisticsFragment.showData();
-					}
+					loadDataIfFragmentShown();
 					AlertDialog.Builder builder = new AlertDialog.Builder(tmpContext);
 					builder.setTitle(R.string.menu_reset);
 					builder.setMessage(R.string.str_update_data_reset_success);

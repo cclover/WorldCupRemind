@@ -29,7 +29,7 @@ public class GroupFragment extends BaseFragment {
 		
 		LogHelper.d(TAG, "GroupFragment::setData");
 		mGroupStaticsList = groupStaticsData;
-		super.setData();
+		super.refresh();
 	}
 	
 	class GropStaticsListAdapter extends BaseAdapter {

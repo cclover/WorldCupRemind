@@ -104,7 +104,7 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 		LogHelper.d(TAG, "MatchesFragment::setData");
 		matchList = list;
 		createMatchesDayMap();
-		setData();
+		super.refresh();
 	}
 	
 	public void setAlarmMode(Boolean isOn){
