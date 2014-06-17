@@ -16,10 +16,12 @@ public class MatchDate {
 
 	private static final String TAG = "DateHelper";
 	private static final String DATE_FORMAT_24 = "yyyy-MM-dd HH:mm:ss";
+	private static final String DAY_FORMAT = "yyyy-MM-dd";
 	private static final int REMIND_AHEAD_MIN = -15;
 	private static final String DEFAULT_TIME_ZONE_ID = "GMT+8"; 
 	
 	private Date date = null;
+	private Date day = null;
 	private Context context = null;
 	private String rawString = null;
 	
@@ -27,6 +29,10 @@ public class MatchDate {
 		try
 		{
 			rawString = dateString;
+			SimpleDateFormat dayFormat = new SimpleDateFormat(DAY_FORMAT, Locale.CHINA);
+			dayFormat.setTimeZone(TimeZone.getTimeZone(DEFAULT_TIME_ZONE_ID));
+			day = dayFormat.parse(dateString);
+			
 			SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_24, Locale.CHINA);
 			dateFormat.setTimeZone(TimeZone.getTimeZone(DEFAULT_TIME_ZONE_ID));
 			return dateFormat.parse(dateString);
@@ -47,11 +53,19 @@ public class MatchDate {
 		return date;
 	}
 	
+	public Date getDay(){
+		return day;
+	}
+	
 	public Calendar getRemindCalendar(){
 		Calendar remindCalendar = Calendar.getInstance();
 		remindCalendar.setTime(date);
 		remindCalendar.add(Calendar.MINUTE, REMIND_AHEAD_MIN);
 		return remindCalendar;
+	}
+	
+	public Boolean isSameDay(MatchDate matchDate){
+		return day.equals(matchDate.getDay());
 	}
 	
 	public String getDateString(){

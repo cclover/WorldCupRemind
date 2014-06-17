@@ -182,15 +182,15 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 		dayIndexList.clear();
 		matchDataList.clear();
 		int count = 1;
-		String dayNext = "";
 		
 		//Get the same day count
 		for(int i = 1; i < matchList.size(); i++){
-	
+			
+			//Tune: if we compare the getMatchTime().getDateString(), on some device, it's cost 5m-8ms (X920E), 2ms-3ms(G7)
 			matchDataList.add(matchList.valueAt(i-1));
-			String day = matchList.valueAt(i-1).getMatchTime().getDateString();
-			dayNext = matchList.valueAt(i).getMatchTime().getDateString();
-			if(day.equals(dayNext)){
+			MatchDate day = matchList.valueAt(i-1).getMatchTime();
+			MatchDate dayNext = matchList.valueAt(i).getMatchTime();
+			if(day.isSameDay(dayNext)){
 				count++;
 			}else{
 //				LogHelper.d(TAG, day + "count:" + String.valueOf(count));
@@ -266,7 +266,6 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 		public View getView(int position, View convertView, ViewGroup parent) {
 			
 			MatchesModel model = matchDataList.get(position);
-			
 			//Get item view
 			if(getItemViewType(position) == ITEM_DAY){
 				
