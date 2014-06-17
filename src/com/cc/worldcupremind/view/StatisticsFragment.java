@@ -30,8 +30,8 @@ public class StatisticsFragment extends ListFragment {
 	private LayoutInflater mInflater;
 	private MatchDataController controller;
 	private Resources resource;
-	private TextView txtHeaderType;
-	private ImageView imgHeaderFlag;
+	private TextView txtHeaderType = null;
+	private ImageView imgHeaderFlag = null;
 	private Boolean isGoal = true;
 	
 
@@ -51,8 +51,8 @@ public class StatisticsFragment extends ListFragment {
 		View view = inflater.inflate(R.layout.fragment_statistics, container, false);
 		imgHeaderFlag = (ImageView)view.findViewById(R.id.imgStatTitle);
 		txtHeaderType = (TextView)view.findViewById(R.id.txtStatTitleCount);
-		txtHeaderType.setText(resource.getString(R.string.str_player_goal));
 		setListAdapter(mAdapter);   
+		refresh();
         return view;
     }
 	
@@ -66,12 +66,20 @@ public class StatisticsFragment extends ListFragment {
 	public void refresh(){
 		if(isGoal){
 			mDataStaticsList = mGoalStaticsList;
-			txtHeaderType.setText(resource.getString(R.string.str_player_goal));
-			imgHeaderFlag.setBackgroundResource(R.drawable.ic_title_goal);
+			if(txtHeaderType != null){
+				txtHeaderType.setText(resource.getString(R.string.str_player_goal));
+			}
+			if(imgHeaderFlag != null){
+				imgHeaderFlag.setBackgroundResource(R.drawable.ic_title_goal);
+			}
 		}else{
 			mDataStaticsList = mAssistStaticsList;
-			txtHeaderType.setText(resource.getString(R.string.str_player_assist));
-			imgHeaderFlag.setBackgroundResource(R.drawable.ic_title_assist);
+			if(txtHeaderType != null){
+				txtHeaderType.setText(resource.getString(R.string.str_player_assist));
+			}
+			if(imgHeaderFlag != null){
+				imgHeaderFlag.setBackgroundResource(R.drawable.ic_title_assist);
+			}
 		}
 		if (mAdapter != null) {
 			mAdapter.notifyDataSetChanged();
