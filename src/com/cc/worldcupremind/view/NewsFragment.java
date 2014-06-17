@@ -53,4 +53,9 @@ public class NewsFragment extends Fragment {
 	  	return url;
   	}
   	
+  	public void refresh(){
+  		if(myWebView != null){
+  			myWebView.reload();
+  		}
+  	}
 }

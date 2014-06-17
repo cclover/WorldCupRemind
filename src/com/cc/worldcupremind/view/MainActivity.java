@@ -3,11 +3,12 @@ package com.cc.worldcupremind.view;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.crypto.spec.PSource;
+
 import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.common.LogHelper;
 import com.cc.worldcupremind.logic.MatchDataController;
 import com.cc.worldcupremind.logic.MatchDataListener;
-import com.cc.worldcupremind.model.GroupStatistics;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -25,7 +26,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,6 +59,9 @@ public class MainActivity extends ActionBarActivity implements
 	NewsFragment newsFragment;
 	MenuItem remindItem;
 	MenuItem remindFlagItem;
+	MenuItem secondStageItem;
+	MenuItem statisticsItem;
+	MenuItem newsItem;
 	Boolean isExit;
 	ActionBar actionBar;
 	
@@ -92,6 +95,7 @@ public class MainActivity extends ActionBarActivity implements
 					@Override
 					public void onPageSelected(int position) {
 						actionBar.setSelectedNavigationItem(position);
+						//set menu visible in different page
 						if(position == 0){
 							if(controller.isRemindEnable()){
 								remindItem.setVisible(true);
@@ -100,7 +104,22 @@ public class MainActivity extends ActionBarActivity implements
 							if(remindItem != null){
 								remindItem.setVisible(false);
 							}
-						}						
+						}
+						if(position == 1){
+							secondStageItem.setVisible(true);
+						}else{
+							secondStageItem.setVisible(false);
+						}
+						if(position == 2){
+							statisticsItem.setVisible(true);
+						}else{
+							statisticsItem.setVisible(false);
+						}
+						if(position == 3){
+							newsItem.setVisible(true);
+						}else{
+							newsItem.setVisible(false);
+						}
 					}
 				});
 
@@ -173,6 +192,11 @@ public class MainActivity extends ActionBarActivity implements
 		getMenuInflater().inflate(R.menu.main, menu);
 		remindItem = menu.findItem(R.id.action_remind);
 		remindFlagItem = menu.findItem(R.id.action_remind_flag);
+		secondStageItem = menu.findItem(R.id.action_second);
+		statisticsItem = menu.findItem(R.id.action_statistics);
+		newsItem = menu.findItem(R.id.action_refresh);
+		
+		//init remindflagitem
 		if(controller.isRemindEnable()){
 			remindFlagItem.setTitle(R.string.menu_remind_disable);
 			remindItem.setVisible(true);
@@ -189,20 +213,39 @@ public class MainActivity extends ActionBarActivity implements
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_update) {
+		
+		if(id == R.id.action_remind){ //Set alarm
+			if(matchFragment != null){
+				matchFragment.setAlarmMode(true);
+			}
+		}else if(id == R.id.action_second){ //Show second stage
+			Intent intent = new Intent(this, KonckoutMatchActivity.class);
+			startActivity(intent);
+		}else if(id == R.id.action_statistics){ //Switch the goal/assist
+			if(statisticsFragment != null){
+				if(statisticsFragment.setGoalAssistList()){
+					statisticsItem.setTitle(R.string.menu_assist);
+					statisticsItem.setIcon(R.drawable.ic_action_assist);
+				}else{
+					statisticsItem.setTitle(R.string.menu_goal);
+					statisticsItem.setIcon(R.drawable.ic_action_goal);
+				}
+			}
+		}else if(id == R.id.action_refresh){
+			if(newsFragment != null){
+				newsFragment.refresh();
+			}
+		}else if (id == R.id.action_update) { //update local data
 			showToast(R.string.str_update_check_start);
 			if(!controller.updateData()){
 				LogHelper.w(TAG, "Can't update");
 				showToast(R.string.str_update_check_fail);
 			}
-			return true;
-		}else if(id == R.id.action_remind){
-			matchFragment.setAlarmMode(true);
-		}else if(id == R.id.action_reset){
+		}else if(id == R.id.action_reset){ //reset loacl data
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.menu_reset);
 			builder.setMessage(R.string.str_update_data_reset);
-			builder.setIcon(R.drawable.error);
+			builder.setIcon(R.drawable.ic_alerts_warning);
 			builder.setPositiveButton(android.R.string.ok, new OnClickListener() {	
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -212,9 +255,9 @@ public class MainActivity extends ActionBarActivity implements
 			});
 			builder.setNegativeButton(android.R.string.cancel, null);
 			builder.show();
-		}else if(id == R.id.action_about){
+		}else if(id == R.id.action_about){ //Show about dialog
 			new AboutDialog(this).show();
-		}else if(id == R.id.action_remind_flag){
+		}else if(id == R.id.action_remind_flag){ //Set remind flag
 			if(controller.isRemindEnable()){
 				if(controller.setRemindEnabl(false)){
 					remindFlagItem.setTitle(R.string.menu_remind_enable);
@@ -330,9 +373,6 @@ public class MainActivity extends ActionBarActivity implements
 					}
 					if(statisticsFragment != null){
 						statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
-					}
-					if(newsFragment != null){
-						newsFragment.load();
 					}
 				}else{
 					showToast(R.string.data_fail);

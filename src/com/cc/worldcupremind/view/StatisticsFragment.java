@@ -17,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,8 +30,8 @@ public class StatisticsFragment extends ListFragment {
 	private LayoutInflater mInflater;
 	private MatchDataController controller;
 	private Resources resource;
-	private Button btnSwitch;
 	private TextView txtHeaderType;
+	private ImageView imgHeaderFlag;
 	private Boolean isGoal = true;
 	
 
@@ -50,30 +49,9 @@ public class StatisticsFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
 		View view = inflater.inflate(R.layout.fragment_statistics, container, false);
-		btnSwitch = (Button)view.findViewById(R.id.btnSwitch);
+		imgHeaderFlag = (ImageView)view.findViewById(R.id.imgStatTitle);
 		txtHeaderType = (TextView)view.findViewById(R.id.txtStatTitleCount);
 		txtHeaderType.setText(resource.getString(R.string.str_player_goal));
-		btnSwitch.setText(R.string.str_stat_goal);
-		btnSwitch.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				if(isGoal){
-					mDataStaticsList  = mAssistStaticsList;
-					btnSwitch.setText(R.string.str_stat_assist);
-					txtHeaderType.setText(resource.getString(R.string.str_player_assist));
-					isGoal = false;
-				}else{
-					mDataStaticsList = mGoalStaticsList;
-					btnSwitch.setText(R.string.str_stat_goal);
-					txtHeaderType.setText(resource.getString(R.string.str_player_goal));
-					isGoal = true;
-				}
-				if (mAdapter != null) {
-					mAdapter.notifyDataSetChanged();
-				}
-			}
-		});
 		setListAdapter(mAdapter);   
         return view;
     }
@@ -82,20 +60,37 @@ public class StatisticsFragment extends ListFragment {
 		LogHelper.d(TAG, "setData");
 		mGoalStaticsList = goalStaticsData;
 		mAssistStaticsList = assistStaticsData;
-		if(isGoal){
-			mDataStaticsList = mGoalStaticsList;
-		}else{
-			mDataStaticsList = mAssistStaticsList;
-		}
 		refresh();
 	}
 	
 	public void refresh(){
+		if(isGoal){
+			mDataStaticsList = mGoalStaticsList;
+			txtHeaderType.setText(resource.getString(R.string.str_player_goal));
+			imgHeaderFlag.setBackgroundResource(R.drawable.ic_title_goal);
+		}else{
+			mDataStaticsList = mAssistStaticsList;
+			txtHeaderType.setText(resource.getString(R.string.str_player_assist));
+			imgHeaderFlag.setBackgroundResource(R.drawable.ic_title_assist);
+		}
 		if (mAdapter != null) {
 			mAdapter.notifyDataSetChanged();
 		}
 	}
 	
+	public Boolean setGoalAssistList(){
+		if(isGoal){
+			mDataStaticsList  = mAssistStaticsList;
+			isGoal = false;
+			refresh();
+		}else{
+			mDataStaticsList = mGoalStaticsList;
+			isGoal = true;
+			refresh();
+		}
+		return isGoal;
+	}
+		
 	class PlayerStaticsListAdapter extends BaseAdapter {
 
 		@Override

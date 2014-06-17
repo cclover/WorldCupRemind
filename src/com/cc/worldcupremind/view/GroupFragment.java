@@ -4,7 +4,6 @@ import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.logic.MatchDataController;
 import com.cc.worldcupremind.model.GroupStatistics;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -12,10 +11,8 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -47,24 +44,7 @@ public class GroupFragment extends ListFragment {
 			mAdapter.notifyDataSetChanged();
 		}
 	}
-
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		Button footView = new Button(getActivity());
-		footView.setText(getResources().getString(R.string.str_konckout_match));
-		footView.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(),
-						KonckoutMatchActivity.class);
-				startActivity(intent);
-			}
-		});
-		getListView().addHeaderView(footView);
-	}
-
+	
 	class GropStaticsListAdapter extends BaseAdapter {
 
 		@Override

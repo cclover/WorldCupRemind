@@ -9,7 +9,11 @@
 	<string name="menu_remind_disable">REMIND DISABLE</string>
     <string name="menu_confirm">CONFIRM</string>
     <string name="menu_cancel">CANCEL</string>
+	<string name="menu_second">SECOND STAGE</string>
     <string name="menu_reset">RESET</string>
+    <string name="menu_goal">GOAL</string>
+	<string name="menu_assist">ASSIST</string>
+	<string name="menu_refresh">REFRESH</string>
     <string name="tab_mathces">MATCHES</string>
     <string name="tab_group">GROUP</string>
     <string name="tab_statistics">STATISTICS</string>
@@ -66,15 +70,12 @@
 	<string name="str_group_gf">GF</string>
 	<string name="str_group_ga">GA</string>
 	<string name="str_group_pts">MP</string>
-	<string name="str_konckout_match">SECOND STAGE MATCHES</string>
 	
 	<!-- Statistics Info -->
 	<string name="str_player_goal">GOAL(Pen)</string>
 	<string name="str_player_assist">ASSIST</string>
 	<string name="str_player_name">PALYER</string>
 	<string name="str_team_name">TEAM</string>
-	<string name="str_stat_goal">SHOW GOAL LIST</string>
-	<string name="str_stat_assist">SHOW ASSIST LIST</string>
 	
 	<!-- Remind -->
 	<string name="str_remind_enable">SET REMIND ENABLE</string>

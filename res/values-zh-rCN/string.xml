@@ -6,9 +6,13 @@
     <string name="menu_remind">设置提醒</string>
     <string name="menu_remind_enable">启用提醒</string>
 	<string name="menu_remind_disable">关闭提醒</string>
+	<string name="menu_second">淘汰赛</string>
     <string name="menu_confirm">确定</string>
     <string name="menu_cancel">取消</string>
     <string name="menu_reset">重置数据</string>
+   	<string name="menu_goal">射手榜</string>
+	<string name="menu_assist">助攻榜</string>
+	<string name="menu_refresh">刷新</string>
     <string name="tab_mathces">赛程表</string>
     <string name="tab_group">分组对阵</string>
     <string name="tab_statistics">数据统计</string>
@@ -65,15 +69,12 @@
 	<string name="str_group_gf">进球</string>
 	<string name="str_group_ga">失球</string>
 	<string name="str_group_pts">积分</string>
-	<string name="str_konckout_match">淘汰赛对阵</string>
 	
 	<!-- Statistics Info -->
 	<string name="str_player_goal">进球(点球)</string>
 	<string name="str_player_assist">助攻</string>
 	<string name="str_player_name">球员名</string>
 	<string name="str_team_name">球队名</string>
-	<string name="str_stat_goal">查看助攻榜</string>
-	<string name="str_stat_assist">查看射手榜</string>
 	
 	<!-- Remind -->
 	<string name="str_remind_enable">比赛提醒已开启</string>

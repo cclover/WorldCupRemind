@@ -9,6 +9,24 @@
       android:icon="@drawable/ic_action_stat_notify_alarm_alert"
       cc:showAsAction="always|withText"/>
     
+    <item android:id="@+id/action_second"
+      android:title="@string/menu_second"
+      android:icon="@drawable/ic_action_second"
+      android:visible="false"
+      cc:showAsAction="always|withText"/>
+    
+ 	<item android:id="@+id/action_statistics"
+      android:title="@string/menu_assist"
+      android:icon="@drawable/ic_action_assist"
+      android:visible="false"
+      cc:showAsAction="always|withText"/>
+ 	
+ 	<item android:id="@+id/action_refresh"
+      android:title="@string/menu_refresh"
+      android:icon="@drawable/ic_action_navigation_refresh"
+      android:visible="false"
+      cc:showAsAction="always|withText"/>
+    
     <item
         android:id="@+id/action_update"
         android:title="@string/menu_update"
