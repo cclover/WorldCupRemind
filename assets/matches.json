@@ -1,4 +1,4 @@
-{"Version":2.110,"TeamsCount":32,"MatchesCount":64,"stage":0,"newsURL":"http://3g.163.com/ntes/special/00340H1J/worldcup2014.html?from=index","Matches":[
+{"Version":2.140,"TeamsCount":32,"MatchesCount":64,"stage":0,"newsURL":"http://3g.163.com/ntes/special/00340H1J/worldcup2014.html?from=index","Matches":[
 {"NO":1,"Stage":0,"Group":"A","Time":"2014-06-13 04:00:00","Team1":"bra","Team2":"cro","Status":2,"Score1":3,"Score2":1,"ext":""},
 {"NO":2,"Stage":0,"Group":"A","Time":"2014-06-14 00:00:00","Team1":"mex","Team2":"cmr","Status":2,"Score1":1,"Score2":0,"ext":""},
 {"NO":3,"Stage":0,"Group":"B","Time":"2014-06-14 03:00:00","Team1":"esp","Team2":"ned","Status":2,"Score1":1,"Score2":5,"ext":""},
@@ -10,9 +10,9 @@
 {"NO":9,"Stage":0,"Group":"E","Time":"2014-06-16 00:00:00","Team1":"sui","Team2":"ecu","Status":2,"Score1":2,"Score2":1,"ext":""},
 {"NO":10,"Stage":0,"Group":"E","Time":"2014-06-16 03:00:00","Team1":"fra","Team2":"hon","Status":2,"Score1":3,"Score2":0,"ext":""},
 {"NO":11,"Stage":0,"Group":"F","Time":"2014-06-16 06:00:00","Team1":"arg","Team2":"bih","Status":2,"Score1":2,"Score2":1,"ext":""},
-{"NO":12,"Stage":0,"Group":"G","Time":"2014-06-17 00:00:00","Team1":"ger","Team2":"por","Status":0,"Score1":0,"Score2":0,"ext":""},
-{"NO":13,"Stage":0,"Group":"F","Time":"2014-06-17 03:00:00","Team1":"irn","Team2":"nga","Status":0,"Score1":0,"Score2":0,"ext":""},
-{"NO":14,"Stage":0,"Group":"G","Time":"2014-06-17 06:00:00","Team1":"gha","Team2":"usa","Status":0,"Score1":0,"Score2":0,"ext":""},
+{"NO":12,"Stage":0,"Group":"G","Time":"2014-06-17 00:00:00","Team1":"ger","Team2":"por","Status":2,"Score1":4,"Score2":0,"ext":""},
+{"NO":13,"Stage":0,"Group":"F","Time":"2014-06-17 03:00:00","Team1":"irn","Team2":"nga","Status":2,"Score1":0,"Score2":0,"ext":""},
+{"NO":14,"Stage":0,"Group":"G","Time":"2014-06-17 06:00:00","Team1":"gha","Team2":"usa","Status":2,"Score1":1,"Score2":2,"ext":""},
 {"NO":15,"Stage":0,"Group":"H","Time":"2014-06-18 00:00:00","Team1":"bel","Team2":"alg","Status":0,"Score1":0,"Score2":0,"ext":""},
 {"NO":16,"Stage":0,"Group":"A","Time":"2014-06-18 03:00:00","Team1":"bra","Team2":"mex","Status":0,"Score1":0,"Score2":0,"ext":""},
 {"NO":17,"Stage":0,"Group":"H","Time":"2014-06-18 06:00:00","Team1":"rus","Team2":"kor","Status":0,"Score1":0,"Score2":0,"ext":""},

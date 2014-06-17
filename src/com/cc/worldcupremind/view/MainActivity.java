@@ -60,7 +60,8 @@ public class MainActivity extends ActionBarActivity implements
 	MenuItem remindItem;
 	MenuItem remindFlagItem;
 	Boolean isExit;
-
+	ActionBar actionBar;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -70,7 +71,7 @@ public class MainActivity extends ActionBarActivity implements
 		isExit = false;
 
 		// Set up the action bar.
-		final ActionBar actionBar = getSupportActionBar();
+		actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 		// Create the adapter that will return a fragment for each of the three
@@ -197,7 +198,6 @@ public class MainActivity extends ActionBarActivity implements
 			return true;
 		}else if(id == R.id.action_remind){
 			matchFragment.setAlarmMode(true);
-			remindItem.setVisible(false);
 		}else if(id == R.id.action_reset){
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.menu_reset);
@@ -227,7 +227,9 @@ public class MainActivity extends ActionBarActivity implements
 				if(controller.setRemindEnabl(true)){
 					remindFlagItem.setTitle(R.string.menu_remind_disable);
 					showToast(R.string.str_remind_enable);
-					remindItem.setVisible(true);
+					if(actionBar.getSelectedNavigationIndex() == 0){
+						remindItem.setVisible(true);
+					}
 				}else{
 					showToast(R.string.str_remind_fail);
 				}

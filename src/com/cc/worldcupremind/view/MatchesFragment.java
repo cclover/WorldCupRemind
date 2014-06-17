@@ -32,6 +32,8 @@ import android.widget.TextView;
 public class MatchesFragment extends ListFragment implements View.OnClickListener{
 	
 	private static final String TAG = "MatchesFragment";
+	private static final int ITEM_DAY = 0;
+	private static final int ITEM_MATCH = 1;
 	private MatchesAdapter adapter;  
 	private Context context;
 	private SparseArray<MatchesModel> matchList;
@@ -41,7 +43,6 @@ public class MatchesFragment extends ListFragment implements View.OnClickListene
 	private LayoutInflater mInflater;
 	private Resources resource;
 	private Boolean isAlarmMode;
-	
 	private LinearLayout remindFooterLayout;
 	private Button btnConfitm;
 	private Button btnCancel;
@@ -65,17 +66,49 @@ public class MatchesFragment extends ListFragment implements View.OnClickListene
 			return;
 		}
 		isAlarmMode = isOn;
+		int startIndex = 0;
 		if(isOn){
+			// Build the remind list
 			remindList.clear();
-			for(int i = 0; i < matchList.size(); i++){
-				MatchesModel model = matchList.valueAt(i);
+			for(int i = 0; i < matchDataList.size(); i++){
+				MatchesModel model = matchDataList.get(i);
+				
+				//Skip the ITEM_DAY
+				if(model.getMatchNo() > matchList.size()){
+					continue;
+				}
+				
 				if(model.getIsRemind()){
 					remindList.add(model.getMatchNo());
 				}
+				
+				//Get the first match index which can set the alarm
+				if(startIndex == 0 && (!model.getMatchTime().isStart() ||
+						model.getMatchStatus() == MatchStatus.MATCH_STATUS_WAIT_START)){
+					startIndex = i;
+				}
+				
+				LogHelper.d(TAG, String.format("Visible index is %d, must index is %d",
+						getListView().getFirstVisiblePosition(), startIndex));
 			}
 		}
 		setFootVisibility(isOn);
 		refresh();
+		
+		//Show position at the start index.
+		final int index = startIndex-1;
+		if(index > 0 && getListView().getFirstVisiblePosition() < index){
+			LogHelper.d(TAG, "Scorll to the startIndex:" + index);
+			getListView().postDelayed(new Runnable() {
+				
+				@Override
+				public void run() {
+					getListView().setSelected(false);
+					getListView().setSelection(index);
+					getListView().setSelected(true);
+				}
+			}, 100);
+		}
 	}
 	
 	public void refresh(){
@@ -142,9 +175,10 @@ public class MatchesFragment extends ListFragment implements View.OnClickListene
 		}
 		
 		//renew the matchDataList with day info
+		int dyaID = matchList.size();
 		for(int k : dayIndexList){
 			MatchDate date = matchDataList.get(k).getMatchTime();
-			MatchesModel model = new MatchesModel(0, null, null, date, null, null, null, 0, 0, null);
+			MatchesModel model = new MatchesModel(++dyaID, null, null, date, null, null, null, 0, 0, null);
 			matchDataList.add(k, model);
 		}
 		LogHelper.d(TAG, "matchDataList size = " + String.valueOf(matchDataList.size()));
@@ -159,7 +193,7 @@ public class MatchesFragment extends ListFragment implements View.OnClickListene
 		btnConfitm.setOnClickListener(this);
 		btnCancel = (Button)view.findViewById(R.id.btnCancel);
 		btnCancel.setOnClickListener(this);
-		setListAdapter(adapter);    
+		setListAdapter(adapter);   
         return view;
     }
 	
@@ -229,20 +263,20 @@ public class MatchesFragment extends ListFragment implements View.OnClickListene
 
 		@Override
 		public Object getItem(int position) {
-			return null;
+			return matchDataList.get(position);
 		}
 
 		@Override
 		public long getItemId(int position) {
-			return 0;
+			return matchDataList.get(position).getMatchNo();
 		}
 
 		@Override
 	    public int getItemViewType(int position) {
-	        if(matchDataList.get(position).getMatchNo() == 0){
-	        	return 0;
+	        if(matchDataList.get(position).getMatchNo() > matchList.size()){
+	        	return ITEM_DAY;
 	        }else{
-	        	return 1;
+	        	return ITEM_MATCH;
 	        }
 	    }
 
@@ -257,7 +291,7 @@ public class MatchesFragment extends ListFragment implements View.OnClickListene
 			MatchesModel model = matchDataList.get(position);
 			
 			//Get item view
-			if(model.getMatchNo() == 0){
+			if(getItemViewType(position) == ITEM_DAY){
 				
 				ViewHolder2 holder = null;
 				if (convertView == null) {
