@@ -29,7 +29,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	private static final String REMIND_STATUS = "remindstatus";
 	private static final String APP_VERSION = "appversiom";
 	private static final String PRE_FILE_NAME = "data.xml";
-	private static final String APP_APK_NAME = "WorldCupRemind.apk";
+	private static final String APP_APK_NAME = "WorldCupRemind";
 	private static final int THREAD_POOL_SIZE = 3;
 	private static MatchDataController instance = new MatchDataController();
 	private Boolean isDataInitDone;
