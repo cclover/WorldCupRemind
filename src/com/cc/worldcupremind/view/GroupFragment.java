@@ -6,11 +6,15 @@ import com.cc.worldcupremind.logic.MatchDataController;
 import com.cc.worldcupremind.model.GroupStatistics;
 
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -27,6 +31,16 @@ public class GroupFragment extends BaseFragment {
 	public GroupFragment(){
 		mGroupStaticsList = null;
 	}
+	
+	
+	@Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+		View view = inflater.inflate(R.layout.fragment_group, container, false);
+		progressBar = (ProgressBar)view.findViewById(android.R.id.progress);
+		super.onCreateView(inflater, container, savedInstanceState); 
+        return view;
+    }
 	
 	public void setData(ArrayList<GroupStatistics> groupStaticsData) {
 		

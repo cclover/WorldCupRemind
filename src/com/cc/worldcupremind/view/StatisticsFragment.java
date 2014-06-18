@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class StatisticsFragment extends BaseFragment {
@@ -43,6 +44,7 @@ public class StatisticsFragment extends BaseFragment {
 		txtHeaderType = (TextView)view.findViewById(R.id.txtStatTitleCount);
 		imgHeaderFlag.setBackgroundResource(R.drawable.ic_title_goal);
 		txtHeaderType.setText(resource.getString(R.string.str_player_goal));
+		progressBar = (ProgressBar)view.findViewById(android.R.id.progress);
 		super.onCreateView(inflater, container, savedInstanceState);
         return view;
     }

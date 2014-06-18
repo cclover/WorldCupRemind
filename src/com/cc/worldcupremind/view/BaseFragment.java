@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 
 public abstract class BaseFragment extends ListFragment {
@@ -27,7 +28,7 @@ public abstract class BaseFragment extends ListFragment {
 	protected Boolean isFragmentShow;
 	protected Boolean isDataInit;
 	protected MatchDataController controller;
-	protected ListView listView;
+	protected ProgressBar progressBar;
 	
 	public BaseFragment(){
 		context = null;
@@ -36,6 +37,7 @@ public abstract class BaseFragment extends ListFragment {
 		adapter = null;
 		isFragmentShow = false;
 		isDataInit = false;
+		progressBar = null;
 	}
 	
 	
@@ -59,8 +61,6 @@ public abstract class BaseFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		LogHelper.d(TAG,  this.getClass().getName() + " onActivityCreated");
 		super.onActivityCreated(savedInstanceState);
-		listView = getListView();
-		listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 	}
 	
 	public abstract BaseAdapter createAdapter();
@@ -78,6 +78,9 @@ public abstract class BaseFragment extends ListFragment {
 		if(getListAdapter() == null){
 			LogHelper.d(TAG, this.getClass().getName() + "::setAdapter");
 			setListAdapter(adapter);
+			if(progressBar != null){
+				progressBar.setVisibility(View.INVISIBLE);
+			}
 		}
 	}
 	

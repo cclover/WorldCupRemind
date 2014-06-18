@@ -23,6 +23,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class MatchesFragment extends BaseFragment implements View.OnClickListener{
@@ -57,6 +58,7 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 		btnCancel = (Button)view.findViewById(R.id.btnCancel);
 		btnConfitm.setOnClickListener(this);
 		btnCancel.setOnClickListener(this);
+		progressBar = (ProgressBar)view.findViewById(android.R.id.progress);
 		super.onCreateView(inflater, container, savedInstanceState); 
         return view;
     }
