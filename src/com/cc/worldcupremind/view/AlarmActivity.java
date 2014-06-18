@@ -228,7 +228,7 @@ public class AlarmActivity extends Activity {
 				String time = intent.getExtras().getString(MatchRemindHelper.REMIND_MATCHES_TIME);
 			    int stage = intent.getExtras().getInt(MatchRemindHelper.REMIND_MATCHES_STAGE);
 			    String group = intent.getExtras().getString(MatchRemindHelper.REMIND_MATCHES_GROUP);
-				LogHelper.d(TAG, String.format("The remind:[%d][%s VS %s][%s]", 
+				LogHelper.i(TAG, String.format("The remind:[%d][%s VS %s][%s]", 
 						matchNo,team1,team2,time));
 			    MatchesModel model = new MatchesModel(
 			    		matchNo,

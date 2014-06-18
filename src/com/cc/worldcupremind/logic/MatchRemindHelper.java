@@ -68,7 +68,7 @@ public class MatchRemindHelper {
 		    
 		    PendingIntent pi = PendingIntent.getBroadcast(context, match.getMatchNo(), intent,0);
 		    am.set(AlarmManager.RTC_WAKEUP, remindCalendar.getTimeInMillis(), pi);
-	        LogHelper.d(TAG, String.format("Set Alarm: [%d][%s-%s][%s %s %s][%s][%d:%d]",
+	        LogHelper.i(TAG, String.format("Set Alarm: [%d][%s-%s][%s %s %s][%s][%d:%d]",
 	        				match.getMatchNo(), 
 	        				MatchDataController.getInstance().getTeamNationalName(match.getTeam1Code()),
 	        				MatchDataController.getInstance().getTeamNationalName(match.getTeam2Code()),

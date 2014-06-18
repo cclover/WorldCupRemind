@@ -23,19 +23,19 @@ public class MatchRemindReceiver extends BroadcastReceiver {
 		}
 		
 		if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
-			LogHelper.d(TAG, "Receive BOOT_COMPLETED..Load data and set alarm");
+			LogHelper.i(TAG, "Receive BOOT_COMPLETED..Load data and set alarm");
 			MatchDataController.getInstance().InitData(context, false);
 			
 		}else if(intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)){
 			
-			LogHelper.d(TAG, "Receive CONNECTIVITY_ACTION..Load data and set alarm");
+			LogHelper.i(TAG, "Receive CONNECTIVITY_ACTION..Load data and set alarm");
 			MatchDataController.getInstance().InitData(context, false);
 		}else if(intent.getAction().equals(Intent.ACTION_MY_PACKAGE_REPLACED)){
 			
 			LogHelper.d(TAG, "Receive MY_PACKAGE_REPLACED..Load data and set alarm");
 			MatchDataController.getInstance().InitData(context, false);
 		}else if(intent.getAction().equals(MatchRemindHelper.ACTION_ALARM)){
-			LogHelper.d(TAG, "Receive the match alarm");
+			LogHelper.i(TAG, "Receive the match alarm");
 			
 			if(intent.getExtras() == null){
 				LogHelper.w(TAG, "Invalid intent");

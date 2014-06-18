@@ -149,7 +149,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	 */
 	public void InitData(Context appContext, Boolean needCallbak){
 		
-		LogHelper.d(TAG, "Init Data");
+		LogHelper.i(TAG, "Init Data");
 		
 		if(isDataInitDone){
 			LogHelper.d(TAG, "Data had init done!");
@@ -209,7 +209,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 				//Load the remind filed
 				LogHelper.d(TAG, "Load remind data");
 				if(dataHelper.loadRemindData()){
-					LogHelper.d(TAG, "Set remind alarm");
+					LogHelper.i(TAG, "Set remind alarm");
 					MatchRemindHelper.setAlarm(context, dataHelper.getRemindList(), dataHelper.getRemindCancelList());
 				}
 				
@@ -225,6 +225,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	
 	public Boolean InitDataSync(Context appContext){
 		
+		LogHelper.i(TAG, "Init Data Sync");
 		if(isDataInitDone){
 			LogHelper.d(TAG, "Data had init done!");
 			return false;
@@ -249,7 +250,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		//Load the remind filed
 		LogHelper.d(TAG, "Load remind data");
 		if(dataHelper.loadRemindData()){
-			LogHelper.d(TAG, "Set remind alarm");
+			LogHelper.i(TAG, "Set remind alarm");
 			MatchRemindHelper.setAlarm(context, dataHelper.getRemindList(), dataHelper.getRemindCancelList());
 		}
 		
@@ -268,7 +269,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	 */
 	public Boolean updateData(){
 		
-		LogHelper.d(TAG, "updateData");
+		LogHelper.i(TAG, "updateData");
 		
 		if(!isDataInitDone){
 			LogHelper.w(TAG, "Please init data first");
@@ -292,12 +293,12 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 					//Check
 					String url = updateList.get(0);
 					if(url.contains(APP_APK_NAME)){
-						LogHelper.d(TAG, "Have new APK version!!!!");
+						LogHelper.i(TAG, "Have new APK version!!!!");
 						onUpdateDone(UPDATE_STATE_CHECK_NEW_APK, url);
 						return;
 					}
 						
-					LogHelper.d(TAG, "Have new DATA version!!!!");
+					LogHelper.i(TAG, "Have new DATA version!!!!");
 					onUpdateDone(UPDATE_STATE_UPDATE_START, null);
 					if(!dataHelper.updateAllDataFiles(updateList)){
 						LogHelper.w(TAG, "Update Data failed!");
@@ -325,7 +326,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	 */
 	public Boolean setMatchRemind(ArrayList<Integer> matchesList){
 		
-		LogHelper.d(TAG, "setMatchRemind");
+		LogHelper.i(TAG, "setMatchRemind");
 		
 		if(!isDataInitDone){
 			LogHelper.w(TAG, "Please init data first");
@@ -369,7 +370,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	 */
 	public Boolean deleteMatchRemind(ArrayList<Integer> deleteList){
 		
-		LogHelper.d(TAG, "deleteMatchRemind");
+		LogHelper.i(TAG, "deleteMatchRemind");
 		
 		if(!isDataInitDone){
 			LogHelper.w(TAG, "Please init data first");
@@ -401,7 +402,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	 */
 	public Boolean resetData(){
 		
-		LogHelper.d(TAG, "resetData");
+		LogHelper.i(TAG, "resetData");
 		threadPool.execute(new Runnable() {
 			
 			@Override

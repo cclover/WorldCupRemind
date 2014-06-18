@@ -442,7 +442,7 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public void onInitDone(Boolean isSuccess) {
 		
-		LogHelper.d(TAG, String.format("onInitDone result is %s", isSuccess?"true":"false"));
+		LogHelper.i(TAG, String.format("onInitDone result is %sb", isSuccess));
 		final Boolean ret = isSuccess;
 		
 		LogHelper.d(TAG, "Tell fragment Data Init DONE");
@@ -475,7 +475,7 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public void onUpdateDone(int status, String appURL) {
 
-		LogHelper.d(TAG, String.format("The update status is %d", status));
+		LogHelper.i(TAG, String.format("The update status is %d", status));
 		
 		final int sta = status;
 		final String url = appURL;
@@ -531,7 +531,7 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public void onSetRemindDone(Boolean isSuccess) {
 		
-		LogHelper.d(TAG, String.format("onSetRemindDone is %s", isSuccess?"true":"false"));
+		LogHelper.i(TAG, String.format("onSetRemindDone is %b", isSuccess));
 		if(isSuccess){
 			runOnUiThread(new Runnable() {
 				
@@ -547,7 +547,7 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public void onTimezoneChanged() {
 		
-		LogHelper.d(TAG, "onTimezoneChanged");
+		LogHelper.i(TAG, "onTimezoneChanged");
 		runOnUiThread(new Runnable() {
 			
 			@Override
@@ -561,6 +561,7 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public void onLocalChanged() {
 		
+		LogHelper.i(TAG, "onLocalChanged");
 		//When language changed , the activaty will be destory and create again
 		//But can't show the data. If we set  android:configChanges = "locale | layoutDirection" and refresh 
 		//The action bar language will not change
@@ -571,7 +572,7 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public void onResetDone(Boolean issBoolean) {
 		
-		LogHelper.d(TAG, String.format("onResetDone is %s", issBoolean?"true":"false"));
+		LogHelper.i(TAG, String.format("onResetDone is %b", issBoolean));
 //		controller.InitData(this);
 		final Boolean ret = issBoolean;
 		final Context tmpContext = this;

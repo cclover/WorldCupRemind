@@ -9,8 +9,8 @@ public class LogHelper {
 	
 	public static int LEVEL_E = 0;
 	public static int LEVEL_W = 1;
-	public static int LEVEL_D = 2;
-	public static int LEVEL_I = 3;
+	public static int LEVEL_I = 2;
+	public static int LEVEL_D = 3;
 	public static int LEVEL_V = 4;
 	private static Boolean isEnable = true;
 	private static int level = LEVEL_V;
@@ -27,15 +27,15 @@ public class LogHelper {
 		}
 	}
 	
-	public static void i(String TAG, String msg){
-		if(isEnable && level >= LEVEL_I){
-			Log.i(TAG, msg);	
-		}
-	}
-	
 	public static void d(String TAG, String msg){
 		if(isEnable && level >= LEVEL_D){
 			Log.d(TAG, msg);	
+		}
+	}
+	
+	public static void i(String TAG, String msg){
+		if(isEnable && level >= LEVEL_I){
+			Log.i(TAG, msg);	
 		}
 	}
 	

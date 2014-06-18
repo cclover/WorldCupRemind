@@ -225,7 +225,7 @@ class MatchDataHelper {
 	 */
 	public Boolean loadMatchesData(){
 		
-		LogHelper.d(TAG, "loadMatchesData()");
+		LogHelper.i(TAG, "loadMatchesData()");
 		matchesList.clear();
 		Boolean ret = false;
 		if(DataOperateHelper.isLocalFileExist(context, DATA_MATCHES_FILE)){
@@ -251,7 +251,7 @@ class MatchDataHelper {
 	 */
 	public Boolean loadStatisticsData(){
 		
-		LogHelper.d(TAG, "loadStatisticsData()");
+		LogHelper.i(TAG, "loadStatisticsData()");
 		groupStatisticsList.clear();
 		goalStatisticsList.clear();
 		assistStatisticsList.clear();
@@ -278,7 +278,7 @@ class MatchDataHelper {
 	 */
 	public ArrayList<String> checkNewVersion(){
 		
-		LogHelper.d(TAG, "checkNewVersion()");
+		LogHelper.i(TAG, "checkNewVersion()");
 		ArrayList<String> updateFileList = new ArrayList<String>();
 		
 		//Get Download file stream
@@ -313,7 +313,7 @@ class MatchDataHelper {
 		}
 		
 		//Check the version
-		LogHelper.d(TAG, "Network version is :" + ver);
+		LogHelper.i(TAG, "Network version is :" + ver);
 		try {
 			JSONObject jsonObject = new JSONObject(ver);
 			double newMatchesVer = jsonObject.getDouble(JSON_VERSION_MATCHES);
@@ -361,7 +361,7 @@ class MatchDataHelper {
 	 */
 	public Boolean updateAllDataFiles(ArrayList<String> updateList){
 		
-		LogHelper.d(TAG, "updateAllData()");
+		LogHelper.i(TAG, "updateAllData()");
 
 		// Check update.
 		LogHelper.d(TAG, "Check version file");
@@ -409,7 +409,7 @@ class MatchDataHelper {
 	 */
 	public Boolean loadRemindData(){
 		
-		LogHelper.d(TAG, "loadRemindData()");
+		LogHelper.i(TAG, "loadRemindData()");
 		remindList.clear();
 		remindCancelList.clear();
 		
@@ -832,7 +832,7 @@ class MatchDataHelper {
 			teamsCount = rootObj.getInt(JSON_TEAMS_COUNT);
 			newsURL = rootObj.optString(JSON_NEWS_URL);
 			matchStage = MatchStage.valueOf(rootObj.getInt(JSON_MATCHES_STAGE));
-	    	LogHelper.d(TAG, "The match data version is:" + String.valueOf(tmpVersion));
+	    	LogHelper.i(TAG, "The match data version is:" + String.valueOf(tmpVersion));
 	    	
 	    	//parse match data
 			JSONArray matchesArray = rootObj.getJSONArray(JSON_MATCHES_LIST);
@@ -894,7 +894,7 @@ class MatchDataHelper {
 			
 			//parse data version
 			tmpVersion = rootObj.getDouble(JSON_STATISTICS_DATA_VERSION);
-	    	LogHelper.d(TAG, "The statistics data version is:" + String.valueOf(tmpVersion));
+	    	LogHelper.i(TAG, "The statistics data version is:" + String.valueOf(tmpVersion));
 	    	
 	    	//parse statistics group data
 	    	LogHelper.d(TAG, "parse group statistics");
