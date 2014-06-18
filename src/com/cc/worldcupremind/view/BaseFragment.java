@@ -52,14 +52,6 @@ public abstract class BaseFragment extends ListFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		LogHelper.d(TAG,  this.getClass().getName() + " onCreateView");
-		/**
-		 * We can delay to create and set adapter to speed up the view launch
-		 * (Move create adapter into setDataInit, and setAdapter in setDat)
-		 * 
-		 * Then each fragment will set adapter when it first be visited.
-		 * But it will increase the TAB switch time. So we still do this in onCreateView
-		 */
-		setListAdapter(adapter);
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 	
@@ -69,6 +61,24 @@ public abstract class BaseFragment extends ListFragment {
 		super.onActivityCreated(savedInstanceState);
 		listView = getListView();
 		listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+	}
+	
+	public abstract BaseAdapter createAdapter();
+	
+	
+	/**
+	 * We can delay to create and set adapter to speed up the view launch
+	 * (Move create adapter into setDataInit, and invoke setAdapter in setDat)
+	 * 
+	 * Then each fragment will set adapter when it first be visited.
+	 * But it will increase the TAB switch time. So we delay the fragment laod data by sendMessageDelay in MainActivity
+	 */
+	public void setAdapter(){
+		
+		if(getListAdapter() == null){
+			LogHelper.d(TAG, this.getClass().getName() + "::setAdapter");
+			setListAdapter(adapter);
+		}
 	}
 	
 	public void refresh(){
@@ -97,10 +107,16 @@ public abstract class BaseFragment extends ListFragment {
 		if(!isDataInit){
 			LogHelper.d(TAG, this.getClass().getName() + "--The date init!");
 			isDataInit = true;
+			adapter = createAdapter();
 		}
 	}
 	
-
+	@Override
+	public void onStop() {
+		super.onStop();
+		LogHelper.d(TAG, this.getClass().getName() + "onStop");
+	}
+	
 	public Boolean hasFragmentShown(){
 		return isFragmentShow;
 	}

@@ -40,7 +40,6 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 			
 	public MatchesFragment(){
 		
-        adapter = new MatchesAdapter(); 
         matchDataList = new ArrayList<MatchesModel>();
         remindList = new ArrayList<Integer>();
         isAlarmMode = false;
@@ -104,7 +103,13 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 		LogHelper.d(TAG, "MatchesFragment::setData");
 		matchList = list;
 		createMatchesDayMap();
+		super.setAdapter();
 		super.refresh();
+	}
+	
+	@Override
+	public BaseAdapter createAdapter() {
+		return new MatchesAdapter();
 	}
 	
 	public void setAlarmMode(Boolean isOn){
@@ -385,5 +390,4 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 		}
 		
 	}
-
 }

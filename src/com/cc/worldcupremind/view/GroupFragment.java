@@ -22,14 +22,19 @@ public class GroupFragment extends BaseFragment {
 
 	public GroupFragment(){
 		mGroupStaticsList = null;
-		adapter = new GropStaticsListAdapter();
 	}
 	
 	public void setData(ArrayList<GroupStatistics> groupStaticsData) {
 		
 		LogHelper.d(TAG, "GroupFragment::setData");
 		mGroupStaticsList = groupStaticsData;
+		super.setAdapter();
 		super.refresh();
+	}
+	
+	@Override
+	public BaseAdapter createAdapter() {
+		return new GropStaticsListAdapter();
 	}
 	
 	class GropStaticsListAdapter extends BaseAdapter {

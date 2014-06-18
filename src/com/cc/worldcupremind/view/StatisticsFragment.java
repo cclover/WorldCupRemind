@@ -30,7 +30,6 @@ public class StatisticsFragment extends BaseFragment {
 	
 	public StatisticsFragment(){
 		
-		adapter = new PlayerStaticsListAdapter();
 		txtHeaderType = null;
 		imgHeaderFlag = null;
 		isGoal = true;
@@ -53,7 +52,13 @@ public class StatisticsFragment extends BaseFragment {
 		LogHelper.d(TAG, "StatisticsFragment::setData");
 		mGoalStaticsList = goalStaticsData;
 		mAssistStaticsList = assistStaticsData;
+		super.setAdapter();
 		setGoalAssistList();
+	}
+	
+	@Override
+	public BaseAdapter createAdapter() {
+		return new PlayerStaticsListAdapter();
 	}
 	
 

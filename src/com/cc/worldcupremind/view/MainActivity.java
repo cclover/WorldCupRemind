@@ -39,6 +39,10 @@ public class MainActivity extends ActionBarActivity implements
 		ActionBar.TabListener , MatchDataListener{
 
 	private static final String TAG = "MainActivity";
+	private static final int MESSAGE_ID_MATCH = 1;
+	private static final int MESSAGE_ID_GROUP = 2;
+	private static final int MESSAGE_ID_STATICSTIC = 3;
+	private static final int DELAY_LOAD_TIME = 150;
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -65,6 +69,7 @@ public class MainActivity extends ActionBarActivity implements
 	MenuItem newsItem;
 	Boolean isExit;
 	ActionBar actionBar;
+	DelayLoadHandler handler;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +93,17 @@ public class MainActivity extends ActionBarActivity implements
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		mViewPager.setOffscreenPageLimit(4);
+		
+		/**
+		 * This will influence the view launch time.
+		 * It will invoke the Fragment onCreate, onCreateview, onStart and onResume and hold it in memory.
+		 * If we do some time-consuming operate, it will influence the launch time. 
+		 * But it will more smooth and quick when we switch between those fragment in veiw page.
+		 * 
+		 * At here, we move unnecessary operate out of those method, we only load the view in onCreateview
+		 * So set count to 1 only spend less 10ms-15ms then 3 when launch.
+		 */
+		mViewPager.setOffscreenPageLimit(3); 
 
 		// When swiping between different sections, select the corresponding
 		// tab. We can also use ActionBar.Tab#select() to do this if we have
@@ -103,12 +118,8 @@ public class MainActivity extends ActionBarActivity implements
 							if(controller.isRemindEnable()){
 								remindItem.setVisible(true);
 								if(!matchFragment.hasFragmentShown()){
-									LogHelper.d(TAG, "First show matchFragment!");
-									matchFragment.showFragment();
-									if(matchFragment.isDataInit()){
-										LogHelper.d(TAG, "Data init done! show matchFragment!");
-										matchFragment.setData(controller.getMatchesData());
-									}
+									LogHelper.d(TAG, "First show matchFragment! ---- DELAY");
+									handler.sendEmptyMessageDelayed(MESSAGE_ID_MATCH, DELAY_LOAD_TIME);
 								}
 							}
 						}else{
@@ -119,12 +130,8 @@ public class MainActivity extends ActionBarActivity implements
 						if(position == 1){
 							secondStageItem.setVisible(true);
 							if(!groupFragment.hasFragmentShown()){
-								LogHelper.d(TAG, "First show groupFragment! Load data to show!");
-								groupFragment.showFragment();
-								if(groupFragment.isDataInit()){
-									LogHelper.d(TAG, "Data init done! show groupFragment!");
-									groupFragment.setData(controller.getGroupStaticsData());
-								}
+								LogHelper.d(TAG, "First show groupFragment! Load data to show! ---- DELAY");
+								handler.sendEmptyMessageDelayed(MESSAGE_ID_GROUP, DELAY_LOAD_TIME);
 							}
 						}else{
 							secondStageItem.setVisible(false);
@@ -132,12 +139,8 @@ public class MainActivity extends ActionBarActivity implements
 						if(position == 2){
 							statisticsItem.setVisible(true);
 							if(!statisticsFragment.hasFragmentShown()){
-								LogHelper.d(TAG, "First show statisticsFragment! Load data to show!");
-								statisticsFragment.showFragment();
-								if(statisticsFragment.isDataInit()){
-									LogHelper.d(TAG, "Data init done! show statisticsFragment!");
-									statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
-								}
+								LogHelper.d(TAG, "First show statisticsFragment! Load data to show! ---- DELAY");
+								handler.sendEmptyMessageDelayed(MESSAGE_ID_STATICSTIC, DELAY_LOAD_TIME);
 							}
 						}else{
 							statisticsItem.setVisible(false);
@@ -165,6 +168,7 @@ public class MainActivity extends ActionBarActivity implements
 		controller = MatchDataController.getInstance();
 		controller.setListener(this);
 		controller.InitData(this, true);
+		handler = new DelayLoadHandler(Looper.myLooper());
 	}
 	
 	@Override
@@ -245,8 +249,7 @@ public class MainActivity extends ActionBarActivity implements
 		 * But use thread may spent many time, so we just send message delay.
 		 */				
 		LogHelper.d(TAG, "Delay show the matchFragment after activity visible");
-		DelayLoadHandler handler = new DelayLoadHandler(Looper.myLooper());
-		handler.sendEmptyMessageDelayed(0, 10);
+		handler.sendEmptyMessageDelayed(MESSAGE_ID_MATCH, 10);
 		return true;
 	}
 
@@ -346,31 +349,52 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	
-	 class DelayLoadHandler extends Handler{    
-	     
-		 public DelayLoadHandler(Looper looper){    
-		     super(looper);    
-		 }    
+	class DelayLoadHandler extends Handler{    
+ 
+		public DelayLoadHandler(Looper looper){    
+			super(looper);    
+		}    
 		     
-		 public DelayLoadHandler(){    
-		     super();    
-		 }    
+		public DelayLoadHandler(){    
+			super();    
+		}    
 		 
-		 @Override    
-		 public void handleMessage(Message msg) {    
-		     super.handleMessage(msg);    
-		     
-		     LogHelper.d(TAG, "Delay laod the matchFragment data!");
+		@Override    
+		public void handleMessage(Message msg) { 
+			
+			super.handleMessage(msg);    
+			if(msg.what == MESSAGE_ID_MATCH){
+				
+				LogHelper.d(TAG, "Delay laod the matchFragment data!");
 				matchFragment.showFragment();
 				if(matchFragment.isDataInit()){
 					LogHelper.d(TAG, "Data init done! show matchFragment!");
 					matchFragment.setData(controller.getMatchesData());
 				}
-				
+			
+				//load web view
+				LogHelper.d(TAG, "Pre-laod the newsFragment data!");
 				if(newsFragment != null){
-					newsFragment.showData(); //load web view
+					newsFragment.showData(); 
 				}
-		 }   
+			}else if(msg.what == MESSAGE_ID_GROUP){
+				
+				LogHelper.d(TAG, "Delay laod the groupFragment data!");
+				groupFragment.showFragment();
+				if(groupFragment.isDataInit()){
+					LogHelper.d(TAG, "Data init done! show groupFragment!");
+					groupFragment.setData(controller.getGroupStaticsData());
+				}
+			}else if(msg.what == MESSAGE_ID_STATICSTIC){
+				
+				LogHelper.d(TAG, "Delay laod the statisticsFragment data!");
+				statisticsFragment.showFragment();
+				if(statisticsFragment.isDataInit()){
+					LogHelper.d(TAG, "Data init done! show statisticsFragment!");
+					statisticsFragment.setData(controller.getGoalStaticsData(), controller.getAssistStaticsData());
+				}	 
+			}
+		}   
 	 }
 	
 	/**

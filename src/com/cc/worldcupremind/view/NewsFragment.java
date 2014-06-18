@@ -71,4 +71,10 @@ public class NewsFragment extends Fragment {
   			myWebView.reload();
   		}
   	}
+  	
+  	@Override
+  	public void onStop() {
+  		super.onStop();
+  		isShow = false;
+  	}
 }
