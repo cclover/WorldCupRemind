@@ -53,7 +53,7 @@ public class StatisticsFragment extends BaseFragment {
 		mGoalStaticsList = goalStaticsData;
 		mAssistStaticsList = assistStaticsData;
 		super.setAdapter();
-		setGoalAssistList();
+		switchView();
 	}
 	
 	@Override
@@ -66,10 +66,8 @@ public class StatisticsFragment extends BaseFragment {
 		
 		LogHelper.d(TAG, "StatisticsFragment::setGoalAssistList");
 		if(isGoal){
-			mDataStaticsList  = mAssistStaticsList;
 			isGoal = false;
 		}else{
-			mDataStaticsList = mGoalStaticsList;
 			isGoal = true;
 		}
 		switchView();

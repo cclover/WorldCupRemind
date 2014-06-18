@@ -274,18 +274,17 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 			//Get item view
 			if(getItemViewType(position) == ITEM_DAY){
 				
-				ViewHolder2 holder = null;
+				TextView txtDay = null;
 				if (convertView == null) {
 					convertView = mInflater.inflate(R.layout.day_item, null);
-					holder = new ViewHolder2();
-				    holder.day = (TextView)convertView.findViewById(R.id.txtDay);
-				    convertView.setTag(holder);
+					txtDay = (TextView)convertView.findViewById(R.id.txtDay);
+				    convertView.setTag(txtDay);
 				} else {
-				     holder = (ViewHolder2)convertView.getTag();
+					txtDay = (TextView)convertView.getTag();
 				}
 				
 				//set value
-				holder.day.setText(String.format("%s %s", model.getMatchTime().getDateString(), model.getMatchTime().getWeekdayString()));
+				txtDay.setText(String.format("%s %s", model.getMatchTime().getDateString(), model.getMatchTime().getWeekdayString()));
 				if(model.getMatchTime().isWeekend()){
 					convertView.setBackgroundColor(resource.getColor(R.color.lightsalmon));
 				}else{
@@ -384,10 +383,5 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 			CheckBox remind;
 			ImageView imgRemind;
 		}
-		
-		class ViewHolder2{
-			TextView day;
-		}
-		
 	}
 }
