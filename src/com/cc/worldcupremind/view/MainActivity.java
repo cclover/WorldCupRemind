@@ -487,6 +487,7 @@ public class MainActivity extends ActionBarActivity implements
 				statisticsFragment.setDataInit();
 			}
 		}
+		final Context context = this;
 
 		runOnUiThread(new Runnable() {
 			@Override
@@ -496,7 +497,21 @@ public class MainActivity extends ActionBarActivity implements
 					loadDataIfFragmentShown();
 				}else{
 					LogHelper.d(TAG, "Init fail!");
-					showToast(R.string.data_fail);
+					if(matchFragment != null){
+						matchFragment.setProcessShown(false);
+					}
+					if(groupFragment != null){
+						groupFragment.setProcessShown(false);
+					}
+					if(statisticsFragment != null){
+						statisticsFragment.setProcessShown(false);
+					}
+					AlertDialog.Builder builder = new AlertDialog.Builder(context);
+					builder.setTitle(R.string.data_fail);
+					builder.setMessage(R.string.data_fail_message);
+					builder.setIcon(R.drawable.ic_alerts_warning);
+					builder.setNeutralButton(android.R.string.ok, null);
+					builder.show();
 				}
 			}
 		});

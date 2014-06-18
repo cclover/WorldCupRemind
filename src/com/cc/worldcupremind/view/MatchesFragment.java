@@ -206,8 +206,10 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 			}
 		}
 //		LogHelper.d(TAG, dayNext + "count:" + String.valueOf(count));
-		matchDataList.add(matchList.valueAt(matchList.size()-1));
-		tmpList.add(count);
+		if(matchList.size() >= 1){
+			matchDataList.add(matchList.valueAt(matchList.size()-1));
+			tmpList.add(count);
+		}
 		
 		//Count the day index
 		for(int j = 0; j < tmpList.size(); j++){

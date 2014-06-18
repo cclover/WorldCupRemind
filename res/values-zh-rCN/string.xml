@@ -18,7 +18,8 @@
     <string name="tab_statistics">数据统计</string>
     <string name="tab_news">新闻资讯</string>
     <string name="app_exit">再按一次退出程序</string>
-    <string name="data_fail">数据解析失败！</string>
+    <string name="data_fail">数据解析失败</string>
+    <string name="data_fail_message">数据解析失败！请从菜单中选择【重置数据】或【更新数据】，然后重启！</string>
      
      <!-- National Name -->
 	<string name="bra">"巴西"</string>

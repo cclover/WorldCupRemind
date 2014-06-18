@@ -29,6 +29,7 @@ public abstract class BaseFragment extends ListFragment {
 	protected Boolean isDataInit;
 	protected MatchDataController controller;
 	protected ProgressBar progressBar;
+	private Boolean isProgressShown;
 	
 	public BaseFragment(){
 		context = null;
@@ -38,6 +39,7 @@ public abstract class BaseFragment extends ListFragment {
 		isFragmentShow = false;
 		isDataInit = false;
 		progressBar = null;
+		isProgressShown = true;
 	}
 	
 	
@@ -61,6 +63,7 @@ public abstract class BaseFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		LogHelper.d(TAG,  this.getClass().getName() + " onActivityCreated");
 		super.onActivityCreated(savedInstanceState);
+		setProcessShown(isProgressShown);
 	}
 	
 	public abstract BaseAdapter createAdapter();
@@ -112,6 +115,17 @@ public abstract class BaseFragment extends ListFragment {
 			isDataInit = true;
 			adapter = createAdapter();
 		}
+	}
+	
+	public void setProcessShown(Boolean isShow){
+		if(progressBar != null){
+			isProgressShown = isShow;
+			if(isProgressShown){
+				progressBar.setVisibility(View.VISIBLE);
+			}else{
+				progressBar.setVisibility(View.INVISIBLE);
+			}
+		}		
 	}
 	
 	@Override

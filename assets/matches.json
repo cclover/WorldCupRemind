@@ -1,4 +1,4 @@
-{"Version":2.170,"TeamsCount":32,"MatchesCount":64,"stage":0,"newsURL":"http://3g.163.com/ntes/special/00340H1J/worldcup2014.html?from=index","Matches":[
+{"Version":2.180,"TeamsCount":32,"MatchesCount":64,"stage":0,"newsURL":"http://3g.163.com/ntes/special/00340H1J/worldcup2014.html?from=index","Matches":[
 {"NO":1,"Stage":0,"Group":"A","Time":"2014-06-13 04:00:00","Team1":"bra","Team2":"cro","Status":2,"Score1":3,"Score2":1,"ext":""},
 {"NO":2,"Stage":0,"Group":"A","Time":"2014-06-14 00:00:00","Team1":"mex","Team2":"cmr","Status":2,"Score1":1,"Score2":0,"ext":""},
 {"NO":3,"Stage":0,"Group":"B","Time":"2014-06-14 03:00:00","Team1":"esp","Team2":"ned","Status":2,"Score1":1,"Score2":5,"ext":""},
@@ -16,7 +16,7 @@
 {"NO":15,"Stage":0,"Group":"H","Time":"2014-06-18 00:00:00","Team1":"bel","Team2":"alg","Status":2,"Score1":2,"Score2":1,"ext":""},
 {"NO":16,"Stage":0,"Group":"A","Time":"2014-06-18 03:00:00","Team1":"bra","Team2":"mex","Status":2,"Score1":0,"Score2":0,"ext":""},
 {"NO":17,"Stage":0,"Group":"H","Time":"2014-06-18 06:00:00","Team1":"rus","Team2":"kor","Status":2,"Score1":1,"Score2":1,"ext":""},
-{"NO":18,"Stage":0,"Group":"B","Time":"2014-06-19 00:00:00","Team1":"aus","Team2":"ned","Status":0,"Score1":0,"Score2":0,"ext":""},
+{"NO":18,"Stage":0,"Group":"B","Time":"2014-06-19 00:00:00","Team1":"aus","Team2":"ned","Status":2,"Score1":2,"Score2":3,"ext":""},
 {"NO":19,"Stage":0,"Group":"B","Time":"2014-06-19 03:00:00","Team1":"esp","Team2":"chi","Status":0,"Score1":0,"Score2":0,"ext":""},
 {"NO":20,"Stage":0,"Group":"A","Time":"2014-06-19 06:00:00","Team1":"cmr","Team2":"cro","Status":0,"Score1":0,"Score2":0,"ext":""},
 {"NO":21,"Stage":0,"Group":"C","Time":"2014-06-20 00:00:00","Team1":"col","Team2":"civ","Status":0,"Score1":0,"Score2":0,"ext":""},
