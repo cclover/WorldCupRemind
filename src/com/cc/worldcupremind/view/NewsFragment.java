@@ -25,20 +25,16 @@ public class NewsFragment extends Fragment {
   
   	@Override
   	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-   
+  		LogHelper.d(TAG, "NewsFragment onCreateView");
   		View view = inflater.inflate(R.layout.fragment_news, container, false);
 	 	myWebView = (WebView)view.findViewById(R.id.webview);
-	 	myWebView.getSettings().setJavaScriptEnabled(true);
-//	 	myWebView.getSettings().setUseWideViewPort(true);
-//	 	myWebView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-//		myWebView.getSettings().setLoadWithOverviewMode(true);
-//	 	myWebView.setWebViewClient(new WebViewClient());
       	return view;
   	}
   
 
   	@Override
   	public void onActivityCreated(Bundle savedInstanceState) {
+  		LogHelper.d(TAG, "NewsFragment onActivityCreated");
   		super.onActivityCreated(savedInstanceState);
   		setRetainInstance(true);
   	}
@@ -49,9 +45,16 @@ public class NewsFragment extends Fragment {
   		if(!isShow && myWebView != null){
   			LogHelper.d(TAG, "NewsFragment::loadUrl");
   			isShow = true;
+  		 	myWebView.getSettings().setJavaScriptEnabled(true);
+//  		 	myWebView.getSettings().setUseWideViewPort(true);
+//  		 	myWebView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+//  			myWebView.getSettings().setLoadWithOverviewMode(true);
+//  		 	myWebView.setWebViewClient(new WebViewClient());
   			myWebView.loadUrl(getURL());
+  			LogHelper.d(TAG, "NewsFragment::End");
   		}
   	}
+  	 
 
   	private String getURL(){
   	  	String url = MatchDataController.getInstance().getNewsURL();

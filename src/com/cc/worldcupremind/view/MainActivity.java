@@ -69,6 +69,8 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
+		LogHelper.setLogLevel(LogHelper.LEVEL_D);
+		
 		LogHelper.d(TAG, "onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
@@ -364,6 +366,10 @@ public class MainActivity extends ActionBarActivity implements
 					LogHelper.d(TAG, "Data init done! show matchFragment!");
 					matchFragment.setData(controller.getMatchesData());
 				}
+				
+				if(newsFragment != null){
+					newsFragment.showData(); //load web view
+				}
 		 }   
 	 }
 	
@@ -442,7 +448,7 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public void onInitDone(Boolean isSuccess) {
 		
-		LogHelper.i(TAG, String.format("onInitDone result is %sb", isSuccess));
+		LogHelper.i(TAG, String.format("onInitDone result is %b", isSuccess));
 		final Boolean ret = isSuccess;
 		
 		LogHelper.d(TAG, "Tell fragment Data Init DONE");

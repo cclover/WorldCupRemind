@@ -16,7 +16,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 
-public class BaseFragment extends ListFragment {
+public abstract class BaseFragment extends ListFragment {
 
 	private static final String TAG = "BaseFragment";
 	protected Context context;
@@ -41,6 +41,7 @@ public class BaseFragment extends ListFragment {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		LogHelper.d(TAG,  this.getClass().getName() + " onCreate");
 		super.onCreate(savedInstanceState);
 		context = getActivity();
 		controller = MatchDataController.getInstance();
@@ -50,12 +51,21 @@ public class BaseFragment extends ListFragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		LogHelper.d(TAG,  this.getClass().getName() + " onCreateView");
+		/**
+		 * We can delay to create and set adapter to speed up the view launch
+		 * (Move create adapter into setDataInit, and setAdapter in setDat)
+		 * 
+		 * Then each fragment will set adapter when it first be visited.
+		 * But it will increase the TAB switch time. So we still do this in onCreateView
+		 */
 		setListAdapter(adapter);
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
+		LogHelper.d(TAG,  this.getClass().getName() + " onActivityCreated");
 		super.onActivityCreated(savedInstanceState);
 		listView = getListView();
 		listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
