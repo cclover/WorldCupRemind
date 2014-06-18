@@ -23,6 +23,9 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -156,7 +159,6 @@ public class MainActivity extends ActionBarActivity implements
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
 		}
-		matchFragment.showFragment();
 		LogHelper.d(TAG, "Load data!");
 		controller = MatchDataController.getInstance();
 		controller.setListener(this);
@@ -167,8 +169,7 @@ public class MainActivity extends ActionBarActivity implements
 	protected void onResume() {
 		LogHelper.d(TAG, "onResume");
 		super.onResume();
-	}
-	
+	}	
 
 	@Override
 	protected void onDestroy() 
@@ -206,7 +207,8 @@ public class MainActivity extends ActionBarActivity implements
 //			System.exit(0);
 		}
 	}
-
+	
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -227,6 +229,22 @@ public class MainActivity extends ActionBarActivity implements
 			remindFlagItem.setTitle(R.string.menu_remind_enable);
 			remindItem.setVisible(false);
 		}
+		
+		LogHelper.d(TAG, "onCreateOptionsMenu DONE");
+	
+		/**
+		 * NOTE: AFTER launch the activity(ViewPage + ActionBar(NAVIGATION_MODE_TABS))
+		 * The page will show after onCreateOptionsMenu return. 
+		 * 
+		 * If we load the first tab date in onCreate, it will increase the activity launch (visible)time.
+		 * So we can wait the view change to visible , delay load the first tab data.
+		 * 
+		 * We can use another thread to send message, then the onCreateOptionsMenu can return as soon as possible.
+		 * But use thread may spent many time, so we just send message delay.
+		 */				
+		LogHelper.d(TAG, "Delay show the matchFragment after activity visible");
+		DelayLoadHandler handler = new DelayLoadHandler(Looper.myLooper());
+		handler.sendEmptyMessageDelayed(0, 10);
 		return true;
 	}
 
@@ -325,6 +343,29 @@ public class MainActivity extends ActionBarActivity implements
 			FragmentTransaction fragmentTransaction) {
 	}
 
+	
+	 class DelayLoadHandler extends Handler{    
+	     
+		 public DelayLoadHandler(Looper looper){    
+		     super(looper);    
+		 }    
+		     
+		 public DelayLoadHandler(){    
+		     super();    
+		 }    
+		 
+		 @Override    
+		 public void handleMessage(Message msg) {    
+		     super.handleMessage(msg);    
+		     
+		     LogHelper.d(TAG, "Delay laod the matchFragment data!");
+				matchFragment.showFragment();
+				if(matchFragment.isDataInit()){
+					LogHelper.d(TAG, "Data init done! show matchFragment!");
+					matchFragment.setData(controller.getMatchesData());
+				}
+		 }   
+	 }
 	
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

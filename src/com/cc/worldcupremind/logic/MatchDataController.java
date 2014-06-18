@@ -1,6 +1,8 @@
 package com.cc.worldcupremind.logic;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import com.cc.worldcupremind.common.LogHelper;
 import com.cc.worldcupremind.common.ResourceHelper;
@@ -28,13 +30,15 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	private static final String APP_VERSION = "appversiom";
 	private static final String PRE_FILE_NAME = "data.xml";
 	private static final String APP_APK_NAME = "WorldCupRemind.apk";
+	private static final int THREAD_POOL_SIZE = 3;
 	private static MatchDataController instance = new MatchDataController();
 	private Boolean isDataInitDone;
 	private MatchDataHelper dataHelper;	
 	private ResourceHelper resourceHelper;
-	private ArrayList<MatchDataListener> listenerList;
+	private MatchDataListener matchListener;
 	private Context context;
 	private Object lockObj;
+	private ExecutorService threadPool;
 	
 	/**
 	 * Get the @MatchDataController object
@@ -53,8 +57,9 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		dataHelper = null;
 		resourceHelper = null;
 		context = null;
-		listenerList = new ArrayList<MatchDataListener>();
+		matchListener = null;
 		lockObj = new Object();
+		threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 	}
 	
 	/**
@@ -72,8 +77,8 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	 * The @MatchDataListener object
 	 */
 	public void setListener(MatchDataListener listener){
-		if(listener != null && !listenerList.contains(listener)){
-			listenerList.add(listener);
+		if(listener != null){
+			matchListener = listener;
 			LogHelper.d(TAG, "Add listener " + listener.toString());
 		}
 	}
@@ -85,9 +90,9 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	 * The @MatchDataListener object
 	 */
 	public void removeListener(MatchDataListener listener){
-		if(listener != null && listenerList.contains(listener)){
-			listenerList.remove(listener);
+		if(listener != null){
 			LogHelper.d(TAG, "Remove the listener " + listener.toString());
+			matchListener = null;
 		}
 	}
 	
@@ -149,7 +154,14 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		if(isDataInitDone){
 			LogHelper.d(TAG, "Data had init done!");
 			if(needCallbak){
-				onInitDone(true);
+				
+				threadPool.execute(new Runnable() {
+
+					@Override
+					public void run() {
+						onInitDone(true);
+					}
+				});
 			}
 			return;
 		}
@@ -166,7 +178,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 			}
 		}
 
-		new Thread(new Runnable() {
+		threadPool.execute(new Runnable() {
 			
 			@Override
 			public synchronized void run() {
@@ -206,12 +218,12 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 				isDataInitDone = true;
 				onInitDone(true);
 			}
-		}).start();
+		});
 	}
 
 	
 	
-	public Boolean InitDataAsync(Context appContext){
+	public Boolean InitDataSync(Context appContext){
 		
 		if(isDataInitDone){
 			LogHelper.d(TAG, "Data had init done!");
@@ -248,18 +260,6 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		return true;
 	}
 	
-	public Boolean setRemind(){
-		
-		LogHelper.d(TAG, "setRemind");
-		
-		if(!isDataInitDone){
-			LogHelper.w(TAG, "Please init data first");
-			return false;
-		}
-		MatchRemindHelper.setAlarm(context, dataHelper.getRemindList(), dataHelper.getRemindCancelList());
-		return true;
-	}
-	
 	/**
 	 * Update data from network, receive result from @MatchDataListener
 	 * 
@@ -275,7 +275,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 			return false;
 		}
 		
-		new Thread(new Runnable() {
+		threadPool.execute(new Runnable() {
 			
 			@Override
 			public synchronized void run() {
@@ -308,7 +308,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 					}
 				}
 			}
-		}).start();
+		});
 		
 		return true;
 	}
@@ -333,7 +333,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		}
 		
 		final ArrayList<Integer> newList = matchesList;
-		new Thread(new Runnable() {
+		threadPool.execute(new Runnable() {
 			
 			@Override
 			public synchronized void run() {
@@ -353,11 +353,20 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 					onSetRemindDone(false);
 				}
 			}
-		}).start();
+		});
 	
 		return true;
 	}
 
+	
+	/**
+	 * Delete the alarm 
+	 * 
+	 * @param deleteList
+	 * Match NO list
+	 * 
+	 * @return true if delete success.
+	 */
 	public Boolean deleteMatchRemind(ArrayList<Integer> deleteList){
 		
 		LogHelper.d(TAG, "deleteMatchRemind");
@@ -368,7 +377,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		}
 		
 		final ArrayList<Integer> delList = deleteList;
-		new Thread(new Runnable() {
+		threadPool.execute(new Runnable() {
 			
 			@Override
 			public synchronized void run() {
@@ -380,8 +389,33 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 				}
 				onSetRemindDone(true);
 			}
-		}).start();
+		});
 	
+		return true;
+	}
+	
+	
+	/**
+	 * Delete the local files and reload from asset
+	 * @return
+	 */
+	public Boolean resetData(){
+		
+		LogHelper.d(TAG, "resetData");
+		threadPool.execute(new Runnable() {
+			
+			@Override
+			public synchronized void run() {
+				if(!dataHelper.removeData()){
+					Log.d(TAG, "Fail to reset data");
+					onResetDone(false);
+					return;
+				}
+				isDataInitDone = false;
+				InitDataSync(context);
+				onResetDone(true);
+			}
+		});
 		return true;
 	}
 	
@@ -430,7 +464,14 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		if(intent.getAction().equals(Intent.ACTION_TIMEZONE_CHANGED)){
-			onTimezoneChanged();
+			threadPool.execute(new Runnable() {
+				
+				@Override
+				public void run() {
+					onTimezoneChanged();
+				}
+			});
+
 		}else if(intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)){
 			onLocalChanged();
 		}
@@ -453,26 +494,6 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		return false;
 	}
 	
-	
-	public Boolean resetData(){
-		
-		LogHelper.d(TAG, "resetData");
-		new Thread(new Runnable() {
-			
-			@Override
-			public synchronized void run() {
-				if(!dataHelper.removeData()){
-					Log.d(TAG, "Fail to reset data");
-					onResetDone(false);
-					return;
-				}
-				isDataInitDone = false;
-				InitDataAsync(context);
-				onResetDone(true);
-			}
-		}).start();
-		return true;
-	}
 	
 	/**
 	 * 
@@ -511,62 +532,51 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	}
 	
 	
-	
-	
 	@Override
 	public void onInitDone(Boolean isSuccess) {
 
-		if(listenerList != null && listenerList.size() > 0){
-			for (MatchDataListener listener : listenerList) {
-				listener.onInitDone(isSuccess);
-			}
+		if(matchListener != null ) {
+			matchListener.onInitDone(isSuccess);
 		}
 	}
 
 	@Override
 	public void onUpdateDone(int status, String appURL) {
 
-		if(listenerList != null && listenerList.size() > 0){
-			for (MatchDataListener listener : listenerList) {
-				listener.onUpdateDone(status, appURL);
-			}
+		if(matchListener != null){
+			matchListener.onUpdateDone(status, appURL);
 		}
 	}
 
 	@Override
 	public void onSetRemindDone(Boolean isSuccess) {
 
-		if(listenerList != null && listenerList.size() > 0){
-			for (MatchDataListener listener : listenerList) {
-				listener.onSetRemindDone(isSuccess);
-			}
+		if(matchListener != null){
+			matchListener.onSetRemindDone(isSuccess);
 		}
 	}
 
 	@Override
 	public void onTimezoneChanged() {
 		
-		if(listenerList != null && listenerList.size() > 0){
-			for (MatchDataListener listener : listenerList) {
-				listener.onTimezoneChanged();
-			}
+		if(matchListener != null){
+			matchListener.onTimezoneChanged();
 		}
-		
 	}
 
 	@Override
 	public void onLocalChanged() {
 
-		for (MatchDataListener listener : listenerList) {
-			listener.onLocalChanged();
+		if(matchListener != null){
+			matchListener.onLocalChanged();
 		}
 	}
 
 	@Override
 	public void onResetDone(Boolean issBoolean) {
-
-		for (MatchDataListener listener : listenerList) {
-			listener.onResetDone(issBoolean);
+		
+		if(matchListener != null){
+			matchListener.onResetDone(issBoolean);
 		}
 	}
 

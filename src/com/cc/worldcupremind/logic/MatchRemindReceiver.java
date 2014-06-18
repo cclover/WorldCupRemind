@@ -51,7 +51,7 @@ public class MatchRemindReceiver extends BroadcastReceiver {
 			//Init data
 			if(!MatchDataController.getInstance().isDataInit()){
 				LogHelper.d(TAG, "Init Data First");
-				MatchDataController.getInstance().InitDataAsync(context);
+				MatchDataController.getInstance().InitDataSync(context);
 			}
 			
 			//Show remind info
