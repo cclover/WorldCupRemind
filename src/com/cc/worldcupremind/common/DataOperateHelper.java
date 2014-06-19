@@ -14,9 +14,9 @@ import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URL;
 
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPReply;
+//import org.apache.commons.net.ftp.FTPClient;
+//import org.apache.commons.net.ftp.FTPFile;
+//import org.apache.commons.net.ftp.FTPReply;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -31,14 +31,14 @@ public class DataOperateHelper {
 	private static final String HTTP_URL_BASE = "https://raw.githubusercontent.com/cclover/store/master/";
 	//private static final String HTTP_URL_BASE = "http://liu2.sinaapp.com/static/cc/";
 	
-	/* FTP Server info*/
-	private static final String FTP_SERVER_URL = "cclover.free3v.net";
-	private static final String FTP_USER_NAME = "cclover";
-	private static final String FTP_USER_PASSWORD = "2014worldcup";
-//	private static final String FTP_SERVER_URL = "174.129.246.208";
-//	private static final String FTP_USER_NAME = "anonymous";
-//	private static final String FTP_USER_PASSWORD = "";
-	private static final int FTP_SERVER_PORT = 21;
+//	/* FTP Server info*/
+//	private static final String FTP_SERVER_URL = "cclover.free3v.net";
+//	private static final String FTP_USER_NAME = "cclover";
+//	private static final String FTP_USER_PASSWORD = "2014worldcup";
+////	private static final String FTP_SERVER_URL = "174.129.246.208";
+////	private static final String FTP_USER_NAME = "anonymous";
+////	private static final String FTP_USER_PASSWORD = "";
+//	private static final int FTP_SERVER_PORT = 21;
 	private static final int NETWORK_TIMEOUT = 20*1000;
 	private static final int BUFFER_SIZE = 1024*8;
 
@@ -321,59 +321,59 @@ public class DataOperateHelper {
 	 * @return 
 	 * The file input stream if successes. return NULL if fail.
 	 */
-	public static InputStream loadFileFromFTPNetwork(String fileName){
-		
-		LogHelper.d(TAG, "loadFileFromFTPNetwork:" + fileName);
-		
-		//Connect to FTP, each FTPClient can only donwload one file....
-		FTPClient ftpClient =  new FTPClient(); 
-		try {	
-			
-			//Connect
-			ftpClient.setConnectTimeout(NETWORK_TIMEOUT);
-			ftpClient.setDataTimeout(NETWORK_TIMEOUT);
-			ftpClient.connect(FTP_SERVER_URL, FTP_SERVER_PORT);
-			ftpClient.login(FTP_USER_NAME, FTP_USER_PASSWORD);
-			
-			//Check reply code
-			LogHelper.d(TAG, "Get Reply from FTP Server");
-			int reply = ftpClient.getReplyCode();
-			if (!FTPReply.isPositiveCompletion(reply))
-			{
-				LogHelper.w(TAG, "Login FTP Server failed");
-				ftpClient.disconnect();
-				return null;
-			}
-			LogHelper.d(TAG, "Connect to FTP Server Success");		
-			ftpClient.changeWorkingDirectory("pub");
-			
-//			FTPFile[] files = ftpClient.listFiles();
-//			for(FTPFile file : files){
-//				LogHelper.d(TAG, "File:" + file.getName());
+//	public static InputStream loadFileFromFTPNetwork(String fileName){
+//		
+//		LogHelper.d(TAG, "loadFileFromFTPNetwork:" + fileName);
+//		
+//		//Connect to FTP, each FTPClient can only donwload one file....
+//		FTPClient ftpClient =  new FTPClient(); 
+//		try {	
+//			
+//			//Connect
+//			ftpClient.setConnectTimeout(NETWORK_TIMEOUT);
+//			ftpClient.setDataTimeout(NETWORK_TIMEOUT);
+//			ftpClient.connect(FTP_SERVER_URL, FTP_SERVER_PORT);
+//			ftpClient.login(FTP_USER_NAME, FTP_USER_PASSWORD);
+//			
+//			//Check reply code
+//			LogHelper.d(TAG, "Get Reply from FTP Server");
+//			int reply = ftpClient.getReplyCode();
+//			if (!FTPReply.isPositiveCompletion(reply))
+//			{
+//				LogHelper.w(TAG, "Login FTP Server failed");
+//				ftpClient.disconnect();
+//				return null;
 //			}
-			
-			// Download
-			LogHelper.d(TAG, "Start to download:" + fileName);
-			InputStream inStream = ftpClient.retrieveFileStream(fileName);
-			if(inStream == null){
-				LogHelper.d(TAG, "download files is null(FTP)");
-			}else{
-				LogHelper.d(TAG, "download files success(FTP)");
-			}
-			return inStream;
-		} catch (SocketException e1) {
-			LogHelper.e(TAG, e1);
-		} catch (IOException e1) {
-			LogHelper.e(TAG, e1);
-		} finally {
-			if(ftpClient != null){
-				try {
-					ftpClient.disconnect();
-				} catch (IOException e) {
-					LogHelper.e(TAG, e);
-				}
-			}
-		}
-		return null;
-	}	
+//			LogHelper.d(TAG, "Connect to FTP Server Success");		
+//			ftpClient.changeWorkingDirectory("pub");
+//			
+////			FTPFile[] files = ftpClient.listFiles();
+////			for(FTPFile file : files){
+////				LogHelper.d(TAG, "File:" + file.getName());
+////			}
+//			
+//			// Download
+//			LogHelper.d(TAG, "Start to download:" + fileName);
+//			InputStream inStream = ftpClient.retrieveFileStream(fileName);
+//			if(inStream == null){
+//				LogHelper.d(TAG, "download files is null(FTP)");
+//			}else{
+//				LogHelper.d(TAG, "download files success(FTP)");
+//			}
+//			return inStream;
+//		} catch (SocketException e1) {
+//			LogHelper.e(TAG, e1);
+//		} catch (IOException e1) {
+//			LogHelper.e(TAG, e1);
+//		} finally {
+//			if(ftpClient != null){
+//				try {
+//					ftpClient.disconnect();
+//				} catch (IOException e) {
+//					LogHelper.e(TAG, e);
+//				}
+//			}
+//		}
+//		return null;
+//	}	
 }

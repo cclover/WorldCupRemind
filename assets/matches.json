@@ -1,4 +1,4 @@
-{"Version":2.200,"TeamsCount":32,"MatchesCount":64,"stage":0,"newsURL":"http://3g.163.com/ntes/special/00340H1J/worldcup2014.html?from=index","Matches":[
+{"Version":2.220,"TeamsCount":32,"MatchesCount":64,"stage":0,"newsURL":"http://3g.163.com/ntes/special/00340H1J/worldcup2014.html?from=index","Matches":[
 {"NO":1,"Stage":0,"Group":"A","Time":"2014-06-13 04:00:00","Team1":"bra","Team2":"cro","Status":2,"Score1":3,"Score2":1,"ext":""},
 {"NO":2,"Stage":0,"Group":"A","Time":"2014-06-14 00:00:00","Team1":"mex","Team2":"cmr","Status":2,"Score1":1,"Score2":0,"ext":""},
 {"NO":3,"Stage":0,"Group":"B","Time":"2014-06-14 03:00:00","Team1":"esp","Team2":"ned","Status":2,"Score1":1,"Score2":5,"ext":""},
@@ -19,8 +19,8 @@
 {"NO":18,"Stage":0,"Group":"B","Time":"2014-06-19 00:00:00","Team1":"aus","Team2":"ned","Status":2,"Score1":2,"Score2":3,"ext":""},
 {"NO":19,"Stage":0,"Group":"B","Time":"2014-06-19 03:00:00","Team1":"esp","Team2":"chi","Status":2,"Score1":0,"Score2":2,"ext":""},
 {"NO":20,"Stage":0,"Group":"A","Time":"2014-06-19 06:00:00","Team1":"cmr","Team2":"cro","Status":2,"Score1":0,"Score2":4,"ext":""},
-{"NO":21,"Stage":0,"Group":"C","Time":"2014-06-20 00:00:00","Team1":"col","Team2":"civ","Status":0,"Score1":0,"Score2":0,"ext":""},
-{"NO":22,"Stage":0,"Group":"D","Time":"2014-06-20 03:00:00","Team1":"uru","Team2":"eng","Status":0,"Score1":0,"Score2":0,"ext":""},
+{"NO":21,"Stage":0,"Group":"C","Time":"2014-06-20 00:00:00","Team1":"col","Team2":"civ","Status":2,"Score1":2,"Score2":1,"ext":""},
+{"NO":22,"Stage":0,"Group":"D","Time":"2014-06-20 03:00:00","Team1":"uru","Team2":"eng","Status":2,"Score1":2,"Score2":1,"ext":""},
 {"NO":23,"Stage":0,"Group":"C","Time":"2014-06-20 06:00:00","Team1":"jpn","Team2":"gre","Status":0,"Score1":0,"Score2":0,"ext":""},
 {"NO":24,"Stage":0,"Group":"D","Time":"2014-06-21 00:00:00","Team1":"ita","Team2":"crc","Status":0,"Score1":0,"Score2":0,"ext":""},
 {"NO":25,"Stage":0,"Group":"E","Time":"2014-06-21 03:00:00","Team1":"sui","Team2":"fra","Status":0,"Score1":0,"Score2":0,"ext":""},

@@ -19,7 +19,7 @@ public class KonckoutMatchActivity extends Activity {
 	private WebView mWebView;
 	private RelativeLayout rootLayout;
 	private static final String TAG = "KonckoutMatchActivity";
-	private static final String DATA_SECOND_STAGE_PIC = "secondstage.png";
+	private static final String DATA_SECOND_STAGE_PIC = "secondstage.jpg";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
