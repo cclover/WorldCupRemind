@@ -91,7 +91,6 @@ public class GroupFragment extends BaseFragment {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			
-			LogHelper.d(TAG, "POSITION:"+position);
 			if(getItemViewType(position) == ITEM_TYPE_TITLE){
 				LogHelper.d(TAG, "ITEM_TYPE_TITLE");
 				//Set title holder
@@ -105,10 +104,8 @@ public class GroupFragment extends BaseFragment {
 				}
 				
 				//Set title value
-				LogHelper.d(TAG, "ITEM_TYPE_TITLE SET VALUE");
 				txtGroup.setText(String.format(getResources().getString(R.string.str_stage_group),GetTitleGroupCode(position)));
 			}else{
-				LogHelper.d(TAG, "ITEM_TYPE_TEAM");
 				//Set team holder
 				ViewHolderTeam holder = null;
 				if (convertView == null) {
@@ -129,7 +126,6 @@ public class GroupFragment extends BaseFragment {
 				}
 				
 				//Set value
-				LogHelper.d(TAG, "ITEM_TYPE_TEAM SETVALUE");
 				GroupStatistics item = getTeamInfo(position);
 				Drawable drawable = controller.getTeamNationalFlag(item.getTeamCode());
 				holder.flag.setImageDrawable(drawable);
@@ -145,7 +141,6 @@ public class GroupFragment extends BaseFragment {
 				holder.value_l.setText(String.valueOf(item.getLoseCount()));
 				holder.value_gf.setText(String.valueOf(item.getGoalFor()));
 				holder.value_ga.setText(String.valueOf(item.getGoalAgainst()));
-				LogHelper.d(TAG, "ITEM_TYPE_TEAM SETVALUEDONE");
 			}
 			return convertView;
 		}
