@@ -6,25 +6,26 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin" 
+    android:paddingBottom="@dimen/activity_vertical_margin" 
     android:orientation="horizontal" >
 
     <TextView
         android:id="@+id/key_group"
         android:layout_width="93dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:paddingLeft="5dp"
-        android:gravity="start"
+        android:gravity="start|center_vertical"
         android:textSize="20sp"
         android:textStyle="bold" />
     
     <TextView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="3.5"/>
     
     <TextView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="2"
         android:gravity="center"
         android:text="@string/str_group_pts"
@@ -34,7 +35,7 @@
 
     <TextView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="2"
         android:gravity="center"
         android:text="@string/str_group_win"
@@ -42,7 +43,7 @@
 
     <TextView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="2"
         android:gravity="center"
         android:text="@string/str_group_draw"
@@ -51,7 +52,7 @@
 
     <TextView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="2"
         android:gravity="center"
         android:text="@string/str_group_lose"
@@ -60,7 +61,7 @@
 
     <TextView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="2"
         android:gravity="center"
         android:text="@string/str_group_gf"
@@ -69,7 +70,7 @@
 
     <TextView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="2"
         android:gravity="center"
         android:text="@string/str_group_ga"

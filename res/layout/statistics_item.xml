@@ -21,7 +21,8 @@
         android:layout_width="23sp"
         android:src="@drawable/ic_star"
 	    android:layout_height="20sp"
-	    android:layout_marginLeft="3dp"
+	    android:layout_marginLeft="1dp"
+	    android:layout_marginRight="1dp"
 	   	android:layout_toRightOf="@id/txtStatPos"
 	   	android:visibility="invisible"
 	    android:layout_centerVertical="true" 
@@ -30,24 +31,21 @@
    	<TextView android:id="@+id/txtStatName"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_marginLeft="1dp"
 	    android:layout_toRightOf="@id/imgStatFlag"
 	   	android:layout_centerVertical="true"
 	    android:textSize="18sp"
 	    android:textStyle="bold"/>
    		
-   	
    	<TextView android:id="@+id/txtStatCount"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_centerVertical="true"
-	    android:layout_marginLeft="5dp"
-	    android:layout_marginRight="5dp"
+	    android:layout_marginLeft="2dp"
+	    android:layout_marginRight="2dp"
 	    android:layout_centerInParent="true"
 	    android:textSize="17sp"
 	    android:textStyle="bold"/>
    		
-   	
    	<ImageView  
         android:id="@+id/imgStatNationalFlag"
         android:layout_width="60dp"
@@ -59,7 +57,7 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_centerVertical="true"
-	    android:layout_marginRight="3dp"
+	    android:layout_marginRight="2dp"
 	    android:layout_toLeftOf="@id/imgStatNationalFlag"
 	    android:textSize="17sp"
 	    android:textStyle="bold"/>
