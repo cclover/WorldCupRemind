@@ -10,6 +10,7 @@ import com.cc.worldcupremind.model.MatchStage;
 import com.cc.worldcupremind.model.MatchStatus;
 import com.cc.worldcupremind.model.MatchesModel;
 
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -342,8 +343,23 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 				}
 				int px = ResourceHelper.dip2px(context,10);
 				flag.setBounds(0, 0, px, px);  
+				if(model.getTeam1Score() > model.getTeam2Score()){
+					holder.team1.setTextColor(Color.RED);
+					holder.team2.setTextColor(Color.BLACK);
+				}else if(model.getTeam1Score() < model.getTeam2Score()){
+					holder.team1.setTextColor(Color.BLACK);
+					holder.team2.setTextColor(Color.RED);
+				}else{
+					if(model.getMatchStatus() == MatchStatus.MATCH_STATUS_WAIT_START){
+						holder.team1.setTextColor(Color.GRAY);
+						holder.team2.setTextColor(Color.GRAY);
+					}else{
+						holder.team1.setTextColor(Color.BLACK);
+						holder.team2.setTextColor(Color.BLACK);
+					}
+				}
 				holder.score.setCompoundDrawables(null, flag, null, null);
-				
+
 				//only show the remind image or checkbox when game not start
 				if(model.getMatchStatus() != MatchStatus.MATCH_STATUS_WAIT_START || model.getMatchTime().isStart()){
 					holder.remind.setVisibility(View.GONE);

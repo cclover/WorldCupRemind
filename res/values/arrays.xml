@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <string-array name="national">
+    <string-array name="national" translatable="false">
 	　　  <item>bra</item>
 		<item>cro</item>
 		<item>mex</item>

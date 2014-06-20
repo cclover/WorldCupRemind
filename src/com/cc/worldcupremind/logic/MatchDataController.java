@@ -292,7 +292,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	
 					//Check
 					String url = updateList.get(0);
-					if(url.contains(APP_APK_NAME)){
+					if(url.contains(APP_APK_NAME) || url.contains("http") || url.contains("https")){
 						LogHelper.i(TAG, "Have new APK version!!!!");
 						onUpdateDone(UPDATE_STATE_CHECK_NEW_APK, url);
 						return;

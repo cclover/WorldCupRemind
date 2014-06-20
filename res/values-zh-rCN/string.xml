@@ -88,20 +88,20 @@
 	<string name="str_alram_notify">点击关闭</string>
 	
 	<!-- Update -->
-	<string name="str_update_check_start">检查更新...</string>
-	<string name="str_update_check_fail">检查更新失败。</string>
-	<string name="str_update_check_none">当前没有可用更新。</string>
-	<string name="str_update_update_start">开始下载并应用新的数据。</string>
-	<string name="str_update_update_fail">数据更新失败。</string>
-	<string name="str_update_update_done">数据成功更新到%1.3f!</string>
-	<string name="str_update_apk_title">应用程序有新版本</string>
-	<string name="str_update_apk_message">请将应用程序升级到最新版本!\r\n如果升级后数据显示异常，请使用菜单中的【重置数据】。</string>
-	<string name="str_update_apk_download">更 新</string>
+	<string name="str_update_check_start">检查更新&#8230;</string>
+	<string name="str_update_check_fail">检查更新失败</string>
+	<string name="str_update_check_none">当前没有可用更新</string>
+	<string name="str_update_update_start">开始下载数据更新</string>
+	<string name="str_update_update_fail">数据更新失败</string>
+	<string name="str_update_update_done">数据成功更新到V%1.3f!</string>
+	<string name="str_update_apk_title">发现新版本！</string>
+	<string name="str_update_apk_message">应用程序发现新版本，请及时升级!\r\n如果升级后数据显示异常，请使用菜单中的【重置数据】。</string>
+	<string name="str_update_apk_download">马上更新</string>
 	
 	<!-- Reset data -->
-	<string name="str_update_data_reset">重置数据会导致数据丢失，是否继续？</string>
+	<string name="str_update_data_reset">重置数据会导致更新的数据丢失，是否继续？</string>
 	<string name="str_update_data_reset_fail">数据重置失败！</string>
-	<string name="str_update_data_reset_success">数据重置成功！如果数据显示异常请重启应用。</string>
+	<string name="str_update_data_reset_success">数据重置成功！如果数据显示异常请重新启动应用。</string>
 	
 	<!-- About -->
 	<string name="str_about_close">关 闭</string>
