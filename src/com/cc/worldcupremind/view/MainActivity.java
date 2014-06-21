@@ -74,7 +74,7 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
-		LogHelper.setLogLevel(LogHelper.LEVEL_I);
+		LogHelper.setLogLevel(LogHelper.LEVEL_D);
 		
 		LogHelper.d(TAG, "onCreate");
 		super.onCreate(savedInstanceState);

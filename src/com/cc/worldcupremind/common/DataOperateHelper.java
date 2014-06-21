@@ -210,6 +210,8 @@ public class DataOperateHelper {
 		} catch (IOException e) {
 			LogHelper.e(TAG, e);
 			return null;
+		}finally{
+			assetMrg.close();
 		}
 	}
 	

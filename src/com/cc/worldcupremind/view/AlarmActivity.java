@@ -27,7 +27,9 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
@@ -65,23 +67,29 @@ public class AlarmActivity extends Activity {
 	private Context context = null;
 	private NotificationManager nm = null;
 	private AudioManager audioManager = null;
+	private PowerManager.WakeLock mWakelock = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON 
-				| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON );
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED 
-				| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+		LogHelper.d(TAG, "onCreate");
 		
-		//Show in lock screen 
+		//Switch to Theme_Wallpaper_NoTitleBar in lock screen. Need invoke  setTheme before super.onCreate on ANDROID 2.3.3
 		KeyguardManager manager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
-		if( manager.inKeyguardRestrictedInputMode()){
+		if(manager.inKeyguardRestrictedInputMode()){
+			LogHelper.d(TAG, "Is lock screen. Change the style");
 			setTheme(android.R.style.Theme_Wallpaper_NoTitleBar);
 		}
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+		//Turn on screen. On ANDROID 2.3.3, FLAG_TURN_SCREEN_ON DO NOT WORK.
+		if(Build.VERSION.SDK_INT < 10){
+			PowerManager pm = (PowerManager)getSystemService(POWER_SERVICE); 
+			mWakelock = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP |PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "worldcup_alarm"); 
+			mWakelock.acquire();
+		}
 		setContentView(R.layout.activity_alarm);
-		
 	    audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 		
 		//Set listview
@@ -101,6 +109,7 @@ public class AlarmActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
+				LogHelper.w(TAG, "onClick");
 				stopMusicAndVibrator();
 				finish();
 			}
@@ -133,7 +142,10 @@ public class AlarmActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		
+		LogHelper.d(TAG, "onDestroy");
+		if(mWakelock != null && mWakelock.isHeld()){
+			mWakelock.release();
+		}
 		stopMusicAndVibrator();
 		
 	    if(audioManager != null){
@@ -178,6 +190,7 @@ public class AlarmActivity extends Activity {
 	
 	private void playMusicAndVibrator(){
 		
+		LogHelper.d(TAG, "playMusicAndVibrator");
 	    //Set audio 
 	    setVolumeControlStream(AudioManager.STREAM_ALARM); 
 	    if(audioManager != null){
@@ -210,16 +223,22 @@ public class AlarmActivity extends Activity {
 	
 	private void stopMusicAndVibrator(){
 		
+		LogHelper.d(TAG, "stopMusicAndVibrator");
 		if(vibrator != null){
 			vibrator.cancel();
+			vibrator = null;
 		}
 		
 		if(alarmPlayer != null && alarmPlayer.isPlaying()){
 			alarmPlayer.stop();
+			alarmPlayer.release();
+			alarmPlayer = null;
 		}
 	}
 	
 	private Boolean parseIntent(Intent intent){
+		
+		LogHelper.d(TAG, "parseIntent");
 		if(intent != null && intent.getExtras() != null){
 			try{
 				int matchNo = intent.getExtras().getInt(MatchRemindHelper.REMIND_MATCHES_NO);

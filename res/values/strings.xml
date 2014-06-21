@@ -108,5 +108,5 @@
 	<string name="str_about_close">CLOSE</string>
 	<string name="str_about_wechar">Copy the Wechat Account!</string>
 	<string name="str_about_app">Supply the matches remind, Group info, Matches Statistic and News!\r\nData version:%1.3f Author:cc</string>
-	<string name="str_about_content">Sacn Or Click To Add Wechat Contact And Visit The Blog</string>
+	<string name="str_about_content">Scan Or Click To Add Wechat Contact And Visit The Blog</string>
 </resources>

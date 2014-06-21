@@ -553,7 +553,15 @@ class MatchDataHelper {
 			return false;
 		}
 		
-		if(!DataOperateHelper.saveStream2LocalFile(context, picInStream, DATA_SECOND_STAGE_PIC)){
+		Boolean ret = DataOperateHelper.saveStream2LocalFile(context, picInStream, DATA_SECOND_STAGE_PIC);
+		//Close stream
+		try {
+			picInStream.close();
+		} catch (IOException e) {
+			LogHelper.e(TAG, e);
+		}
+		//check result
+		if(!ret){
 			LogHelper.w(TAG, "Save secondstage pic failed");
 			return false;
 		}
