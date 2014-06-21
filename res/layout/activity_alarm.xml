@@ -42,9 +42,9 @@
 		    android:layout_width="match_parent"
 		    android:layout_height="50dp"
 		    android:gravity="center"
-		    android:textSize="20sp" 
+		    android:textSize="22sp" 
 		    android:textStyle="bold"
-		    android:textColor="@color/lightslategray"
+		    android:textColor="@android:color/darker_gray"
 		    android:background="@color/whitesmoke"
 		    android:text="@string/str_alram_close" />
 	</RelativeLayout>
