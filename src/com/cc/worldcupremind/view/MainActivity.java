@@ -31,6 +31,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -70,6 +71,7 @@ public class MainActivity extends ActionBarActivity implements
 	Boolean isExit;
 	ActionBar actionBar;
 	DelayLoadHandler handler;
+	ViewGroup adsWidgetContainer = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -164,6 +166,11 @@ public class MainActivity extends ActionBarActivity implements
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
 		}
+		
+		// Init AdsSdk.
+		adsWidgetContainer = (ViewGroup)findViewById(R.id.ads_widget_container);
+		 
+		// Load data
 		LogHelper.d(TAG, "Load data!");
 		controller = MatchDataController.getInstance();
 		controller.setListener(this);
@@ -371,6 +378,9 @@ public class MainActivity extends ActionBarActivity implements
 					LogHelper.d(TAG, "Data init done! show matchFragment!");
 					matchFragment.setData(controller.getMatchesData());
 				}
+				
+				//Set fragment match item
+				matchFragment.scrollToSuitMatch();
 			
 				//load web view
 				LogHelper.d(TAG, "Pre-laod the newsFragment data!");
@@ -395,7 +405,7 @@ public class MainActivity extends ActionBarActivity implements
 				}	 
 			}
 		}   
-	 }
+	}
 	
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
