@@ -419,6 +419,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 					onResetDone(false);
 					return;
 				}
+				setVideoAlert(true);
 				isDataInitDone = false;
 				InitDataSync(context);
 				onResetDone(true);
@@ -548,11 +549,11 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		return true;
 	}
 	
-	public Boolean setVideoAlert(){
+	public Boolean setVideoAlert(Boolean enable){
 		SharedPreferences share = context.getSharedPreferences(PRE_FILE_NAME, Context.MODE_PRIVATE);   
 		if(share != null){
 			SharedPreferences.Editor edit = share.edit();  
-			edit.putBoolean(PRE_VIDEO_ALERT, false);
+			edit.putBoolean(PRE_VIDEO_ALERT, enable);
 			edit.commit();
 			return true;
 		}

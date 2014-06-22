@@ -338,6 +338,7 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 								params.gravity = Gravity.CENTER_VERTICAL;
 								final CheckBox box = new CheckBox(context);
 								box.setText(R.string.str_viedo_checkbox);
+								box.setTextColor(resource.getColor(R.color.gray));
 								layout.addView(box, params);
 								
 								//Show alert box
@@ -351,7 +352,7 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 									public void onClick(DialogInterface dialog, int which) {
 										openNewsAndVideo(match);
 										if(box.isChecked()){
-											controller.setVideoAlert();
+											controller.setVideoAlert(false);
 										}
 									}
 								});
