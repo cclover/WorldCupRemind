@@ -67,6 +67,10 @@
 	<string name="str_info_video">"MATCH VIDEO"</string>
 	<string name="str_info_live">"MATCH LIVE"</string>
 	<string name="str_info_match">"MATCH INFO"</string>
+	<string name="str_viedo_alert_title">"DATA USAGE"</string>
+	<string name="str_viedo_alert_message">"TO PLAY THIS VIDEO WILL CONSUME YOU DATA USAGE，CONTINUE？"</string>
+	<string name="str_viedo_checkbox">"NOT TO REMIND</string>
+	<string name="str_viedo_button">"CONTINUE"</string>
 
     <!-- Group Info -->
     <string name="str_group_win">W</string>

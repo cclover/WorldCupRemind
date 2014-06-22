@@ -28,7 +28,8 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	
 	private static final String TAG = "MatchDataController";
 	private static final String REMIND_STATUS = "remindstatus";
-	private static final String APP_VERSION = "appversiom";
+	private static final String PRE_APP_VERSION = "appversiom";
+	private static final String PRE_VIDEO_ALERT = "videoalert";
 	private static final String PRE_FILE_NAME = "data.xml";
 	private static final String APP_APK_NAME = "WorldCupRemind";
 	private static final int THREAD_POOL_SIZE = 3;
@@ -517,7 +518,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	private Boolean isNewVersionLaunch(){
 		SharedPreferences share =  context.getSharedPreferences(PRE_FILE_NAME, Context.MODE_PRIVATE);
 		if(share != null){
-			double version = share.getFloat(APP_VERSION, 1.0f);
+			double version = share.getFloat(PRE_APP_VERSION, 1.0f);
 			PackageInfo info;
 			try {
 				info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
@@ -530,7 +531,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 				//new app first launch
 				LogHelper.d(TAG, "New version app launch:" + info.versionName);
 				SharedPreferences.Editor edit = share.edit();  
-				edit.putFloat(APP_VERSION, appVersion);
+				edit.putFloat(PRE_APP_VERSION, appVersion);
 				edit.commit();
 				return true;
 			}
@@ -538,6 +539,25 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		return false;
 	}
 	
+	
+	public Boolean needAlertWhenPlayVideo(){
+		SharedPreferences share =  context.getSharedPreferences(PRE_FILE_NAME, Context.MODE_PRIVATE);
+		if(share != null){
+			return share.getBoolean(PRE_VIDEO_ALERT, true);
+		}
+		return true;
+	}
+	
+	public Boolean setVideoAlert(){
+		SharedPreferences share = context.getSharedPreferences(PRE_FILE_NAME, Context.MODE_PRIVATE);   
+		if(share != null){
+			SharedPreferences.Editor edit = share.edit();  
+			edit.putBoolean(PRE_VIDEO_ALERT, false);
+			edit.commit();
+			return true;
+		}
+		return false;
+	}
 	
 	@Override
 	public void onInitDone(Boolean isSuccess) {

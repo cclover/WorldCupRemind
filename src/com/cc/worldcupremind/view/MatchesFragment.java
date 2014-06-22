@@ -10,14 +10,18 @@ import com.cc.worldcupremind.model.MatchStage;
 import com.cc.worldcupremind.model.MatchStatus;
 import com.cc.worldcupremind.model.MatchesModel;
 
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -318,32 +322,43 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 						@Override
 						public void onClick(View v) {
 							int pos = Integer.parseInt(v.getTag().toString());
-							MatchesModel match = matchDataList.get(pos);
+							final MatchesModel match = matchDataList.get(pos);
 							if(match == null){
 								LogHelper.w(TAG, "match not exist");
 								return;
 							}
-							String url = match.getExtInfo();
-							if(url.length() > 0){
+							//check need alert
+							if(controller.needAlertWhenPlayVideo()){
 								
-								Intent intent = new Intent(Intent.ACTION_VIEW); 
-								//open infi
-								if(match.getExtType() == MatchesModel.EXT_TYPE_NEWS){
-									//Show news
-									intent.setData(Uri.parse(url));
-									context.startActivity(intent);
-								}else if(match.getExtType() == MatchesModel.EXT_TYPE_VIDEO){
-									//show video
-									intent.setDataAndType(Uri.parse(url), "video/mp4");  //Open video
-									try{
-										context.startActivity(intent); 
-									}catch(ActivityNotFoundException e){
-										LogHelper.e(TAG, e);
-										//If no app can play it. open the browser to download
-										intent.setData(Uri.parse(url));
-										context.startActivity(intent);
+								//Add check box
+								LinearLayout layout = new LinearLayout(context);
+								LinearLayout.LayoutParams params 
+									= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+								params.leftMargin = ResourceHelper.dip2px(context,10);
+								params.gravity = Gravity.CENTER_VERTICAL;
+								final CheckBox box = new CheckBox(context);
+								box.setText(R.string.str_viedo_checkbox);
+								layout.addView(box, params);
+								
+								//Show alert box
+								AlertDialog.Builder builder = new AlertDialog.Builder(context);
+								builder.setTitle(R.string.str_viedo_alert_title);
+								builder.setMessage(R.string.str_viedo_alert_message);
+								builder.setIcon(R.drawable.ic_match_video);
+								builder.setView(layout);
+								builder.setPositiveButton(R.string.str_viedo_button, new OnClickListener() {	
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										openNewsAndVideo(match);
+										if(box.isChecked()){
+											controller.setVideoAlert();
+										}
 									}
-								}
+								});
+								builder.setNegativeButton(android.R.string.cancel, null);
+								builder.show();
+							}else{
+								openNewsAndVideo(match);
 							}
 						}
 					});
@@ -474,6 +489,33 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 			return convertView;
 		}	
 		
+
+		private void openNewsAndVideo(MatchesModel match){
+			
+			LogHelper.d(TAG, "openNewsAndVideo");
+			String url = match.getExtInfo();
+			if(url.length() > 0){
+				
+				Intent intent = new Intent(Intent.ACTION_VIEW); 
+				//open infi
+				if(match.getExtType() == MatchesModel.EXT_TYPE_NEWS){
+					//Show news
+					intent.setData(Uri.parse(url));
+					context.startActivity(intent);
+				}else if(match.getExtType() == MatchesModel.EXT_TYPE_VIDEO){
+					//show video
+					intent.setDataAndType(Uri.parse(url), "video/mp4");  //Open video
+					try{
+						context.startActivity(intent); 
+					}catch(ActivityNotFoundException e){
+						LogHelper.e(TAG, e);
+						//If no app can play it. open the browser to download
+						intent.setData(Uri.parse(url));
+						context.startActivity(intent);
+					}
+				}
+			}
+		}
 		
 		class ViewHolder{
 			TextView group;

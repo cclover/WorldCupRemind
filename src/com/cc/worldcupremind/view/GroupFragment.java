@@ -2,7 +2,6 @@ package com.cc.worldcupremind.view;
 
 import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.common.LogHelper;
-import com.cc.worldcupremind.logic.MatchDataController;
 import com.cc.worldcupremind.model.GroupStatistics;
 
 import android.graphics.drawable.Drawable;
@@ -11,9 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
