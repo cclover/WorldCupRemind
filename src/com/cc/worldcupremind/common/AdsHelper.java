@@ -1,5 +1,6 @@
 package com.cc.worldcupremind.common;
 
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -139,6 +140,13 @@ public class AdsHelper {
 		LogHelper.d(TAG, "showAdsInScreen");
 		if(showAds && Ads.isLoaded(Fetcher.AdFormat.interstitial, TAG_INTERSTITIAL_FULLSCREEN)){
 			Ads.showAppWidget(context, null, TAG_INTERSTITIAL_FULLSCREEN, Ads.ShowMode.FULL_SCREEN);
+		}
+	}
+	
+	public void showAdsInFullScreenRandom(){
+		int count = (int)(Math.random()*10+1) ;
+		if(count == 1 || count == 3 || count == 9 ){
+			showAdsInFullScreen();
 		}
 	}
 

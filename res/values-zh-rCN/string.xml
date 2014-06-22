@@ -13,6 +13,7 @@
    	<string name="menu_goal">射手榜</string>
 	<string name="menu_assist">助攻榜</string>
 	<string name="menu_refresh">刷新</string>
+	<string name="menu_app">精选应用</string>
     <string name="tab_mathces">赛程表</string>
     <string name="tab_group">分组对阵</string>
     <string name="tab_statistics">数据统计</string>

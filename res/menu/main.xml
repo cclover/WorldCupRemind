@@ -33,6 +33,10 @@
         android:icon="@drawable/ic_action_data_download" 
         cc:showAsAction="always|withText"/>
     
+    <item android:id="@+id/action_app"
+      android:title="@string/menu_app"
+      cc:showAsAction="ifRoom|withText"/>
+    
     <item
         android:id="@+id/action_remind_flag"
         android:title="@string/menu_remind_disable"

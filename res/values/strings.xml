@@ -14,6 +14,7 @@
     <string name="menu_goal">GOAL</string>
 	<string name="menu_assist">ASSIST</string>
 	<string name="menu_refresh">REFRESH</string>
+	<string name="menu_app">OTHER APP</string>
     <string name="tab_mathces">MATCHES</string>
     <string name="tab_group">GROUP</string>
     <string name="tab_statistics">STATISTICS</string>

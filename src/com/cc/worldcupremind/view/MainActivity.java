@@ -4,6 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.cc.worldcupremind.R;
+import com.cc.worldcupremind.common.AdsHelper;
 import com.cc.worldcupremind.common.LogHelper;
 import com.cc.worldcupremind.logic.MatchDataController;
 import com.cc.worldcupremind.logic.MatchDataListener;
@@ -72,6 +73,7 @@ public class MainActivity extends ActionBarActivity implements
 	ActionBar actionBar;
 	DelayLoadHandler handler;
 	ViewGroup adsWidgetContainer = null;
+	AdsHelper adsHelper = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +171,27 @@ public class MainActivity extends ActionBarActivity implements
 		
 		// Init AdsSdk.
 		adsWidgetContainer = (ViewGroup)findViewById(R.id.ads_widget_container);
-		 
+		adsHelper = new AdsHelper(this);
+//		adsHelper.setAdsListener(new AdsHelper.ADSListener() {
+//			
+//			@Override
+//			public void onPerloaderDone() {
+//				runOnUiThread(new Runnable() {
+//				
+//					@Override
+//					public void run() {
+//						adsHelper.setAdsWidgetContainer(adsWidgetContainer);
+//						adsHelper.showAdsInWidget();
+//					}
+//				});
+//			}
+//			
+//			@Override
+//			public void onInitAdsFail() {
+//			}
+//		});
+		adsHelper.initAds();
+		
 		// Load data
 		LogHelper.d(TAG, "Load data!");
 		controller = MatchDataController.getInstance();
@@ -333,6 +355,8 @@ public class MainActivity extends ActionBarActivity implements
 			if(matchFragment != null){
 				matchFragment.refresh();
 			}
+		}else if(id == R.id.action_app){
+			adsHelper.showAppWall();
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -479,6 +503,10 @@ public class MainActivity extends ActionBarActivity implements
 		}
 	}
 	
+	public AdsHelper getAdsHelper(){
+		return adsHelper;
+	}
+	
 	@Override
 	public void onInitDone(Boolean isSuccess) {
 		
@@ -577,6 +605,8 @@ public class MainActivity extends ActionBarActivity implements
 					loadDataIfFragmentShown();
 					showToastLong(String.format(tmpContext.getResources().getString(R.string.str_update_update_done),
 							controller.getDataVersion()));
+					//Show ads
+					adsHelper.showAdsInFullScreen();
 				}
 			}
 		});
@@ -593,6 +623,9 @@ public class MainActivity extends ActionBarActivity implements
 				@Override
 				public void run() {
 					matchFragment.setData(controller.getMatchesData());
+					
+					//show ads
+					adsHelper.showAdsInFullScreenRandom();
 				}
 			});
 		}

@@ -3,6 +3,7 @@ package com.cc.worldcupremind.view;
 import java.util.ArrayList;
 
 import com.cc.worldcupremind.R;
+import com.cc.worldcupremind.common.AdsHelper;
 import com.cc.worldcupremind.common.LogHelper;
 import com.cc.worldcupremind.common.ResourceHelper;
 import com.cc.worldcupremind.model.MatchDate;
@@ -531,7 +532,7 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 			LogHelper.d(TAG, "openNewsAndVideo");
 			String url = match.getExtInfo();
 			if(url.length() > 0){
-				
+
 				Intent intent = new Intent(Intent.ACTION_VIEW); 
 				//open infi
 				if(match.getExtType() == MatchesModel.EXT_TYPE_NEWS){
@@ -539,6 +540,13 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 					intent.setData(Uri.parse(url));
 					context.startActivity(intent);
 				}else if(match.getExtType() == MatchesModel.EXT_TYPE_VIDEO){
+					
+					//show ads
+					AdsHelper helper = ((MainActivity)getActivity()).getAdsHelper();
+					if(helper != null){
+						helper.showAdsInFullScreenRandom();
+					}
+
 					//show video
 					intent.setDataAndType(Uri.parse(url), "video/mp4");  //Open video
 					try{
