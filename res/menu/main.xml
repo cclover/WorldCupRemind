@@ -6,12 +6,12 @@
        
     <item android:id="@+id/action_remind"
       android:title="@string/menu_remind"
-      android:icon="@drawable/ic_action_stat_notify_alarm_alert"
+      android:icon="@drawable/ic_action_set_alarm"
       cc:showAsAction="always|withText"/>
     
     <item android:id="@+id/action_second"
       android:title="@string/menu_second"
-      android:icon="@drawable/ic_action_second"
+      android:icon="@drawable/ic_action_second_stage"
       android:visible="false"
       cc:showAsAction="always|withText"/>
     
@@ -23,14 +23,14 @@
  	
  	<item android:id="@+id/action_refresh"
       android:title="@string/menu_refresh"
-      android:icon="@drawable/ic_action_navigation_refresh"
+      android:icon="@drawable/ic_action_webview_refresh"
       android:visible="false"
       cc:showAsAction="always|withText"/>
     
     <item
         android:id="@+id/action_update"
         android:title="@string/menu_update"
-        android:icon="@drawable/ic_action_av_download" 
+        android:icon="@drawable/ic_action_data_download" 
         cc:showAsAction="always|withText"/>
     
     <item

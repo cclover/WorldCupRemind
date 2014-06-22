@@ -12,11 +12,15 @@ public class MatchesModel {
 	private String team2Code;
 	private MatchStatus matchStatus;
 	private Boolean isRemind;
+	private String extInfo;
+	private int extType;
 
 	/* Match Result */
 	private int team1Score;
 	private int team2Score;
 	
+	public static final int EXT_TYPE_NEWS = 1;
+	public static final int EXT_TYPE_VIDEO = 2;
 	
 	public MatchesModel(int matchNo, MatchStage matchStage, String groupName,
 			MatchDate matchTime, String team1Code, String team2Code, 
@@ -32,6 +36,8 @@ public class MatchesModel {
 		this.team1Score = team1Score;
 		this.team2Score = team2Score;
 		this.isRemind = isRemind;
+		this.extInfo = "";
+		this.extType = EXT_TYPE_NEWS;
 	}
 
 
@@ -120,6 +126,31 @@ public class MatchesModel {
 	 */
 	public void setIsRemind(Boolean isRemind) {
 		this.isRemind = isRemind;
+	}
+
+
+	/**
+	 * @return the MatchNewsURL
+	 */
+	public String getExtInfo() {
+		return extInfo;
+	}
+	
+
+	/**
+	 * @param extInfo the extInfo to set
+	 */
+	public void setExtInfo(String extInfo, int type) {
+		this.extInfo = extInfo;
+		this.extType = type;
+	}
+	
+	
+	/**
+	 * @return the extType
+	 */
+	public int getExtType() {
+		return extType;
 	}
 	
 }

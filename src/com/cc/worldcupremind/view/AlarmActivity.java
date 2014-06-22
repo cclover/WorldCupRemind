@@ -356,8 +356,6 @@ public class AlarmActivity extends Activity {
 			}
 			if(model.getMatchStatus() == MatchStatus.MATCH_STATUS_WAIT_START){
 				holder.score.setText(model.getMatchTime().getTimeString());
-			}else{
-				holder.score.setText(String.format("%d:%d", model.getTeam1Score(), model.getTeam2Score()));
 			}
 			return convertView;
 		}

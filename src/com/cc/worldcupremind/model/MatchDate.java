@@ -18,6 +18,8 @@ public class MatchDate {
 	private static final String DATE_FORMAT_24 = "yyyy-MM-dd HH:mm:ss";
 	private static final String DAY_FORMAT = "yyyy-MM-dd";
 	private static final int REMIND_AHEAD_MIN = -15;
+	private static final int MATCH_TIME_HOUR = 2;
+	private static final int MATCH_COMMING_HOUR = -24;
 	private static final String DEFAULT_TIME_ZONE_ID = "GMT+8"; 
 	
 	private Date date = null;
@@ -96,6 +98,31 @@ public class MatchDate {
 	public Boolean isStart(){
 		Date nowDate = new Date();
 		return date.getTime() < nowDate.getTime();
+	}
+	
+	public Boolean isOver(){
+		Calendar calendar = Calendar.getInstance();  
+		calendar.setTime(date);
+		calendar.add(Calendar.HOUR, MATCH_TIME_HOUR);
+		Date nowDate = new Date();
+		return nowDate.getTime() > calendar.getTimeInMillis();
+	}
+	
+	public Boolean isPlaying(){
+		return (isStart() && !isOver());
+	}
+	
+	public Boolean isPlayingSoon(){
+		
+		Calendar calendar = Calendar.getInstance();  
+		calendar.setTime(date);
+		int d = calendar.get(Calendar.DATE);
+		
+		Calendar calendarNow = Calendar.getInstance();  
+		calendarNow.setTime(new Date());
+		int dNow = calendarNow.get(Calendar.DATE);
+		
+		return ((dNow == d) || (dNow + 1 == d));
 	}
 	
 	public Boolean isWeekend(){

@@ -62,6 +62,10 @@
 	<string name="str_stage_4">"四强"</string>
 	<string name="str_stage_2">"季军"</string>
 	<string name="str_stage_1">"冠军"</string>
+	<string name="str_info_news">"比赛前瞻"</string>
+	<string name="str_info_video">"比赛集锦"</string>
+	<string name="str_info_live">"文字直播"</string>
+	<string name="str_info_match">"比赛信息"</string>
 	
 	<!-- Group Info -->
 	<string name="str_group_win">胜</string>

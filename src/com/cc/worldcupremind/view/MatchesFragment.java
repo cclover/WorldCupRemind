@@ -10,8 +10,11 @@ import com.cc.worldcupremind.model.MatchStage;
 import com.cc.worldcupremind.model.MatchStatus;
 import com.cc.worldcupremind.model.MatchesModel;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
@@ -274,7 +277,7 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 	    
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			
+
 			MatchesModel model = matchDataList.get(position);
 			//Get item view
 			if(getItemViewType(position) == ITEM_DAY){
@@ -305,22 +308,60 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 				     holder.flag1 = (ImageView)convertView.findViewById(R.id.imgFlag1);
 				     holder.team1 = (TextView)convertView.findViewById(R.id.txtTeam1);
 				     holder.score = (TextView)convertView.findViewById(R.id.txtScore);
+				     holder.info = (TextView)convertView.findViewById(R.id.txtInfo);
 				     holder.team2 = (TextView)convertView.findViewById(R.id.txtTeam2);
 				     holder.flag2 = (ImageView)convertView.findViewById(R.id.imgFlag2);
 				     holder.remind = (CheckBox)convertView.findViewById(R.id.chkRemind);
 				     holder.imgRemind = (ImageView)convertView.findViewById(R.id.imgRemind);
+				     holder.info.setOnClickListener(new View.OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							int pos = Integer.parseInt(v.getTag().toString());
+							MatchesModel match = matchDataList.get(pos);
+							if(match == null){
+								LogHelper.w(TAG, "match not exist");
+								return;
+							}
+							String url = match.getExtInfo();
+							if(url.length() > 0){
+								
+								Intent intent = new Intent(Intent.ACTION_VIEW); 
+								//open infi
+								if(match.getExtType() == MatchesModel.EXT_TYPE_NEWS){
+									//Show news
+									intent.setData(Uri.parse(url));
+									context.startActivity(intent);
+								}else if(match.getExtType() == MatchesModel.EXT_TYPE_VIDEO){
+									//show video
+									intent.setDataAndType(Uri.parse(url), "video/mp4");  //Open video
+									try{
+										context.startActivity(intent); 
+									}catch(ActivityNotFoundException e){
+										LogHelper.e(TAG, e);
+										//If no app can play it. open the browser to download
+										intent.setData(Uri.parse(url));
+										context.startActivity(intent);
+									}
+								}
+							}
+						}
+					});
+				     
 				     convertView.setTag(holder);
 				} else {
 				     holder = (ViewHolder)convertView.getTag();
 				}
 				
 				//Set value
+				//Match Stage Name
 				if(model.getMatchStage() == MatchStage.STAGE_GROUP){
 					holder.group.setText(String.format(resource.getString(R.string.str_stage_group),  model.getGroupName()));
 				}else{
 					holder.group.setText(resource.getString(model.getMatchStage().getStringResourceID()));
 				}
 	
+				//National name and flag
 				holder.team1.setText(controller.getTeamNationalName(model.getTeam1Code()));
 				Drawable drawable1= controller.getTeamNationalFlag(model.getTeam1Code());
 				if(drawable1 != null){
@@ -331,18 +372,17 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 				if(drawable2 != null){
 					holder.flag2.setImageDrawable(drawable2);
 				}
-				Drawable flag = null;
+				
+				//Match time or score
 				if(model.getMatchStatus() == MatchStatus.MATCH_STATUS_WAIT_START){
 					holder.score.setText(model.getMatchTime().getTimeString());
 					holder.score.setTextColor(resource.getColor(R.color.gray));
-					flag = resource.getDrawable(R.drawable.ic_match_wait);
 				}else{
 					holder.score.setText(String.format("%d:%d", model.getTeam1Score(), model.getTeam2Score()));
 					holder.score.setTextColor(resource.getColor(R.color.score));
-					flag = resource.getDrawable(R.drawable.ic_match_over);
 				}
-				int px = ResourceHelper.dip2px(context,10);
-				flag.setBounds(0, 0, px, px);  
+				
+				//winner text color
 				if(model.getTeam1Score() > model.getTeam2Score()){
 					holder.team1.setTextColor(Color.RED);
 					holder.team2.setTextColor(Color.BLACK);
@@ -358,8 +398,50 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 						holder.team2.setTextColor(Color.BLACK);
 					}
 				}
-				holder.score.setCompoundDrawables(null, flag, null, null);
-
+				
+				//show the news and video info only for current matches item 
+			    holder.info.setTag(position);
+			    if(controller.getMatchStage().getStageValue() >= model.getMatchStage().getStageValue()
+			    		&& model.getExtInfo().length() > 0)
+			    {
+				    Drawable infoFlag = null;
+					if(model.getMatchStatus() == MatchStatus.MATCH_STATUS_OVER){
+				    	if(model.getExtType() == MatchesModel.EXT_TYPE_NEWS){ //not set video url
+							holder.info.setText(R.string.str_info_match);
+							infoFlag = resource.getDrawable(R.drawable.ic_match_over);
+				    	}else if(model.getExtType() == MatchesModel.EXT_TYPE_VIDEO){//set video url
+							holder.info.setText(R.string.str_info_video);
+							infoFlag = resource.getDrawable(R.drawable.ic_match_video);
+				    	}
+				    	holder.info.setTextColor(resource.getColor(R.color.score));
+					}else{
+						if(model.getMatchTime().isOver()){//match over but not update data
+							holder.info.setText(R.string.str_info_match);
+							infoFlag = resource.getDrawable(R.drawable.ic_match_over);
+							holder.info.setTextColor(resource.getColor(R.color.score));
+						}else if(model.getMatchTime().isPlaying()){ // playing
+							holder.info.setText(R.string.str_info_live);
+							infoFlag = resource.getDrawable(R.drawable.ic_match_live);
+							holder.info.setTextColor(resource.getColor(R.color.score));
+						}else if(model.getMatchTime().isPlayingSoon()){
+							holder.info.setText(R.string.str_info_news);
+							infoFlag = resource.getDrawable(R.drawable.ic_match_before);
+							holder.info.setTextColor(resource.getColor(R.color.gray));
+						}
+					}
+					if(infoFlag != null){
+						int flagSize = ResourceHelper.dip2px(context,20);
+						infoFlag.setBounds(0, 0, flagSize, flagSize);  
+						holder.info.setCompoundDrawables(infoFlag, null, null, null);
+						holder.info.setVisibility(View.VISIBLE);
+					}else{
+						holder.info.setVisibility(View.GONE);
+					}
+					
+			    }else{
+			    	holder.info.setVisibility(View.GONE);
+			    }
+				
 				//only show the remind image or checkbox when game not start
 				if(model.getMatchStatus() != MatchStatus.MATCH_STATUS_WAIT_START || model.getMatchTime().isStart()){
 					holder.remind.setVisibility(View.GONE);
@@ -398,6 +480,7 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 			ImageView flag1;
 			TextView team1;
 			TextView score;
+			TextView info;
 			TextView team2;
 			ImageView flag2;
 			CheckBox remind;

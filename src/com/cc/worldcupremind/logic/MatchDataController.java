@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 import com.cc.worldcupremind.common.LogHelper;
 import com.cc.worldcupremind.common.ResourceHelper;
 import com.cc.worldcupremind.model.GroupStatistics;
+import com.cc.worldcupremind.model.MatchStage;
 import com.cc.worldcupremind.model.MatchesModel;
 import com.cc.worldcupremind.model.PlayerStatistics;
 
@@ -103,6 +104,11 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	
 	public String getNewsURL(){
 		return dataHelper.getNewsURL();
+	}
+	
+
+	public MatchStage getMatchStage() {
+		return dataHelper.getMatchStage();
 	}
 	
 	/**

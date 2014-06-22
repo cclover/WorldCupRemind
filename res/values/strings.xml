@@ -63,6 +63,10 @@
     <string name="str_stage_4">"QUARTER"</string>
     <string name="str_stage_2">"FINAL"</string>
 	<string name="str_stage_1">"FINAL"</string>
+	<string name="str_info_news">"MATCH NEWS"</string>
+	<string name="str_info_video">"MATCH VIDEO"</string>
+	<string name="str_info_live">"MATCH LIVE"</string>
+	<string name="str_info_match">"MATCH INFO"</string>
 
     <!-- Group Info -->
     <string name="str_group_win">W</string>

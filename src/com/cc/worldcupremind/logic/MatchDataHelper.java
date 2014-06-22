@@ -60,6 +60,8 @@ class MatchDataHelper {
 	private static final String JSON_MATCHES_FILED_EXT= "ext";			/* String */
 	private static final String JSON_NEWS_URL = "newsURL";				/* String */
 	private static final String JSON_MATCHES_STAGE = "stage";			/* Int */
+	private static final String JSON_MATCHES_VIDEO_URL = "videoURL";	/* String */	
+	private static final String JSON_MATCHES_NEWS_URL = "matchURL";		/* String */	
 	
 	/** remind.json format */
 	private static final String JSON_REMIND_LIST = "Remind";			/* Array */
@@ -130,6 +132,11 @@ class MatchDataHelper {
 	/** Match stage */
 	private MatchStage matchStage;
 	
+
+	/** Match video/news URL */
+	private String matchVideoURLFormat;
+	private String matchNewsURLFormat;
+	
 	/**
 	 * Construct
 	 */
@@ -146,6 +153,13 @@ class MatchDataHelper {
 		matchesCount = 0;
 		teamsCount = 0;
 	}
+			
+	/**
+	 * @return the matchStage
+	 */
+	public MatchStage getMatchStage() {
+		return matchStage;
+	}		
 	
 	/**
 	 * @return the dataMatchesVersion
@@ -839,6 +853,8 @@ class MatchDataHelper {
 			matchesCount = rootObj.getInt(JSON_MATCHES_COUNT);
 			teamsCount = rootObj.getInt(JSON_TEAMS_COUNT);
 			newsURL = rootObj.optString(JSON_NEWS_URL);
+			matchVideoURLFormat = rootObj.optString(JSON_MATCHES_VIDEO_URL);
+			matchNewsURLFormat = rootObj.optString(JSON_MATCHES_NEWS_URL);
 			matchStage = MatchStage.valueOf(rootObj.getInt(JSON_MATCHES_STAGE));
 	    	LogHelper.i(TAG, "The match data version is:" + String.valueOf(tmpVersion));
 	    	
@@ -855,8 +871,16 @@ class MatchDataHelper {
 				MatchStatus status = MatchStatus.valueOf(matchObj.getInt(JSON_MATCHES_FILED_STATUS));
 				int team1Score = matchObj.getInt(JSON_MATCHES_FILED_SCORE_1);
 				int team2Score = matchObj.getInt(JSON_MATCHES_FILED_SCORE_2);
+				String extInfo = matchObj.getString(JSON_MATCHES_FILED_EXT); 
 				MatchesModel matchItem = new MatchesModel(matchNo, stage, group, time,  
 						team1, team2, status, team1Score, team2Score, false);
+				if(extInfo.length() > 0){
+					if(extInfo.contains("/SD/")){
+						matchItem.setExtInfo(String.format(matchVideoURLFormat, extInfo), MatchesModel.EXT_TYPE_VIDEO);//Combine the VIDEO URL
+					}else{
+						matchItem.setExtInfo(String.format(matchNewsURLFormat, extInfo), MatchesModel.EXT_TYPE_NEWS);//Combine the NES URL
+					}
+				}
 				matchesList.put(matchNo, matchItem);
 			}
 		} catch (JSONException e) {
