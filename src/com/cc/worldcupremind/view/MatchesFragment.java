@@ -66,7 +66,7 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 		btnCancel = (Button)view.findViewById(R.id.btnCancel);
 		btnConfitm.setOnClickListener(this);
 		btnCancel.setOnClickListener(this);
-		progressBar = (ProgressBar)view.findViewById(android.R.id.progress);
+		progressBar = (ProgressBar)view.findViewById(R.id.progress_load);
 		super.onCreateView(inflater, container, savedInstanceState); 
         return view;
     }
@@ -131,6 +131,7 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 		}
 		isAlarmMode = isOn;
 		int startIndex = 0;
+		int titleIndex = 0;
 		if(isOn){
 			// Build the remind list
 			remindList.clear();
@@ -139,6 +140,9 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 				
 				//Skip the ITEM_DAY
 				if(model.getMatchNo() > matchList.size()){
+					if(startIndex == 0){
+						titleIndex = i;
+					}
 					continue;
 				}
 				
@@ -158,8 +162,8 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 		setFootVisibility(isOn);
 		super.refresh();
 		
-		//Scoll the list  position to the start index.
-		final int index = startIndex-1;
+		//Scroll the list  position to the start index.
+		final int index = titleIndex;
 		if(index > 0 && getListView().getFirstVisiblePosition() < index){
 			LogHelper.d(TAG, "Scorll to the startIndex:" + index);
 			getListView().postDelayed(new Runnable() {
@@ -188,6 +192,40 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 	public ArrayList<Integer> getRemindList() {
 		return remindList;
 	}
+	
+	public void scrollToSuitMatch(){
+
+		//find the first match
+		int pos = 0;
+		int titlePos = 0;
+		for(int i = 0; i < matchDataList.size(); i++){
+			MatchesModel model = matchDataList.get(i);
+			//handle the match item
+			if(model.getMatchNo() < matchList.size()){
+				if(!model.getMatchTime().isStart()){
+					pos = i;
+					break;
+				}
+			}else{
+				titlePos = i;
+			}
+		}
+
+
+		//Set position
+		final int index = titlePos;
+		getListView().postDelayed(new Runnable() {
+
+
+			@Override
+			public void run() {
+				getListView().setSelected(false);
+				getListView().setSelection(index);
+				getListView().setSelected(true);
+			}
+		}, 100);
+	}
+
 	
 	private void createMatchesDayMap(){
 		

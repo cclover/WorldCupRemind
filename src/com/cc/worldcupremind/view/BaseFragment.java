@@ -60,7 +60,11 @@ public abstract class BaseFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		LogHelper.d(TAG,  this.getClass().getName() + " onActivityCreated");
 		super.onActivityCreated(savedInstanceState);
-		setProcessShown(isProgressShown);
+		
+		//Show progress bar if adapter has not been set
+  		if(getListAdapter() == null){
+  			setProcessShown(true);
+  		}
 	}
 	
 	public abstract BaseAdapter createAdapter();
@@ -78,9 +82,8 @@ public abstract class BaseFragment extends ListFragment {
 		if(getListAdapter() == null){
 			LogHelper.d(TAG, this.getClass().getName() + "::setAdapter");
 			setListAdapter(adapter);
-			if(progressBar != null){
-				progressBar.setVisibility(View.INVISIBLE);
-			}
+			//Hide progress bar if adapter  set
+			setProcessShown(false);
 		}
 	}
 	
@@ -120,7 +123,7 @@ public abstract class BaseFragment extends ListFragment {
 			if(isProgressShown){
 				progressBar.setVisibility(View.VISIBLE);
 			}else{
-				progressBar.setVisibility(View.INVISIBLE);
+				progressBar.setVisibility(View.GONE);
 			}
 		}		
 	}

@@ -34,7 +34,7 @@ public class GroupFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_group, container, false);
-		progressBar = (ProgressBar)view.findViewById(android.R.id.progress);
+		progressBar = (ProgressBar)view.findViewById(R.id.progress_load);
 		super.onCreateView(inflater, container, savedInstanceState); 
         return view;
     }

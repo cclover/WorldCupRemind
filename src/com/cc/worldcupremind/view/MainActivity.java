@@ -371,6 +371,9 @@ public class MainActivity extends ActionBarActivity implements
 					LogHelper.d(TAG, "Data init done! show matchFragment!");
 					matchFragment.setData(controller.getMatchesData());
 				}
+				
+				//Set fragment match item
+				matchFragment.scrollToSuitMatch();
 			
 				//load web view
 				LogHelper.d(TAG, "Pre-laod the newsFragment data!");

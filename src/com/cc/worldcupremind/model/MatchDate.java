@@ -135,6 +135,35 @@ public class MatchDate {
          return false;
 	}
 	
+	public static Boolean isTodayInPeroid(){
+		 
+		//today
+		Calendar calendar = Calendar.getInstance();  
+		calendar.setTime(new Date());
+		//start
+		Calendar start = Calendar.getInstance();
+		start.set(Calendar.YEAR, 2014);
+		start.set(Calendar.MONTH, 6);
+		start.set(Calendar.DAY_OF_MONTH, 13);
+		//end
+		Calendar end = Calendar.getInstance();
+		start.set(Calendar.YEAR, 2014);
+		start.set(Calendar.MONTH, 7);
+		start.set(Calendar.DAY_OF_MONTH, 15);
+		return (calendar.after(start))&&(calendar.before(end));
+	}
+	
+	public Boolean isToday(){
+		
+		Calendar matchDay = Calendar.getInstance();  
+		matchDay.setTime(day);
+		Calendar today = Calendar.getInstance();  
+		today.setTime(new Date());
+		return (matchDay.get(Calendar.YEAR) == today.get(Calendar.YEAR)) && 
+				(matchDay.get(Calendar.MONTH) == today.get(Calendar.MONTH)) && 
+				(matchDay.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH));
+	}
+
 	@Override
 	public String toString() {
 		return rawString;

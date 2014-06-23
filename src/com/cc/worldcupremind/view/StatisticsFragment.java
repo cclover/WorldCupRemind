@@ -44,7 +44,7 @@ public class StatisticsFragment extends BaseFragment {
 		txtHeaderType = (TextView)view.findViewById(R.id.txtStatTitleCount);
 		imgHeaderFlag.setBackgroundResource(R.drawable.ic_title_goal);
 		txtHeaderType.setText(resource.getString(R.string.str_player_goal));
-		progressBar = (ProgressBar)view.findViewById(android.R.id.progress);
+		progressBar = (ProgressBar)view.findViewById(R.id.progress_load);
 		super.onCreateView(inflater, container, savedInstanceState);
         return view;
     }
