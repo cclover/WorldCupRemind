@@ -116,8 +116,12 @@ public class AdsHelper {
 	public void showAppWall(){
 		
 		LogHelper.d(TAG, "showAppWall");
-		if(showAds && Ads.isLoaded(Fetcher.AdFormat.appwall, TAG_LIST)){
-			Ads.showAppWall(context, TAG_LIST);
+		try{
+			if(showAds && Ads.isLoaded(Fetcher.AdFormat.appwall, TAG_LIST)){
+				Ads.showAppWall(context, TAG_LIST);
+			}
+		}catch(Exception ex){
+			LogHelper.e(TAG, ex);
 		}
 	}
 	
@@ -137,9 +141,13 @@ public class AdsHelper {
 	
 	public void showAdsInFullScreen(){
 		
-		LogHelper.d(TAG, "showAdsInScreen");
-		if(showAds && Ads.isLoaded(Fetcher.AdFormat.interstitial, TAG_INTERSTITIAL_FULLSCREEN)){
-			Ads.showAppWidget(context, null, TAG_INTERSTITIAL_FULLSCREEN, Ads.ShowMode.FULL_SCREEN);
+		try{
+			LogHelper.d(TAG, "showAdsInScreen");
+			if(showAds && Ads.isLoaded(Fetcher.AdFormat.interstitial, TAG_INTERSTITIAL_FULLSCREEN)){
+				Ads.showAppWidget(context, null, TAG_INTERSTITIAL_FULLSCREEN, Ads.ShowMode.FULL_SCREEN);
+			}
+		}catch(Exception ex){
+			LogHelper.e(TAG, ex);
 		}
 	}
 	
@@ -149,7 +157,6 @@ public class AdsHelper {
 			showAdsInFullScreen();
 		}
 	}
-
 	
 	public interface ADSListener{
 		void onPerloaderDone();
