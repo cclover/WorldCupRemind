@@ -1,5 +1,11 @@
 package com.cc.worldcupremind.common;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Date;
+
+import android.os.Environment;
 import android.util.Log;
 
 /*
@@ -48,6 +54,7 @@ public class LogHelper {
 	public static void e(String TAG, String msg){
 		if(isEnable && level >= LEVEL_E){
 			Log.e(TAG, msg);	
+//			writeLog(msg);
 		}
 	}
 	
@@ -55,6 +62,53 @@ public class LogHelper {
 		if(isEnable && level >= LEVEL_E){
 			Log.e(TAG, "[Exception]" + e.getMessage());	
 			e.printStackTrace();
+//			writeLog(e);
 		}
+	}
+	
+
+	private static void writeLog(String log){
+		
+		LogHelper.d("loghelper", "writeLog");
+		File logFile = new File(Environment.getExternalStorageDirectory()+"/worldcupremind_crash_" + new Date().getTime() + ".log");
+		FileWriter writer = null; 
+		try {
+			writer = new FileWriter(logFile);
+			writer.write("==========================================\r\n");
+			writer.write(log);
+			writer.write("==========================================\r\n");
+			writer.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally{
+			if(writer != null){
+				try {
+					writer.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	private static void writeLog(Exception ex){
+		writeLog(getExceptionStack(ex));
+	}
+	
+	
+	private static String getExceptionStack(Exception e){
+		
+		StringBuffer bs = new StringBuffer();
+        StackTraceElement[] a = e.getStackTrace();
+        String format = "at: %s.%s(%s:%S)\r\n";
+        bs.append("[Exception]: " + e.fillInStackTrace() + "\r\n"); 
+        for (int i = 0; i < a.length; i++) {
+        	bs.append(String.format(format, 
+        			a[i].getClassName(),
+        			a[i].getMethodName(),
+        			a[i].getFileName(),
+        			a[i].getLineNumber()));
+        }
+        return bs.toString();
 	}
 }
