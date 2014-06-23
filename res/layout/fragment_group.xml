@@ -1,13 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin" 
-    android:paddingBottom="@dimen/activity_vertical_margin">
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical">
     
-	<ListView
+    
+    <FrameLayout
+        android:id="@+id/imgSecondStage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginBottom="5dp">
+        
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+       		android:background="@drawable/secondstage"/>       		
+        
+        <ImageView
+            android:id="@+id/imgFullScreen"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerInside"
+            android:layout_gravity="center"
+            android:alpha="0.7"
+       		android:background="@drawable/ic_av_full_screen"/>  
+       		
+       	<ProgressBar 
+	        android:id="@+id/progress_img_load"
+	       	android:layout_gravity="center"
+	       	android:layout_width="50dp"
+	        android:layout_height="50dp"
+	        android:visibility="gone"/>
+        
+    </FrameLayout>
+    
+    <FrameLayout 
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        
+     <ListView
         android:id="@android:id/list"
         android:listSelector="@android:color/transparent"
         android:layout_width="match_parent"
@@ -18,6 +55,8 @@
        	android:layout_gravity="center"
        	android:layout_width="85dp"
         android:layout_height="85dp"/>
-	    
-</FrameLayout>
+        
+    </FrameLayout>
+  
+</LinearLayout>
 

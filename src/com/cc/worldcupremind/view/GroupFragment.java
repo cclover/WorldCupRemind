@@ -3,13 +3,16 @@ package com.cc.worldcupremind.view;
 import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.common.LogHelper;
 import com.cc.worldcupremind.model.GroupStatistics;
+import com.cc.worldcupremind.model.MatchStage;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,9 +27,15 @@ public class GroupFragment extends BaseFragment {
 	private static final int ITEM_TYPE_TEAM = 1;	
 	private static final int GROUP_TEAM_COUNT = 4;
 	private static final int TITLE_SPAN = GROUP_TEAM_COUNT + 1;
+	
+	private FrameLayout sencondStageLayout;
+	private ProgressBar progressImage;
+	private ImageView imgFullScreen;
 
 	public GroupFragment(){
 		mGroupStaticsList = null;
+		sencondStageLayout = null;
+		progressImage = null;
 	}
 	
 	
@@ -35,9 +44,29 @@ public class GroupFragment extends BaseFragment {
 
 		View view = inflater.inflate(R.layout.fragment_group, container, false);
 		progressBar = (ProgressBar)view.findViewById(R.id.progress_load);
+		progressImage = (ProgressBar)view.findViewById(R.id.progress_img_load);
+		sencondStageLayout = (FrameLayout)view.findViewById(R.id.imgSecondStage);
+		imgFullScreen = (ImageView)view.findViewById(R.id.imgFullScreen);
+		imgFullScreen.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				LogHelper.d(TAG, "Click the full screen image");
+				Intent intent = new Intent(getActivity(), KonckoutMatchActivity.class);
+				startActivity(intent);
+			}
+		});
 		super.onCreateView(inflater, container, savedInstanceState); 
         return view;
     }
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		if(controller.getMatchStage() == MatchStage.STAGE_GROUP){
+			sencondStageLayout.setVisibility(View.GONE);
+		}
+	}
 	
 	public void setData(ArrayList<GroupStatistics> groupStaticsData) {
 		
