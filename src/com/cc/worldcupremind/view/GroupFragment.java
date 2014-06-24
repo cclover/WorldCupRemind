@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -41,8 +42,9 @@ public class GroupFragment extends BaseFragment {
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+		
 		View view = inflater.inflate(R.layout.fragment_group, container, false);
+		listView = (ListView)view.findViewById(android.R.id.list);
 		progressBar = (ProgressBar)view.findViewById(R.id.progress_load);
 		progressImage = (ProgressBar)view.findViewById(R.id.progress_img_load);
 		sencondStageLayout = (FrameLayout)view.findViewById(R.id.imgSecondStage);
