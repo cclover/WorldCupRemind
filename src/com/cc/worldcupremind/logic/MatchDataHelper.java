@@ -94,6 +94,8 @@ class MatchDataHelper {
 	private static final String JSON_VERSION_APP_VERSION = "appVersion";
 	private static final String JSON_VERSION_APP_APK = "appURL";
 	private static final String JSON_VERSION_APP_EXT = "ext";
+	private static final String JSON_VERSION_APP_CODE = "appCode";			/* ADD For v1.4 to update from market*/
+	private static final String JSON_VERSION_APP_MARKET = "marketURL";
 	
 	
 	/** MatchesModel list */
@@ -333,13 +335,25 @@ class MatchDataHelper {
 			double newMatchesVer = jsonObject.getDouble(JSON_VERSION_MATCHES);
 			double newStatisticsVer = jsonObject.getDouble(JSON_VERSION_STATISTICS);
 			double appVersion = jsonObject.getDouble(JSON_VERSION_APP_VERSION);
+			int appCode = jsonObject.getInt(JSON_VERSION_APP_CODE);
 			
-			//Check APP version
+//			//Check APP version by string
+//			PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);  
+//			if(appVersion > Double.parseDouble(info.versionName)){
+//				LogHelper.d(TAG, "App need be updated, version:" + appVersion);
+//				String appURL = jsonObject.getString(JSON_VERSION_APP_APK);
+//				updateFileList.add(appURL);
+//				return updateFileList;
+//			}
+			
+			//check app version by code
 			PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);  
-			if(appVersion > Double.parseDouble(info.versionName)){
-				LogHelper.d(TAG, "App need be updated, version:" + appVersion);
-				String appURL = jsonObject.getString(JSON_VERSION_APP_APK);
+			if(appCode > info.versionCode){
+				LogHelper.d(TAG, "App need be updated, version:" + appCode);
+				String appURL = jsonObject.getString(JSON_VERSION_APP_MARKET);
+				String ext = jsonObject.getString(JSON_VERSION_APP_EXT);
 				updateFileList.add(appURL);
+				updateFileList.add(ext);
 				return updateFileList;
 			}
 			

@@ -43,6 +43,11 @@
         android:title="@string/menu_reset"
         cc:showAsAction="never"/>
     
+    <item
+        android:id="@+id/action_update_server"
+        android:title="@string/menu_update_server"
+        cc:showAsAction="never"/>
+    
      <item
         android:id="@+id/action_about"
         android:title="@string/menu_about"

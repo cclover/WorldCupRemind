@@ -13,13 +13,14 @@
    	<string name="menu_goal">射手榜</string>
 	<string name="menu_assist">助攻榜</string>
 	<string name="menu_refresh">刷新</string>
+	<string name="menu_update_server">"升级设置"</string>
     <string name="tab_mathces">赛程表</string>
     <string name="tab_group">分组对阵</string>
     <string name="tab_statistics">数据统计</string>
     <string name="tab_news">新闻资讯</string>
     <string name="app_exit">再按一次退出程序</string>
     <string name="data_fail">数据解析失败</string>
-    <string name="data_fail_message">数据解析失败！请从菜单中选择【重置数据】或【更新数据】，然后重启！</string>
+    <string name="data_fail_message">数据解析失败！请从菜单中选择[重置数据]或[更新数据]，然后重启！</string>
      
      <!-- National Name -->
 	<string name="bra">"巴西"</string>
@@ -100,11 +101,17 @@
 	<string name="str_update_check_fail">检查更新失败</string>
 	<string name="str_update_check_none">当前没有可用更新</string>
 	<string name="str_update_update_start">开始下载数据更新</string>
-	<string name="str_update_update_fail">数据更新失败</string>
+	<string name="str_update_update_fail_title">更新失败</string>
+	<string name="str_update_update_fail_message">更新数据失败，请先检查网络设置！\r\n如果依旧无法更新数据，可以尝试在菜单[升级设置]中切换服务器！</string>
 	<string name="str_update_update_done">数据成功更新到V%1.3f!</string>
 	<string name="str_update_apk_title">发现新版本！</string>
-	<string name="str_update_apk_message">应用程序发现新版本，请及时升级!\r\n如果升级后数据显示异常，请使用菜单中的【重置数据】。</string>
+	<string name="str_update_apk_message">%s\r\n\r\n如果升级后数据显示异常，请使用菜单中的[重置数据]。</string>
 	<string name="str_update_apk_download">马上更新</string>
+	
+	<!-- Update server -->
+	<string name="str_update_server_title">选择升级服务器</string>
+	<string name="str_update_server_1">升级服务器1(默认)</string>
+	<string name="str_update_server_2">升级服务器2(备用)</string>
 	
 	<!-- Reset data -->
 	<string name="str_update_data_reset">重置数据会导致更新的数据丢失，是否继续？</string>

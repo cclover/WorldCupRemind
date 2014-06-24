@@ -70,6 +70,7 @@ public class MainActivity extends ActionBarActivity implements
 	Boolean isExit;
 	ActionBar actionBar;
 	DelayLoadHandler handler;
+	int selectServerID;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -326,6 +327,30 @@ public class MainActivity extends ActionBarActivity implements
 			if(matchFragment != null){
 				matchFragment.refresh();
 			}
+		}else if(id == R.id.action_update_server){
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(R.string.str_update_server_title);
+			builder.setIcon(R.drawable.ic_action_data_download);
+			String[] serverList = new String[]{getResources().getString(R.string.str_update_server_1), 
+					getResources().getString(R.string.str_update_server_2)};
+			selectServerID = 0;
+			builder.setSingleChoiceItems(serverList, controller.getUpdateServerID(), new OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					selectServerID = which;
+					LogHelper.d(TAG, "Select server " + selectServerID);
+				}
+			});
+			builder.setPositiveButton(android.R.string.ok, new OnClickListener() {	
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					
+					controller.setUpdateServerID(selectServerID);
+				}
+			});
+			builder.setNegativeButton(android.R.string.cancel, null);
+			builder.show();
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -536,7 +561,12 @@ public class MainActivity extends ActionBarActivity implements
 				
 				if(sta == UPDATE_STATE_CHECK_ERROR){
 					LogHelper.w(TAG, "UPDATE_STATE_CHECK_ERROR");
-					showToastLong(R.string.str_update_check_fail);
+					AlertDialog.Builder builder = new AlertDialog.Builder(tmpContext);
+					builder.setTitle(R.string.str_update_check_fail);
+					builder.setMessage(R.string.str_update_update_fail_message);
+					builder.setIcon(R.drawable.ic_alerts_warning);
+					builder.setNegativeButton(android.R.string.ok, null);
+					builder.show();
 				}else if(sta == UPDATE_STATE_CHECK_NONE){
 					LogHelper.d(TAG, "UPDATE_STATE_CHECK_NONE");
 					showToastLong(R.string.str_update_check_none);
@@ -545,7 +575,7 @@ public class MainActivity extends ActionBarActivity implements
 					//Show aleart message
 					AlertDialog.Builder builder = new AlertDialog.Builder(tmpContext);
 					builder.setTitle(R.string.str_update_apk_title);
-					builder.setMessage(R.string.str_update_apk_message);
+					builder.setMessage(String.format(getResources().getString(R.string.str_update_apk_message), controller.getUpdateInfo()));
 					builder.setIcon(R.drawable.ic_launcher);
 					builder.setPositiveButton(R.string.str_update_apk_download, new OnClickListener() {	
 						@Override
@@ -564,7 +594,12 @@ public class MainActivity extends ActionBarActivity implements
 					showToast(R.string.str_update_update_start);
 				}else if(sta == UPDATE_STATE_UPDATE_ERROR){
 					LogHelper.w(TAG, "UPDATE_STATE_UPDATE_ERROR");
-					showToast(R.string.str_update_update_fail);
+					AlertDialog.Builder builder = new AlertDialog.Builder(tmpContext);
+					builder.setTitle(R.string.str_update_update_fail_title);
+					builder.setMessage(R.string.str_update_update_fail_message);
+					builder.setIcon(R.drawable.ic_alerts_warning);
+					builder.setNegativeButton(android.R.string.ok, null);
+					builder.show();
 				}else if(sta == UPDATE_STATE_UPDATE_DONE){
 					LogHelper.d(TAG, "UPDATE_STATE_UPDATE_DONE");
 					loadDataIfFragmentShown();
