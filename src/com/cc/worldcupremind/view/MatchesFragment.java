@@ -68,6 +68,7 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 		btnConfitm.setOnClickListener(this);
 		btnCancel.setOnClickListener(this);
 		progressBar = (ProgressBar)view.findViewById(R.id.progress_load);
+		listView = (ListView)view.findViewById(android.R.id.list);
 		super.onCreateView(inflater, container, savedInstanceState); 
         return view;
     }
@@ -165,15 +166,16 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 		
 		//Scroll the list  position to the start index.
 		final int index = titleIndex;
-		if(index > 0 && getListView().getFirstVisiblePosition() < index){
+		if(index > 0 && listView != null && 
+				listView.getFirstVisiblePosition() < index){
 			LogHelper.d(TAG, "Scorll to the startIndex:" + index);
-			getListView().postDelayed(new Runnable() {
+			listView.postDelayed(new Runnable() {
 				
 				@Override
 				public void run() {
-					getListView().setSelected(false);
-					getListView().setSelection(index);
-					getListView().setSelected(true);
+					listView.setSelected(false);
+					listView.setSelection(index);
+					listView.setSelected(true);
 				}
 			}, 100);
 		}
@@ -195,6 +197,8 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 	}
 	
 	public void scrollToSuitMatch(){
+	
+		LogHelper.d(TAG, "scrollToSuitMatch");
 
 		//find the first match
 		int pos = 0;
@@ -211,18 +215,23 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 				titlePos = i;
 			}
 		}
-		
+
 		//Set position
 		final int index = titlePos;
-		getListView().postDelayed(new Runnable() {
-			
-			@Override
-			public void run() {
-				getListView().setSelected(false);
-				getListView().setSelection(index);
-				getListView().setSelected(true);
-			}
-		}, 100);
+		if(listView != null){
+			listView.postDelayed(new Runnable() {
+	
+	
+				@Override
+				public void run() {
+					listView.setSelected(false);
+					listView.setSelection(index);
+					listView.setSelected(true);
+				}
+			}, 100);
+		}else{
+			LogHelper.d(TAG, "listView is null");
+		}
 	}
 	
 	private void createMatchesDayMap(){

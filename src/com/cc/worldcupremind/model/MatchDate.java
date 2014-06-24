@@ -163,7 +163,8 @@ public class MatchDate {
 				(matchDay.get(Calendar.MONTH) == today.get(Calendar.MONTH)) && 
 				(matchDay.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH));
 	}
-	
+
+
 	@Override
 	public String toString() {
 		return rawString;

@@ -13,6 +13,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.cc.worldcupremind.logic.MatchDataController;
+
 //import org.apache.commons.net.ftp.FTPClient;
 //import org.apache.commons.net.ftp.FTPFile;
 //import org.apache.commons.net.ftp.FTPReply;
@@ -27,17 +29,8 @@ import android.content.res.AssetManager;
 public class DataOperateHelper {
 	
 	private static final String TAG = "DataOperateHelper";
-	private static final String HTTP_URL_BASE = "https://raw.githubusercontent.com/cclover/store/master/";
-	//private static final String HTTP_URL_BASE = "http://liu2.sinaapp.com/static/cc/";
-	
-//	/* FTP Server info*/
-//	private static final String FTP_SERVER_URL = "cclover.free3v.net";
-//	private static final String FTP_USER_NAME = "cclover";
-//	private static final String FTP_USER_PASSWORD = "2014worldcup";
-////	private static final String FTP_SERVER_URL = "174.129.246.208";
-////	private static final String FTP_USER_NAME = "anonymous";
-////	private static final String FTP_USER_PASSWORD = "";
-//	private static final int FTP_SERVER_PORT = 21;
+	private static final String HTTP_URL_BASE_1 = "https://raw.githubusercontent.com/cclover/store/master/";
+	private static final String HTTP_URL_BASE_2 = "http://worldcupremind.sinaapp.com/update/";
 	private static final int NETWORK_TIMEOUT = 20*1000;
 	private static final int BUFFER_SIZE = 1024*8;
 
@@ -253,8 +246,16 @@ public class DataOperateHelper {
     	URL url = null;
     	HttpURLConnection httpConn = null;
 		try {
+			
+			int serverID = MatchDataController.getInstance().getUpdateServerID();
+			if(serverID == MatchDataController.UPDATE_SERVER_ID_1){
+				url = new URL(HTTP_URL_BASE_1 + fileName);
+			}else if(serverID == MatchDataController.UPDATE_SERVER_ID_2){
+				url = new URL(HTTP_URL_BASE_2 + fileName);
+			}
+			LogHelper.d(TAG, "Download from " + url.toString());
+			
 			//Get update file stream
-			url = new URL(HTTP_URL_BASE+fileName);
 			httpConn = (HttpURLConnection)url.openConnection();
 		    HttpURLConnection.setFollowRedirects(true);
 		    httpConn.setConnectTimeout(NETWORK_TIMEOUT);

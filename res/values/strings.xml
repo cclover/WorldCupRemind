@@ -15,6 +15,7 @@
 	<string name="menu_assist">ASSIST</string>
 	<string name="menu_refresh">REFRESH</string>
 	<string name="menu_app">OTHER APP</string>
+	<string name="menu_update_server">"SET SERVER"</string>
     <string name="tab_mathces">MATCHES</string>
     <string name="tab_group">GROUP</string>
     <string name="tab_statistics">STATISTICS</string>
@@ -102,11 +103,17 @@
 	<string name="str_update_check_fail">FAIL TO CHECK THE UPDATES.</string>
 	<string name="str_update_check_none">THERE ARE NO UPDATES AVAILABLE.</string>
 	<string name="str_update_update_start">START TO DOWNLOAD AND UPDATE.</string>
-	<string name="str_update_update_fail">FAIL TO UPDATE THE DATA!</string>
+	<string name="str_update_update_fail_title">UPDATE FAILED!</string>
+	<string name="str_update_update_fail_message">PLEASE CHECK THE NETWORK FIRST IF! THEN YOU CAN CHANGE THE UPDATE SERVER IN MEUN!</string>
 	<string name="str_update_update_done">DATA UPDATE TO VERSION %1.3f!</string>
 	<string name="str_update_apk_title">APP UPDATES AVAILABLE</string>
-	<string name="str_update_apk_message">PLEASE UPDATE IT!\r\nPLEASE RESET DATE IF THE DATA INCORRECT AFTER INSTALL THE NEW VERSION!</string>
+	<string name="str_update_apk_message">%s\r\n\r\nPLEASE RESET DATE IF THE DATA INCORRECT AFTER INSTALL THE NEW VERSION!</string>
 	<string name="str_update_apk_download">UPDATE NOW</string>
+	
+	<!-- Update server -->
+	<string name="str_update_server_title">SELECT UPDATE SERVER</string>
+	<string name="str_update_server_1">SERVER A(MASTER)</string>
+	<string name="str_update_server_2">SERVER B(SLAVE)</string>
 	
 	<!-- Reset data -->
 	<string name="str_update_data_reset">YOU WILL LOSE ALL DATA. CONTINUE?</string>

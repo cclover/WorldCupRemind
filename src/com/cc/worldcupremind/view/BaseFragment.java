@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 
 
@@ -27,6 +28,7 @@ public abstract class BaseFragment extends ListFragment {
 	protected MatchDataController controller;
 	protected ProgressBar progressBar;
 	private Boolean isProgressShown;
+	protected ListView listView;
 	
 	public BaseFragment(){
 		context = null;
@@ -37,6 +39,7 @@ public abstract class BaseFragment extends ListFragment {
 		isDataInit = false;
 		progressBar = null;
 		isProgressShown = true;
+		listView = null;
 	}
 	
 	
@@ -60,11 +63,10 @@ public abstract class BaseFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		LogHelper.d(TAG,  this.getClass().getName() + " onActivityCreated");
 		super.onActivityCreated(savedInstanceState);
-		
 		//Show progress bar if adapter has not been set
-		if(getListAdapter() == null){
-			setProcessShown(true);
-		}
+  		if(getListAdapter() == null){
+  			setProcessShown(true);
+  		}
 	}
 	
 	public abstract BaseAdapter createAdapter();

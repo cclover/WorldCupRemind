@@ -30,6 +30,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	private static final String REMIND_STATUS = "remindstatus";
 	private static final String PRE_APP_VERSION = "appversiom";
 	private static final String PRE_VIDEO_ALERT = "videoalert";
+	private static final String PRE_UPDATE_SERVER = "updateserver";
 	private static final String PRE_FILE_NAME = "data.xml";
 	private static final String APP_APK_NAME = "WorldCupRemind";
 	private static final int THREAD_POOL_SIZE = 3;
@@ -41,6 +42,10 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	private Context context;
 	private Object lockObj;
 	private ExecutorService threadPool;
+	private String updateInfo;
+
+	public static final int UPDATE_SERVER_ID_1 = 0;
+	public static final int UPDATE_SERVER_ID_2 = 1;
 	
 	/**
 	 * Get the @MatchDataController object
@@ -62,6 +67,13 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		matchListener = null;
 		lockObj = new Object();
 		threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+	}
+	
+	/**
+	 * @return the updateInfo
+	 */
+	public String getUpdateInfo() {
+		return updateInfo;
 	}
 	
 	/**
@@ -299,8 +311,9 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	
 					//Check
 					String url = updateList.get(0);
-					if(url.contains(APP_APK_NAME) || url.contains("http") || url.contains("https")){
+					if(url.contains("http") || url.contains("https")){
 						LogHelper.i(TAG, "Have new APK version!!!!");
+						updateInfo = updateList.get(1);
 						onUpdateDone(UPDATE_STATE_CHECK_NEW_APK, url);
 						return;
 					}
@@ -554,6 +567,28 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		if(share != null){
 			SharedPreferences.Editor edit = share.edit();  
 			edit.putBoolean(PRE_VIDEO_ALERT, enable);
+			edit.commit();
+			return true;
+		}
+		return false;
+	}
+	
+	
+	public int getUpdateServerID(){
+		SharedPreferences share =  context.getSharedPreferences(PRE_FILE_NAME, Context.MODE_PRIVATE);
+		if(share != null){
+			return share.getInt(PRE_UPDATE_SERVER, UPDATE_SERVER_ID_1);
+		}
+		return UPDATE_SERVER_ID_1;
+	}
+	
+	public Boolean setUpdateServerID(int serverID){
+		
+		LogHelper.d(TAG, "Set update server id:" + serverID);
+		SharedPreferences share = context.getSharedPreferences(PRE_FILE_NAME, Context.MODE_PRIVATE);   
+		if(share != null){
+			SharedPreferences.Editor edit = share.edit();  
+			edit.putInt(PRE_UPDATE_SERVER, serverID);
 			edit.commit();
 			return true;
 		}
