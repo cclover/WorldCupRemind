@@ -1,9 +1,12 @@
 package com.cc.worldcupremind.logic;
 
+import java.io.Flushable;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.cc.worldcupremind.common.DataOperateHelper;
+import com.cc.worldcupremind.common.ImageCreator;
 import com.cc.worldcupremind.common.LogHelper;
 import com.cc.worldcupremind.common.ResourceHelper;
 import com.cc.worldcupremind.model.GroupStatistics;
@@ -31,6 +34,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	private static final String PRE_APP_VERSION = "appversiom";
 	private static final String PRE_VIDEO_ALERT = "videoalert";
 	private static final String PRE_UPDATE_SERVER = "updateserver";
+	private static final String PRE_IMAGE_VERSION = "imageversion";
 	private static final String PRE_FILE_NAME = "data.xml";
 	private static final String APP_APK_NAME = "WorldCupRemind";
 	private static final int THREAD_POOL_SIZE = 3;
@@ -42,6 +46,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	private Context context;
 	private Object lockObj;
 	private ExecutorService threadPool;
+	private ExecutorService drawThread;
 	private String updateInfo;
 
 	public static final int UPDATE_SERVER_ID_1 = 0;
@@ -67,6 +72,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		matchListener = null;
 		lockObj = new Object();
 		threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+		drawThread = Executors.newSingleThreadExecutor();
 	}
 	
 	/**
@@ -232,10 +238,14 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 					MatchRemindHelper.setAlarm(context, dataHelper.getRemindList(), dataHelper.getRemindCancelList());
 				}
 				
+				//make image
+				makeSecondStageImage();
+				
 				//Init done
 				LogHelper.d(TAG, "Init Data Done!");
 				isDataInitDone = true;
 				onInitDone(true);
+		
 			}
 		});
 	}
@@ -272,6 +282,9 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 			LogHelper.i(TAG, "Set remind alarm");
 			MatchRemindHelper.setAlarm(context, dataHelper.getRemindList(), dataHelper.getRemindCancelList());
 		}
+		
+		//make image
+		makeSecondStageImage();
 		
 		//Init done
 		LogHelper.d(TAG, "Init Data Done!");
@@ -326,6 +339,8 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 					}else{
 						LogHelper.d(TAG, "Update Data success!");
 						onUpdateDone(UPDATE_STATE_UPDATE_DONE, null);
+						//update image
+						makeSecondStageImage();
 					}
 				}
 			}
@@ -594,6 +609,55 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		}
 		return false;
 	}
+	
+	
+	private float getImageVersion(){
+		SharedPreferences share =  context.getSharedPreferences(PRE_FILE_NAME, Context.MODE_PRIVATE);
+		if(share != null){
+			return share.getFloat(PRE_IMAGE_VERSION, -1);
+		}
+		return -1;
+	}
+	
+	private void setImageVersion(float version){
+		
+		LogHelper.d(TAG, "Set image version:" + version);
+		SharedPreferences share = context.getSharedPreferences(PRE_FILE_NAME, Context.MODE_PRIVATE);   
+		if(share != null){
+			SharedPreferences.Editor edit = share.edit();  
+			edit.putFloat(PRE_IMAGE_VERSION, version);
+			edit.commit();
+		}
+	}
+	
+	
+	public void makeSecondStageImage(){
+		
+		LogHelper.d(TAG, "makeSecondStageImage");
+		drawThread.execute(new Runnable() {
+			
+			@Override
+			public void run() {
+				double version = getImageVersion();
+				double dataVesion = dataHelper.getDataMatchesVersion();
+				if(version > dataVesion && !DataOperateHelper.isLocalFileExist(context, ImageCreator.DATA_SECOND_STAGE_IMAGE)){
+					LogHelper.d(TAG, "No need to update the secondstage image");
+					return;
+				}
+				LogHelper.d(TAG, "Create the secondstage image");
+				ImageCreator creator = new ImageCreator(context);
+				Intent intent = new Intent(ImageCreator.ACTION_CRATEA_IAMGE_DONE);
+				if(creator.createSecondStageImage()){
+					setImageVersion((float)dataVesion);
+					intent.putExtra(ImageCreator.KEY_CRATEA_IAMGE_DONE, true);
+				}else{
+					intent.putExtra(ImageCreator.KEY_CRATEA_IAMGE_DONE, false);
+				}
+				context.sendBroadcast(intent);
+			}
+		});
+	}
+	
 	
 	@Override
 	public void onInitDone(Boolean isSuccess) {
