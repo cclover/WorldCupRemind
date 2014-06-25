@@ -46,7 +46,6 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	private Context context;
 	private Object lockObj;
 	private ExecutorService threadPool;
-	private ExecutorService drawThread;
 	private String updateInfo;
 
 	public static final int UPDATE_SERVER_ID_1 = 0;
@@ -72,7 +71,6 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		matchListener = null;
 		lockObj = new Object();
 		threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
-		drawThread = Executors.newSingleThreadExecutor();
 	}
 	
 	/**
@@ -634,13 +632,13 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	public void makeSecondStageImage(){
 		
 		LogHelper.d(TAG, "makeSecondStageImage");
-		drawThread.execute(new Runnable() {
+		threadPool.execute(new Runnable() {
 			
 			@Override
 			public void run() {
 				double version = getImageVersion();
 				double dataVesion = dataHelper.getDataMatchesVersion();
-				if(version > dataVesion && !DataOperateHelper.isLocalFileExist(context, ImageCreator.DATA_SECOND_STAGE_IMAGE)){
+				if(version >= dataVesion && DataOperateHelper.isLocalFileExist(context, ImageCreator.DATA_SECOND_STAGE_IMAGE)){
 					LogHelper.d(TAG, "No need to update the secondstage image");
 					return;
 				}
