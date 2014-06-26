@@ -450,6 +450,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 					return;
 				}
 				setVideoAlert(true);
+				setImageVersion(0);
 				isDataInitDone = false;
 				InitDataSync(context);
 				onResetDone(true);
@@ -642,10 +643,11 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 			public void run() {
 				double version = getImageVersion();
 				double dataVesion = dataHelper.getDataMatchesVersion();
-//				if(version >= dataVesion && DataOperateHelper.isLocalFileExist(context, ImageCreator.DATA_SECOND_STAGE_IMAGE)){
-//					LogHelper.d(TAG, "No need to update the secondstage image");
-//					return;
-//				}
+				LogHelper.d(TAG, String.format("Image version %f, data version %f ",version, dataVesion));
+				if(version >= dataVesion && DataOperateHelper.isLocalFileExist(context, ImageCreator.DATA_SECOND_STAGE_IMAGE)){
+					LogHelper.d(TAG, "No need to update the secondstage image");
+					return;
+				}
 				LogHelper.d(TAG, "Create the secondstage image");
 				ImageCreator creator = new ImageCreator(context);
 				Intent intent = new Intent(ImageCreator.ACTION_CRATEA_IAMGE_DONE);

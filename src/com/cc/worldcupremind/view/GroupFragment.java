@@ -32,6 +32,7 @@ public class GroupFragment extends BaseFragment {
 	private FrameLayout sencondStageLayout;
 	private ProgressBar progressImage;
 	private ImageView imgFullScreen;
+	private ImageView imgSecondStage;
 
 	public GroupFragment(){
 		mGroupStaticsList = null;
@@ -47,7 +48,8 @@ public class GroupFragment extends BaseFragment {
 		listView = (ListView)view.findViewById(android.R.id.list);
 		progressBar = (ProgressBar)view.findViewById(R.id.progress_load);
 		progressImage = (ProgressBar)view.findViewById(R.id.progress_img_load);
-		sencondStageLayout = (FrameLayout)view.findViewById(R.id.imgSecondStage);
+		sencondStageLayout = (FrameLayout)view.findViewById(R.id.layoutSecondStage);
+		imgSecondStage = (ImageView)view.findViewById(R.id.imgSecondStage);
 		imgFullScreen = (ImageView)view.findViewById(R.id.imgFullScreen);
 		imgFullScreen.setOnClickListener(new View.OnClickListener() {
 			

@@ -18,6 +18,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
@@ -49,6 +50,7 @@ public class KonckoutMatchActivity extends Activity {
 		mWebView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		mWebView.getSettings().setLoadWithOverviewMode(true);
 		mWebView.setVisibility(View.INVISIBLE);
+		mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 		
 		//register
 		IntentFilter filter = new IntentFilter();
@@ -64,6 +66,7 @@ public class KonckoutMatchActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		mWebView.setVisibility(View.GONE);
 		unregisterReceiver(mReceiver);
 	}
 	
@@ -74,6 +77,9 @@ public class KonckoutMatchActivity extends Activity {
 			mProgressBar.setVisibility(View.VISIBLE);
 			MatchDataController.getInstance().makeSecondStageImage();
 		}else{
+			//Clear the cache!!!
+			mWebView.loadDataWithBaseURL(null, "","text/html", "utf-8",null);
+			mWebView.clearCache(true);
 			String imgPath = Uri.fromFile(file).toString();
 			String html = "<center><img src=\"" + imgPath + "\"></center>";
 			mWebView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", "");
