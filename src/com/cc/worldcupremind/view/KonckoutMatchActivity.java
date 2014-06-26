@@ -77,7 +77,7 @@ public class KonckoutMatchActivity extends Activity {
 			String imgPath = Uri.fromFile(file).toString();
 			String html = "<center><img src=\"" + imgPath + "\"></center>";
 			mWebView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", "");
-			LogHelper.d(TAG, "Load from local：" + imgPath);
+			LogHelper.d(TAG, "Load from local" + imgPath);
 			mWebView.setVisibility(View.VISIBLE);
 			mProgressBar.setVisibility(View.GONE);
 		}
