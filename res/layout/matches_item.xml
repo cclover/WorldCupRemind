@@ -12,23 +12,25 @@
     	android:layout_marginTop="5dp"
 		android:layout_marginBottom="5dp">
 
+	    <!-- layout_height can't using 0dp, the text height may changed! Then will show incorrectly  -->
     	<TextView
     	    android:id="@+id/txtGroup"
     	    android:layout_width="match_parent"
-    	    android:layout_height="0dp"
-    	    android:gravity="center" 
+    	    android:layout_height="wrap_content" 
+    	    android:gravity="center"
     	    android:textSize="20sp"
     	    android:layout_weight = "1"
 			android:textStyle="bold"/>
-    	
+    
     	<FrameLayout
     		android:layout_width="match_parent"
 			android:layout_height="wrap_content">
 	    	<CheckBox
 			    android:id="@+id/chkRemind"
-			    android:layout_width="match_parent"
+			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
 			    android:gravity="center"
+			    android:layout_gravity="center"
 			    android:visibility="gone"
 			    android:focusable="false"
 			    android:clickable="false" />
@@ -39,6 +41,7 @@
 			    android:layout_height="wrap_content"
 			    android:gravity="center"
 			    android:scaleType="centerInside"
+			    android:layout_gravity="center"
 			    android:visibility="gone"/>
 	    	
     	</FrameLayout>
@@ -87,18 +90,20 @@
 			
 			<TextView
 			    android:id="@+id/txtScore"
-			    android:layout_width="match_parent"
+			    android:layout_width="wrap_content"
 			    android:layout_height="0dp" 
 			    android:layout_weight = "1"
 			    android:gravity="center" 
+			    android:layout_gravity="center_horizontal"
 			    android:textSize="31sp"
 			    android:textStyle="bold"/>
 			
 			<TextView
 			    android:id="@+id/txtInfo"
-			    android:layout_width="match_parent"
+			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content" 
 				android:gravity="center_horizontal" 
+				android:layout_gravity="center_horizontal"
 			    android:textSize="14sp"
 			    android:textStyle="bold"
 			    android:textColor="@color/score"/>
