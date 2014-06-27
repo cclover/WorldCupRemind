@@ -79,6 +79,8 @@
 	<string name="str_group_gf">进球</string>
 	<string name="str_group_ga">失球</string>
 	<string name="str_group_pts">积分</string>
+	<string name="str_secondstage_full">全屏查看</string>
+	<string name="str_secondstage_fail">加载淘汰赛对阵失败!</string>
 	
 	<!-- Statistics Info -->
 	<string name="str_player_goal">进球(点球)</string>

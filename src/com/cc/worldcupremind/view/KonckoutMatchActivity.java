@@ -23,6 +23,7 @@ import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class KonckoutMatchActivity extends Activity {
 
@@ -30,6 +31,7 @@ public class KonckoutMatchActivity extends Activity {
 
 	private WebView mWebView;
 	private ProgressBar mProgressBar;
+	private TextView mTextFail;
 	private CreateImageReceive mReceiver;
 	
 	@Override
@@ -41,6 +43,7 @@ public class KonckoutMatchActivity extends Activity {
 		setContentView(R.layout.activity_konckout);
 		mWebView = (WebView)findViewById(R.id.secondstageView);
 		mProgressBar = (ProgressBar)findViewById(R.id.secondstageProgress);
+		mTextFail = (TextView)findViewById(R.id.txtFail);
 		
 		//Init the web view
 		mWebView.getSettings().setJavaScriptEnabled(false);
@@ -49,7 +52,6 @@ public class KonckoutMatchActivity extends Activity {
 		mWebView.getSettings().setUseWideViewPort(true);
 		mWebView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		mWebView.getSettings().setLoadWithOverviewMode(true);
-		mWebView.setVisibility(View.INVISIBLE);
 		mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 		
 		//register
@@ -84,8 +86,8 @@ public class KonckoutMatchActivity extends Activity {
 			String html = "<center><img src=\"" + imgPath + "\"></center>";
 			mWebView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", "");
 			LogHelper.d(TAG, "Load from local" + imgPath);
-			mWebView.setVisibility(View.VISIBLE);
 			mProgressBar.setVisibility(View.GONE);
+			mTextFail.setVisibility(View.GONE);
 		}
 	}
 	
@@ -95,8 +97,16 @@ public class KonckoutMatchActivity extends Activity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			
-			LogHelper.d(TAG, "Create Image done, show it");
-			loadSecondStageImage();
+			if(intent.getBooleanExtra(ImageCreator.KEY_CRATEA_IAMGE_DONE, false)){
+				LogHelper.d(TAG, "Create Image done, show it");
+				loadSecondStageImage();
+			}else{
+				mWebView.loadDataWithBaseURL(null, "","text/html", "utf-8",null);
+				mWebView.clearCache(true);
+				mProgressBar.setVisibility(View.GONE);
+				mTextFail.setVisibility(View.VISIBLE);
+				LogHelper.w(TAG, "Fail to create the secondstage image");
+			}
 		}
 	}
 

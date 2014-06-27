@@ -1,11 +1,20 @@
 package com.cc.worldcupremind.view;
 
 import com.cc.worldcupremind.R;
+import com.cc.worldcupremind.common.DataOperateHelper;
+import com.cc.worldcupremind.common.ImageCreator;
 import com.cc.worldcupremind.common.LogHelper;
+import com.cc.worldcupremind.logic.MatchDataController;
 import com.cc.worldcupremind.model.GroupStatistics;
 import com.cc.worldcupremind.model.MatchStage;
+import com.cc.worldcupremind.view.KonckoutMatchActivity.CreateImageReceive;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +27,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class GroupFragment extends BaseFragment {
@@ -33,11 +43,15 @@ public class GroupFragment extends BaseFragment {
 	private ProgressBar progressImage;
 	private ImageView imgFullScreen;
 	private ImageView imgSecondStage;
+	private TextView txtImageFail;
+	private TextView txtFullScreen;
+	private CreateImageReceive receiver;
 
 	public GroupFragment(){
 		mGroupStaticsList = null;
 		sencondStageLayout = null;
 		progressImage = null;
+		receiver = null;
 	}
 	
 	
@@ -49,6 +63,8 @@ public class GroupFragment extends BaseFragment {
 		progressBar = (ProgressBar)view.findViewById(R.id.progress_load);
 		progressImage = (ProgressBar)view.findViewById(R.id.progress_img_load);
 		sencondStageLayout = (FrameLayout)view.findViewById(R.id.layoutSecondStage);
+		txtImageFail = (TextView)view.findViewById(R.id.txtSecondFail);
+		txtFullScreen = (TextView)view.findViewById(R.id.txtSecondFull);
 		imgSecondStage = (ImageView)view.findViewById(R.id.imgSecondStage);
 		imgFullScreen = (ImageView)view.findViewById(R.id.imgFullScreen);
 		imgFullScreen.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +85,21 @@ public class GroupFragment extends BaseFragment {
 		super.onActivityCreated(savedInstanceState);
 		if(controller.getMatchStage() == MatchStage.STAGE_GROUP){
 			sencondStageLayout.setVisibility(View.GONE);
+		}else{
+			imgFullScreen.setVisibility(View.GONE);
+			txtFullScreen.setVisibility(View.GONE);
+		}
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(ImageCreator.ACTION_CRATEA_IAMGE_DONE);
+		receiver = new CreateImageReceive();
+		context.registerReceiver(receiver, filter);
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if(receiver != null){
+			context.unregisterReceiver(receiver);
 		}
 	}
 	
@@ -76,6 +107,10 @@ public class GroupFragment extends BaseFragment {
 		
 		LogHelper.d(TAG, "GroupFragment::setData");
 		mGroupStaticsList = groupStaticsData;
+		if(controller.getMatchStage() != MatchStage.STAGE_GROUP){
+			progressImage.setVisibility(View.VISIBLE);
+			loadThumbnail();
+		}
 		super.setAdapter();
 		super.refresh();
 	}
@@ -83,6 +118,43 @@ public class GroupFragment extends BaseFragment {
 	@Override
 	public BaseAdapter createAdapter() {
 		return new GropStaticsListAdapter();
+	}
+	
+	private void loadThumbnail(){
+		
+		LogHelper.d(TAG, "loadThumbnail");
+		if(DataOperateHelper.isLocalFileExist(context, ImageCreator.DATA_SECOND_STAGE_IMAGE)){
+			try {
+				InputStream imageStream = DataOperateHelper.loadFileFromLocal(context, ImageCreator.DATA_SECOND_STAGE_IMAGE);
+				Bitmap thumbnail = BitmapFactory.decodeStream(imageStream);
+				imgSecondStage.setImageBitmap(thumbnail);
+				imgFullScreen.setVisibility(View.VISIBLE);
+				txtFullScreen.setVisibility(View.VISIBLE);
+	           } catch (Exception e) {
+	        	   txtImageFail.setVisibility(View.VISIBLE);
+	        	   LogHelper.e(TAG, e);
+	           }
+			progressImage.setVisibility(View.GONE);
+		}else{
+			MatchDataController.getInstance().makeSecondStageImage();
+		}		
+	}
+	
+	
+	class CreateImageReceive extends BroadcastReceiver{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			
+			if(intent.getBooleanExtra(ImageCreator.KEY_CRATEA_IAMGE_DONE, false)){
+				LogHelper.d(TAG, "Create Image done, show it");
+				loadThumbnail();
+			}else{
+				LogHelper.w(TAG, "Fail to create the secondstage image");
+				progressImage.setVisibility(View.GONE);
+				 txtImageFail.setVisibility(View.VISIBLE);
+			}
+		}
 	}
 	
 	class GropStaticsListAdapter extends BaseAdapter {
