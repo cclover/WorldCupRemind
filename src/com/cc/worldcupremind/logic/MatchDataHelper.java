@@ -550,7 +550,7 @@ class MatchDataHelper {
 	
 	public Boolean removeData(){
 		
-		LogHelper.d(TAG, "donwloadSecondStagePic()");
+		LogHelper.d(TAG, "removeData()");
 //		DataOperateHelper.deleteLoaclFile(context, DATA_REMIND_FILE);
 		Boolean ret1 = DataOperateHelper.deleteLoaclFile(context, DATA_MATCHES_FILE);
 		Boolean ret2 = DataOperateHelper.deleteLoaclFile(context, DATA_STATISTICS_FILE);
