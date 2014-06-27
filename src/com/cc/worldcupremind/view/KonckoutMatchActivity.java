@@ -1,8 +1,6 @@
 package com.cc.worldcupremind.view;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 
 import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.common.ImageCreator;
@@ -17,12 +15,10 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class KonckoutMatchActivity extends Activity {

@@ -1,6 +1,5 @@
 package com.cc.worldcupremind.logic;
 
-import java.io.Flushable;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -36,16 +35,19 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	private static final String PRE_UPDATE_SERVER = "updateserver";
 	private static final String PRE_IMAGE_VERSION = "imageversion";
 	private static final String PRE_FILE_NAME = "data.xml";
-	private static final String APP_APK_NAME = "WorldCupRemind";
-	private static final int THREAD_POOL_SIZE = 3;
+	private static final int THREAD_POOL_SIZE = 2;
 	private static MatchDataController instance = new MatchDataController();
 	private Boolean isDataInitDone;
+	private Boolean isInUpdateProcess;
 	private MatchDataHelper dataHelper;	
 	private ResourceHelper resourceHelper;
 	private MatchDataListener matchListener;
 	private Context context;
 	private Object lockObj;
 	private ExecutorService threadPool;
+	private ExecutorService remindThread;
+	private ExecutorService updateThread;
+	private ExecutorService initThread;
 	private String updateInfo;
 
 	public static final int UPDATE_SERVER_ID_1 = 0;
@@ -65,11 +67,15 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	 */
 	private MatchDataController(){
 		isDataInitDone = false;
+		isInUpdateProcess = false;
 		dataHelper = null;
 		resourceHelper = null;
 		context = null;
 		matchListener = null;
 		lockObj = new Object();
+		remindThread = Executors.newSingleThreadExecutor();
+		updateThread = Executors.newSingleThreadExecutor();
+		initThread = Executors.newSingleThreadExecutor();
 		threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 	}
 	
@@ -182,7 +188,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 			LogHelper.d(TAG, "Data had init done!");
 			if(needCallbak){
 				
-				threadPool.execute(new Runnable() {
+				initThread.execute(new Runnable() {
 
 					@Override
 					public void run() {
@@ -205,10 +211,10 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 			}
 		}
 
-		threadPool.execute(new Runnable() {
+		initThread.execute(new Runnable() {
 			
 			@Override
-			public synchronized void run() {
+			public void run() {
 				
 				if(isDataInitDone){
 					LogHelper.d(TAG, "Data had init done!");
@@ -310,10 +316,15 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 			return false;
 		}
 		
-		threadPool.execute(new Runnable() {
+		if(isInUpdateProcess){
+			LogHelper.d(TAG, "isInUpdateProcess");
+			return true;
+		}
+		isInUpdateProcess = true;
+		updateThread.execute(new Runnable() {
 			
 			@Override
-			public synchronized void run() {
+			public void run() {
 
 				ArrayList<String> updateList = dataHelper.checkNewVersion();
 				if(updateList == null){
@@ -330,6 +341,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 						LogHelper.i(TAG, "Have new APK version!!!!");
 						updateInfo = updateList.get(1);
 						onUpdateDone(UPDATE_STATE_CHECK_NEW_APK, url);
+						isInUpdateProcess = false;
 						return;
 					}
 						
@@ -345,6 +357,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 						makeSecondStageImage();
 					}
 				}
+				isInUpdateProcess = false;
 			}
 		});
 		
@@ -371,10 +384,10 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		}
 		
 		final ArrayList<Integer> newList = matchesList;
-		threadPool.execute(new Runnable() {
+		remindThread.execute(new Runnable() {
 			
 			@Override
-			public synchronized void run() {
+			public void run() {
 				
 				if(!dataHelper.setRemindData(newList)){
 					LogHelper.w(TAG, "Fail to set the remind data");
@@ -415,10 +428,10 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		}
 		
 		final ArrayList<Integer> delList = deleteList;
-		threadPool.execute(new Runnable() {
+		remindThread.execute(new Runnable() {
 			
 			@Override
-			public synchronized void run() {
+			public void run() {
 				
 				if(!dataHelper.deleteRemindData(delList)){
 					LogHelper.w(TAG, "Fail to delete the remind data");
@@ -443,7 +456,7 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 		threadPool.execute(new Runnable() {
 			
 			@Override
-			public synchronized void run() {
+			public void run() {
 				if(!dataHelper.removeData()){
 					Log.d(TAG, "Fail to reset data");
 					onResetDone(false);

@@ -7,7 +7,6 @@ import com.cc.worldcupremind.common.LogHelper;
 import com.cc.worldcupremind.logic.MatchDataController;
 import com.cc.worldcupremind.model.GroupStatistics;
 import com.cc.worldcupremind.model.MatchStage;
-import com.cc.worldcupremind.view.KonckoutMatchActivity.CreateImageReceive;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -197,7 +196,6 @@ public class GroupFragment extends BaseFragment {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			
 			if(getItemViewType(position) == ITEM_TYPE_TITLE){
-				LogHelper.d(TAG, "ITEM_TYPE_TITLE");
 				//Set title holder
 				TextView txtGroup = null;
 				if (convertView == null) {
