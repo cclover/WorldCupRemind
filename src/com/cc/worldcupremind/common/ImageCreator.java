@@ -194,6 +194,7 @@ public class ImageCreator {
 				}else{
 					paArea.setColor(res.getColor(R.color.match_area_16));
 				}
+				paArea.setAlpha(200);
 				cv.drawRect(model.rect, paArea);
 			}
 			
@@ -210,7 +211,7 @@ public class ImageCreator {
 				//draw name
 				paText1.setTextSize(ResourceHelper.dip2px(context, 12));
 				paText1.setTypeface(Typeface.DEFAULT_BOLD);
-				paText1.setColor(Color.GRAY);
+				paText1.setColor(Color.DKGRAY);
 				paText2 = paText1;
 				if(model.model.getMatchStatus() == MatchStatus.MATCH_STATUS_OVER){
 					//winner text color
