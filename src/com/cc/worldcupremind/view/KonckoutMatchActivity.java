@@ -15,6 +15,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
@@ -63,10 +64,20 @@ public class KonckoutMatchActivity extends Activity {
 	
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();
-		mWebView.setVisibility(View.GONE);
 		unregisterReceiver(mReceiver);
+		super.onDestroy();
 	}
+	
+	
+	//TO FIX ISSUE:android.view.WindowLeaked: 
+	//Activity com.cc.worldcupremind.view.KonckoutMatchActivity has 
+	//leaked window android.widget.ZoomButtonsController$Container
+	@Override
+    public void finish() {
+        ViewGroup view = (ViewGroup) getWindow().getDecorView();
+        view.removeAllViews();
+        super.finish();
+    }
 	
 	private void loadSecondStageImage(){
 		File file = getFileStreamPath(ImageCreator.DATA_SECOND_STAGE_IMAGE);

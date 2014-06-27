@@ -155,6 +155,10 @@ public class GroupFragment extends BaseFragment {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			
+			if(!isFragmentShow){
+				LogHelper.d(TAG, "load image when visit the fragment");
+				return;
+			}
 			if(intent.getBooleanExtra(ImageCreator.KEY_CRATEA_IAMGE_DONE, false)){
 				LogHelper.d(TAG, "Create Image done, show it");
 				loadThumbnail();
