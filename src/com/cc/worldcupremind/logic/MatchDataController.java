@@ -690,6 +690,9 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	@Override
 	public void onTimezoneChanged() {
 		
+		LogHelper.d(TAG, "onTimezoneChanged");
+		DataOperateHelper.deleteLoaclFile(context, ImageCreator.DATA_SECOND_STAGE_IMAGE);
+		makeSecondStageImage();
 		if(matchListener != null){
 			matchListener.onTimezoneChanged();
 		}

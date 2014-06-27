@@ -108,8 +108,11 @@ public class GroupFragment extends BaseFragment {
 		LogHelper.d(TAG, "GroupFragment::setData");
 		mGroupStaticsList = groupStaticsData;
 		if(controller.getMatchStage() != MatchStage.STAGE_GROUP){
+			sencondStageLayout.setVisibility(View.VISIBLE);
 			progressImage.setVisibility(View.VISIBLE);
 			loadThumbnail();
+		}else{
+			sencondStageLayout.setVisibility(View.GONE);
 		}
 		super.setAdapter();
 		super.refresh();

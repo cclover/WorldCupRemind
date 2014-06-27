@@ -34,26 +34,36 @@ public class ImageCreator {
 	public static final String DATA_SECOND_STAGE_IMAGE = "secondstage.jpg";
 	public static final String ACTION_CRATEA_IAMGE_DONE = "com.cc.worldcupremind.createimage";
 	public static final String KEY_CRATEA_IAMGE_DONE = "com.cc.worldcupremind.createimage.key";
+	
 	private Context context;
 	private Resources res;
 	private MatchDataController controller;
 	private ResourceHelper resourceHelper;
 	
-	private int bgWidth = 0;
-	private int bgHeight = 0;
-	private float itemWidth = 0;
-	private float itemHeight = 0;
-	private float marginWidth = 0;
-	private float marginHeight = 0;
-	private float flagWidth = 0;
-	private float flagHight = 0;
-	private float lineWidth = 0;
-	private SparseArray<DrawMatchModel> drawMatchesList;
-	private ArrayList<DrawLineModel> drawLinesList;
-	private SparseArray<MatchesModel> matchList;
+	private int bgWidth;
+	private int bgHeight;
+	private float itemWidth;
+	private float itemHeight;
+	private float marginWidth;
+	private float marginHeight;
+	private float flagWidth;
+	private float flagHight;
+	private float lineWidth;
 	
 	private Boolean needDrawLine;
 	private Boolean needDrawArea;
+	private Boolean needDrawData;
+	private Boolean needDrawLogo;
+	
+	private SparseArray<DrawMatchModel> drawMatchesList;
+	private ArrayList<DrawLineModel> drawLinesList;
+	private SparseArray<MatchesModel> matchList;
+
+	private Paint paArea;
+	private Paint paText1;
+	private Paint paText2;
+	private Paint paScore;
+	private Paint paTime;
 	
 	public ImageCreator(Context context) {
 		this.context = context.getApplicationContext();
@@ -64,6 +74,22 @@ public class ImageCreator {
 		resourceHelper = controller.gerResourceHelper();
 		needDrawLine = false;
 		needDrawArea = false;
+		needDrawLogo = false;
+		needDrawData = true;
+		bgWidth = 0;
+		bgHeight = 0;
+		itemWidth = 0;
+		itemHeight = 0;
+		marginWidth = 0;
+		marginHeight = 0;
+		flagWidth = 0;
+		flagHight = 0;
+		lineWidth = 0;
+		paArea = new Paint();
+		paText1 = new Paint();
+		paText2 = new Paint();
+		paScore = new Paint();
+		paTime = new Paint();
 	}
 	
 	
@@ -90,7 +116,7 @@ public class ImageCreator {
 			//Load background image and clip size same to screen
 			LogHelper.d(TAG, "Load background image as bitmap");
 			//BitmapFactory.decodeResource will scale the picture
-			Bitmap background = BitmapFactory.decodeStream(res.openRawResource(R.drawable.bg_secondestage));
+			Bitmap background = BitmapFactory.decodeStream(res.openRawResource(R.drawable.bg_secondstage));
 			LogHelper.d(TAG, String.format("background pic width:%d,height:%d", background.getWidth(), background.getHeight()));
 			Bitmap secondStageBG = null;
 			if(background.getWidth() > bgWidth || background.getHeight() > bgHeight){
@@ -159,59 +185,94 @@ public class ImageCreator {
 			
 			if(needDrawArea){
 				//draw area
-				Paint pa = new Paint();
 				if(model.model.getMatchNo() == 64){
-					pa.setColor(res.getColor(R.color.match_area_final));
+					paArea.setColor(res.getColor(R.color.match_area_final));
 				}else if(model.model.getMatchNo() == 63){
-					pa.setColor(res.getColor(R.color.match_area_16));
+					paArea.setColor(res.getColor(R.color.match_area_16));
 				}else if(model.model.getMatchNo() >= 61){
-					pa.setColor(res.getColor(R.color.match_area_2));	
+					paArea.setColor(res.getColor(R.color.match_area_2));	
 				}else{
-					pa.setColor(res.getColor(R.color.match_area_16));
+					paArea.setColor(res.getColor(R.color.match_area_16));
 				}
-				cv.drawRect(model.rect, pa);
+				cv.drawRect(model.rect, paArea);
 			}
 			
-			//draw flag
-			Bitmap flag1 = getFlagBitmap(model.model.getTeam1Code());
-			Bitmap flag2 = getFlagBitmap(model.model.getTeam2Code());
-			cv.drawBitmap(flag1, model.pointFlag1.x, model.pointFlag1.y, null);
-			cv.drawBitmap(flag2, model.pointFlag2.x, model.pointFlag2.y, null);
+			if(needDrawData){
 			
-			//draw name
-			Paint paText = new Paint();
-			paText.setColor(Color.BLACK);
-			paText.setTextSize(ResourceHelper.dip2px(context, 12));
-			paText.setTypeface(Typeface.DEFAULT_BOLD);
-			String name1 = controller.getTeamNationalName(model.model.getTeam1Code());
-			String name2 = controller.getTeamNationalName(model.model.getTeam2Code());
-			Rect txtSize1 = getTextSize(paText, name1);
-			Rect txtSize2 = getTextSize(paText, name2);
-			cv.drawText(name1, model.pointFlag1.x + flagWidth/2 - txtSize1.width()/2  ,
-					model.pointFlag1.y + flagHight + txtSize1.height() + flagHight/2, paText);
-			cv.drawText(name2, model.pointFlag2.x + flagWidth/2 - txtSize2.width()/2 , 
-					model.pointFlag2.y + flagHight + txtSize2.height() + flagHight/2, paText);
-			
-			//draw score
-			Paint paScore = new Paint();
-			paScore.setTextSize(ResourceHelper.dip2px(context, 12));
-			paScore.setTypeface(Typeface.DEFAULT_BOLD);
-			String score = "";
-			if(model.model.getMatchStatus() == MatchStatus.MATCH_STATUS_WAIT_START){
-				score = model.model.getMatchTime().getTimeString();
-				paScore.setColor(res.getColor(R.color.gray));
-			}else{
-				score = String.format("%d:%d", model.model.getTeam1Score(), model.model.getTeam2Score());
-				paScore.setColor(res.getColor(R.color.score));
+				//draw flag
+				Bitmap flag1 = getFlagBitmap(model.model.getTeam1Code());
+				Bitmap flag2 = getFlagBitmap(model.model.getTeam2Code());
+				cv.drawBitmap(flag1, model.pointFlag1.x, model.pointFlag1.y, null);
+				cv.drawBitmap(flag2, model.pointFlag2.x, model.pointFlag2.y, null);
+				flag1.recycle();
+				flag2.recycle();
+				
+				//draw name
+				paText1.setTextSize(ResourceHelper.dip2px(context, 12));
+				paText1.setTypeface(Typeface.DEFAULT_BOLD);
+				paText1.setColor(Color.GRAY);
+				paText2 = paText1;
+				if(model.model.getMatchStatus() == MatchStatus.MATCH_STATUS_OVER){
+					//winner text color
+					if(model.model.getTeam1Score() > model.model.getTeam2Score()){
+						paText1.setColor(Color.RED);
+						paText2.setColor(Color.BLACK);
+					}else if(model.model.getTeam1Score() < model.model.getTeam2Score()){
+						paText2.setColor(Color.RED);
+						paText1.setColor(Color.BLACK);
+					}else{
+						paText1.setColor(Color.BLACK);
+						paText2.setColor(Color.BLACK);
+					}
+				}
+				String name1 = controller.getTeamNationalName(model.model.getTeam1Code());
+				String name2 = controller.getTeamNationalName(model.model.getTeam2Code());
+				Rect txtSize1 = getTextSize(paText1, name1);
+				Rect txtSize2 = getTextSize(paText2, name2);
+				cv.drawText(name1, model.pointFlag1.x + flagWidth/2 - txtSize1.width()/2  ,
+						model.pointFlag1.y + flagHight + txtSize1.height() + flagHight/2, paText1);
+				cv.drawText(name2, model.pointFlag2.x + flagWidth/2 - txtSize2.width()/2 , 
+						model.pointFlag2.y + flagHight + txtSize2.height() + flagHight/2, paText2);
+				
+				//draw score
+				paScore.setTextSize(ResourceHelper.dip2px(context, 12));
+				paScore.setTypeface(Typeface.DEFAULT_BOLD);
+				String score = "";
+				if(model.model.getMatchStatus() == MatchStatus.MATCH_STATUS_WAIT_START){
+					score = model.model.getMatchTime().getTimeString();
+					paScore.setColor(res.getColor(R.color.gray));
+				}else{
+					score = String.format("%d:%d", model.model.getTeam1Score(), model.model.getTeam2Score());
+					paScore.setColor(res.getColor(R.color.score));
+				}
+				Rect scoreSize = getTextSize(paScore, score);
+				cv.drawText(score, 
+						model.rect.left + itemWidth/2 - scoreSize.width()/2 , 
+						model.rect.top + itemHeight/2 + scoreSize.height()/2,
+						paScore);
+				
+				//draw time
+				String time = String.format("[%d] %s", 
+						model.model.getMatchNo(), 
+						model.model.getMatchTime().getDateString());
+				paTime.setTextSize(ResourceHelper.dip2px(context, 12));
+				paTime.setTypeface(Typeface.DEFAULT_BOLD);
+				Rect timeSize = getTextSize(paTime, time);
+				cv.drawText(time, 
+						model.rect.left + itemWidth/2 - timeSize.width()/2 , 
+						model.pointFlag1.y - flagHight/2,
+						paScore);
 			}
-			Rect scoreSize = getTextSize(paScore, score);
-			cv.drawText(score, 
-					model.rect.left + itemWidth/2 - scoreSize.width()/2 , 
-					model.rect.top + itemHeight/2 + scoreSize.height()/2,
-					paScore);
 			
-			//draw score
-			
+			if(needDrawLogo){
+				//draw logo
+				Bitmap logo = BitmapFactory.decodeStream(res.openRawResource(R.drawable.logo_ic));
+				cv.drawBitmap(logo, 
+						bgWidth/2 - logo.getWidth()/2, 
+						bgHeight/2 - itemHeight/2 - logo.getHeight() - marginHeight/2, 
+						null);
+				logo.recycle();
+			}
 		}
 	}
 	
@@ -233,8 +294,6 @@ public class ImageCreator {
 		
 		Rect rect = new Rect();  
 		paint.getTextBounds(str, 0, str.length(), rect);  
-		int w = rect.width();  
-		int h = rect.height(); 
 		return rect;
 	}
 
