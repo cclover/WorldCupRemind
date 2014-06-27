@@ -1,6 +1,7 @@
 package com.cc.worldcupremind.view;
 
 import com.cc.worldcupremind.R;
+import com.cc.worldcupremind.common.AdsHelper;
 import com.cc.worldcupremind.common.DataOperateHelper;
 import com.cc.worldcupremind.common.ImageCreator;
 import com.cc.worldcupremind.common.LogHelper;
@@ -73,6 +74,12 @@ public class GroupFragment extends BaseFragment {
 				LogHelper.d(TAG, "Click the full screen image");
 				Intent intent = new Intent(getActivity(), KonckoutMatchActivity.class);
 				startActivity(intent);
+				
+				//show ads
+				AdsHelper helper = ((MainActivity)getActivity()).getAdsHelper();
+				if(helper != null){
+					helper.showAdsInFullScreenRandom();
+				}
 			}
 		});
 		super.onCreateView(inflater, container, savedInstanceState); 

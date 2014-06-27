@@ -297,6 +297,10 @@ public class MainActivity extends ActionBarActivity implements
 		}else if(id == R.id.action_second){ //Show second stage
 			Intent intent = new Intent(this, KonckoutMatchActivity.class);
 			startActivity(intent);
+			
+			//show ads
+			adsHelper.showAdsInFullScreenRandom();
+			
 		}else if(id == R.id.action_statistics){ //Switch the goal/assist
 			if(statisticsFragment != null){
 				if(statisticsFragment.setGoalAssistList()){

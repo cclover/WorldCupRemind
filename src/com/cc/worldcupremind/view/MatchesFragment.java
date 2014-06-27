@@ -543,6 +543,11 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 			if(url.length() > 0){
 
 				Intent intent = new Intent(Intent.ACTION_VIEW); 
+				//show ads
+				AdsHelper helper = ((MainActivity)getActivity()).getAdsHelper();
+				if(helper != null){
+					helper.showAdsInFullScreenRandom();
+				}
 				//open infi
 				if(match.getExtType() == MatchesModel.EXT_TYPE_NEWS){
 					//Show news
@@ -550,12 +555,6 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 					context.startActivity(intent);
 				}else if(match.getExtType() == MatchesModel.EXT_TYPE_VIDEO){
 					
-					//show ads
-					AdsHelper helper = ((MainActivity)getActivity()).getAdsHelper();
-					if(helper != null){
-						helper.showAdsInFullScreenRandom();
-					}
-
 					//show video
 					intent.setDataAndType(Uri.parse(url), "video/mp4");  //Open video
 					try{
