@@ -76,7 +76,7 @@ public class MatchRemindReceiver extends BroadcastReceiver {
 			
 			//Start alarm activity
 			intent.setClass(context, AlarmActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY );
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //| Intent.FLAG_ACTIVITY_NO_HISTORY can't use this for multi intent on singleinstance acticity
 			context.startActivity(intent);
 		}
 	}

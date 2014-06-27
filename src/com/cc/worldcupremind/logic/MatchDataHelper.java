@@ -16,6 +16,7 @@ import android.util.Log;
 import android.util.SparseArray;
 
 import com.cc.worldcupremind.common.DataOperateHelper;
+import com.cc.worldcupremind.common.ImageCreator;
 import com.cc.worldcupremind.common.LogHelper;
 import com.cc.worldcupremind.model.GroupStatistics;
 import com.cc.worldcupremind.model.MatchDate;
@@ -40,7 +41,6 @@ class MatchDataHelper {
 	private static final String DATA_MATCHES_FILE = "matches.json";
 	private static final String DATA_REMIND_FILE = "remind.json";
 	private static final String DATA_STATISTICS_FILE = "statistics.json";
-	private static final String DATA_SECOND_STAGE_PIC = "secondstage.png";
 	private static final String FILE_ENCODE_FORMAT = "UTF-8";
 	
 	/** matches.json format */
@@ -418,12 +418,6 @@ class MatchDataHelper {
 				return false;
 			}
 		}
-		if(matchStage != MatchStage.STAGE_GROUP){
-			LogHelper.d(TAG, "update the second stage pic");
-			donwloadSecondStagePic();
-		}else{
-			LogHelper.d(TAG, "Current in GROUP stage, no need update the pic");
-		}
 		LogHelper.d(TAG, "all update success!");
 		return true;
 	}
@@ -560,44 +554,8 @@ class MatchDataHelper {
 //		DataOperateHelper.deleteLoaclFile(context, DATA_REMIND_FILE);
 		Boolean ret1 = DataOperateHelper.deleteLoaclFile(context, DATA_MATCHES_FILE);
 		Boolean ret2 = DataOperateHelper.deleteLoaclFile(context, DATA_STATISTICS_FILE);
-		Boolean ret3 = DataOperateHelper.deleteLoaclFile(context, DATA_SECOND_STAGE_PIC);
+		Boolean ret3 = DataOperateHelper.deleteLoaclFile(context, ImageCreator.DATA_SECOND_STAGE_IMAGE);
 		return ret1 && ret2 && ret3;
-	}
-	
-	private Boolean donwloadSecondStagePic(){
-		
-		LogHelper.d(TAG, "donwloadSecondStagePic()");	
-		//InputStream picInStream = DataOperateHelper.loadFileFromFTPNetwork(DATA_SECOND_STAGE_PIC);
-		
-		HttpURLConnection conn = DataOperateHelper.conectHTTPServer(DATA_SECOND_STAGE_PIC);
-		if(conn == null){
-			LogHelper.w(TAG, "Fail to donwloadSecondStagePic");
-			return false;
-		}
-		InputStream picInStream = DataOperateHelper.loadFileFromHTTPNetwork(conn);
-		
-		if(picInStream == null){
-			LogHelper.w(TAG, "Fail to donwloadSecondStagePic");
-			return false;
-		}
-		
-		Boolean ret = DataOperateHelper.saveStream2LocalFile(context, picInStream, DATA_SECOND_STAGE_PIC);
-		//Close stream
-		try {
-			picInStream.close();
-		} catch (IOException e) {
-			LogHelper.e(TAG, e);
-		}
-		//check result
-		if(!ret){
-			LogHelper.w(TAG, "Save secondstage pic failed");
-			return false;
-		}
-		
-		DataOperateHelper.disconnectHTTPServer(conn);
-		
-		LogHelper.d(TAG, "Save secondstage pic");
-		return true;
 	}
 	
 	/**

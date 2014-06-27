@@ -143,5 +143,10 @@
 	<color name="mediumblue">#0000CD</color><!--中兰色 --> 
 	<color name="darkblue">#00008B</color><!--暗蓝色 --> 
 	<color name="navy">#000080</color><!--海军色 --> 
+	
 	<color name="score">#6CA6CD</color>
+	<color name="match_area_16">#E0E0E0</color>
+	<color name="match_area_2">#bdfea2</color>
+	<color name="match_area_final">#faf18a</color>
+	
 </resources>

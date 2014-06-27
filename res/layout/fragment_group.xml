@@ -10,16 +10,17 @@
     
     
     <FrameLayout
-        android:id="@+id/imgSecondStage"
+        android:id="@+id/layoutSecondStage"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:background="@color/gray"
         android:layout_marginBottom="5dp">
         
         <ImageView
+            android:id="@+id/imgSecondStage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitXY"
-       		android:background="@drawable/secondstage"/>       		
+            android:scaleType="fitXY"/>       		
         
         <ImageView
             android:id="@+id/imgFullScreen"
@@ -30,12 +31,33 @@
             android:alpha="0.7"
        		android:background="@drawable/ic_av_full_screen"/>  
        		
+		<TextView 
+			android:id="@+id/txtSecondFail"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:gravity="center"
+			android:textSize="16sp"
+			android:visibility="gone"
+			android:textColor="@color/red"
+			android:text="@string/str_secondstage_fail"/>
+		
+		<TextView 
+            android:id="@+id/txtSecondFull"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:layout_marginBottom="5dp"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:text="@string/str_secondstage_full"/>
+       		
        	<ProgressBar 
 	        android:id="@+id/progress_img_load"
 	       	android:layout_gravity="center"
 	       	android:layout_width="50dp"
-	        android:layout_height="50dp"
-	        android:visibility="gone"/>
+	        android:layout_height="50dp"/>
         
     </FrameLayout>
     

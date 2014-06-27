@@ -81,7 +81,7 @@ public class MatchDate {
 		if(date == null){
 			return "";
 		}
-		String time = DateUtils.formatDateTime(context, date.getTime(), DateUtils.FORMAT_SHOW_TIME);  
+		String time = DateUtils.formatDateTime(context, date.getTime(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_24HOUR);  
 		if(time.length() < 5){
 			return String.format("0%s", time); //On some device time will show 0:30
 		}

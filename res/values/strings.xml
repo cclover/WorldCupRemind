@@ -81,6 +81,8 @@
 	<string name="str_group_gf">GF</string>
 	<string name="str_group_ga">GA</string>
 	<string name="str_group_pts">MP</string>
+	<string name="str_secondstage_full">FULL SCREEN</string>
+	<string name="str_secondstage_fail">FAIL TO LOAD THE SECOND STAGE MATCHES IMAGE</string>
 	
 	<!-- Statistics Info -->
 	<string name="str_player_goal">GOAL(Pen)</string>

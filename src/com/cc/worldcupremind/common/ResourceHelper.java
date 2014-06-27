@@ -103,6 +103,17 @@ public class ResourceHelper {
 		return res.getDrawable(R.drawable.t_null);
 	}
 	
+	public int getFlagResourceIDByCode(String teamCode){
+		if(nationalImageMap.containsKey(teamCode)){
+			return nationalImageMap.get(teamCode);
+		}
+		return R.drawable.t_null;	
+	}
+	
+	public int getNaemResourceIDByCode(String teamCode){
+		return nationalNameMap.get(teamCode);
+	}
+	
 	/**
 	 * Load the team's name id from resource
 	 * 
