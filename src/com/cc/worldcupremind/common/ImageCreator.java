@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.logic.MatchDataController;
+import com.cc.worldcupremind.model.MatchStage;
 import com.cc.worldcupremind.model.MatchStatus;
 import com.cc.worldcupremind.model.MatchesModel;
 
@@ -212,7 +213,9 @@ public class ImageCreator {
 				paText1.setTextSize(ResourceHelper.dip2px(context, 12));
 				paText1.setTypeface(Typeface.DEFAULT_BOLD);
 				paText1.setColor(Color.DKGRAY);
-				paText2 = paText1;
+				paText2.setTextSize(ResourceHelper.dip2px(context, 12));
+				paText2.setTypeface(Typeface.DEFAULT_BOLD);
+				paText2.setColor(Color.DKGRAY);
 				if(model.model.getMatchStatus() == MatchStatus.MATCH_STATUS_OVER){
 					//winner text color
 					if(model.model.getTeam1Score() > model.model.getTeam2Score()){
@@ -243,14 +246,33 @@ public class ImageCreator {
 					score = model.model.getMatchTime().getTimeString();
 					paScore.setColor(res.getColor(R.color.gray));
 				}else{
-					score = String.format("%d:%d", model.model.getTeam1Score(), model.model.getTeam2Score());
 					paScore.setColor(res.getColor(R.color.score));
+					score = String.format("%d:%d", model.model.getTeam1Score(), model.model.getTeam2Score());
 				}
 				Rect scoreSize = getTextSize(paScore, score);
-				cv.drawText(score, 
-						model.rect.left + itemWidth/2 - scoreSize.width()/2 , 
-						model.rect.top + itemHeight/2 + scoreSize.height()/2,
-						paScore);
+				if(model.model.getIsPen()){
+					
+					cv.drawText(score, 
+							model.rect.left + itemWidth/2 - scoreSize.width()/2 , 
+							model.rect.top + itemHeight/2 + scoreSize.height()/4,
+							paScore);
+					
+					String nineScore = String.format("(%d:%d)",
+							model.model.getNinetyScore1(), model.model.getNinetyScore2());
+					paScore.setTextSize(ResourceHelper.dip2px(context, 10));
+					Rect nineSize = getTextSize(paScore, nineScore);
+					cv.drawText(nineScore, 
+							model.rect.left + itemWidth/2 - nineSize.width()/2, 
+							model.rect.top + itemHeight/2 + nineSize.height()/4 + scoreSize.height(),
+							paScore);
+				}else{
+					
+					cv.drawText(score, 
+							model.rect.left + itemWidth/2 - scoreSize.width()/2 , 
+							model.rect.top + itemHeight/2 + scoreSize.height()/2,
+							paScore);
+				}
+				
 				
 				//draw time
 				String time = String.format("[%d] %s", 
@@ -262,7 +284,7 @@ public class ImageCreator {
 				cv.drawText(time, 
 						model.rect.left + itemWidth/2 - timeSize.width()/2 , 
 						model.pointFlag1.y - flagHight/2,
-						paScore);
+						paTime);
 			}
 			
 			if(needDrawLogo){

@@ -18,7 +18,10 @@ public class MatchesModel {
 	/* Match Result */
 	private int team1Score;
 	private int team2Score;
-	
+	private int ninetyScore1;
+	private int ninetyScore2;
+	private Boolean isPen;
+
 	public static final int EXT_TYPE_NEWS = 1;
 	public static final int EXT_TYPE_VIDEO = 2;
 	
@@ -38,6 +41,9 @@ public class MatchesModel {
 		this.isRemind = isRemind;
 		this.extInfo = "";
 		this.extType = EXT_TYPE_NEWS;
+		this.ninetyScore1 = 0;
+		this.ninetyScore2 = 0;
+		this.isPen = false;
 	}
 
 
@@ -151,6 +157,39 @@ public class MatchesModel {
 	 */
 	public int getExtType() {
 		return extType;
+	}
+	
+
+	/**
+	 * @return the ninetyScore2
+	 */
+	public int getNinetyScore2() {
+		return ninetyScore2;
+	}
+
+
+	/**
+	 * @param ninetyScore2 the ninetyScore2 to set
+	 */
+	public void setNinetyScore(int score1, int score2) {
+		if(score1 >= 0 && score2 >= 0){
+			this.ninetyScore1 = score1;
+			this.ninetyScore2 = score2;
+			isPen = true;
+		}
+	}
+
+	
+	/**
+	 * @return the ninetyScore1
+	 */
+	public int getNinetyScore1() {
+		return ninetyScore1;
+	}
+	
+	
+	public Boolean getIsPen(){
+		return isPen;
 	}
 	
 }

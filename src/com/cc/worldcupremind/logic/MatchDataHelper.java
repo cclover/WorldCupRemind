@@ -63,6 +63,8 @@ class MatchDataHelper {
 	private static final String JSON_MATCHES_STAGE = "stage";			/* Int */
 	private static final String JSON_MATCHES_VIDEO_URL = "videoURL";	/* String */	
 	private static final String JSON_MATCHES_NEWS_URL = "matchURL";		/* String */	
+	private static final String JSON_MATCHES_FILED_NS1 = "ns1";			/* Int */
+	private static final String JSON_MATCHES_FILED_NS2 = "ns2";			/* Int */
 	
 	/** remind.json format */
 	private static final String JSON_REMIND_LIST = "Remind";			/* Array */
@@ -868,6 +870,10 @@ class MatchDataHelper {
 					}else{
 						matchItem.setExtInfo(String.format(matchNewsURLFormat, extInfo), MatchesModel.EXT_TYPE_NEWS);//Combine the NES URL
 					}
+				}
+				if(matchItem.getMatchStage() != MatchStage.STAGE_GROUP && 
+						matchItem.getMatchStatus() == MatchStatus.MATCH_STATUS_OVER){
+					matchItem.setNinetyScore(matchObj.optInt(JSON_MATCHES_FILED_NS1, -1), matchObj.optInt(JSON_MATCHES_FILED_NS2, -1));
 				}
 				matchesList.put(matchNo, matchItem);
 			}
