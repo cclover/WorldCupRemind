@@ -1,4 +1,4 @@
-{"version":2.481,"team":"http://sports1.sina.cn/worldcup/team?teamid=%s&vt=4","groups":[
+{"version":2.482,"team":"http://sports1.sina.cn/worldcup/team?teamid=%s&vt=4","groups":[
 {"team":"bra","group":"A","w":2,"d":1,"l":0,"gf":7,"ga":2,"pts":7,"pos":1,"id":"952"},
 {"team":"cro","group":"A","w":1,"d":0,"l":2,"gf":6,"ga":6,"pts":3,"pos":3,"id":"930"},
 {"team":"mex","group":"A","w":2,"d":1,"l":0,"gf":4,"ga":1,"pts":7,"pos":2,"id":"1545"},
