@@ -504,10 +504,8 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 
 				Intent intent = new Intent(Intent.ACTION_VIEW); 
 				//show ads
-				AdsHelper helper = ((MainActivity)getActivity()).getAdsHelper();
-				if(helper != null){
-					helper.showAdsInFullScreenRandom();
-				}
+				((MainActivity)getActivity()).showWidgetAds();
+				
 				//open infi
 				if(match.getExtType() == MatchesModel.EXT_TYPE_NEWS){
 					//Show news
@@ -589,6 +587,9 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 						Intent intent = new Intent(Intent.ACTION_VIEW); 
 						intent.setData(Uri.parse(url));
 						context.startActivity(intent);
+						
+						//show ads
+						((MainActivity)getActivity()).showWidgetAds();
 					}
 				}
 			}	

@@ -532,8 +532,10 @@ public class MainActivity extends ActionBarActivity implements
 		}
 	}
 	
-	public AdsHelper getAdsHelper(){
-		return adsHelper;
+	public void showWidgetAds(){
+		if(adsHelper != null){
+			adsHelper.showAdsInFullScreenRandom();
+		}
 	}
 	
 	@Override

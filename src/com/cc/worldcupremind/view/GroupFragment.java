@@ -77,10 +77,7 @@ public class GroupFragment extends BaseFragment {
 				startActivity(intent);
 				
 				//show ads
-				AdsHelper helper = ((MainActivity)getActivity()).getAdsHelper();
-				if(helper != null){
-					helper.showAdsInFullScreenRandom();
-				}
+				((MainActivity)getActivity()).showWidgetAds();
 			}
 		});
 		super.onCreateView(inflater, container, savedInstanceState); 
@@ -248,6 +245,9 @@ public class GroupFragment extends BaseFragment {
 								Intent intent = new Intent(Intent.ACTION_VIEW); 
 								intent.setData(Uri.parse(url));
 								context.startActivity(intent);
+								
+								//Show ads
+								((MainActivity)getActivity()).showWidgetAds();
 							}
 						}
 					});

@@ -153,7 +153,7 @@ public class AdsHelper {
 	
 	public void showAdsInFullScreenRandom(){
 		int count = (int)(Math.random()*10+1) ;
-		if(count == 1 || count == 3 || count == 9 ||  count == 7){
+		if(count % 2 == 0 || count == 7){
 			showAdsInFullScreen();
 		}
 	}
