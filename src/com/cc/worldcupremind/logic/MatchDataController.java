@@ -80,6 +80,13 @@ public class MatchDataController extends BroadcastReceiver implements MatchDataL
 	}
 	
 	/**
+	 * Get team info url
+	 */
+	public String getTeamURL(String teamCode){
+		return dataHelper.getTeamURL(teamCode);
+	}
+	
+	/**
 	 * @return the updateInfo
 	 */
 	public String getUpdateInfo() {

@@ -68,7 +68,7 @@
 	<string name="str_info_live">"文字直播"</string>
 	<string name="str_info_match">"比赛信息"</string>
 	<string name="str_viedo_alert_title">"流量提醒"</string>
-	<string name="str_viedo_alert_message">"观看视频或新闻会产生网络流量，请问是否继续？"</string>
+	<string name="str_viedo_alert_message">"观看网络视频会产生网络流量，请问是否继续？"</string>
 	<string name="str_viedo_checkbox">"不再提醒"</string>
 	<string name="str_viedo_button">"继续访问"</string>
 	

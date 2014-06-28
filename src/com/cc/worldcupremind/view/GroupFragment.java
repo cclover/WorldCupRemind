@@ -15,6 +15,7 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -227,6 +228,22 @@ public class GroupFragment extends BaseFragment {
 					holder.value_gf = (TextView)convertView.findViewById(R.id.value_gf);
 					holder.value_ga = (TextView)convertView.findViewById(R.id.value_ga);
 					holder.value_pts = (TextView)convertView.findViewById(R.id.value_pts);
+					holder.flag.setOnClickListener(new View.OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							String teamCode = v.getTag().toString();
+							if(teamCode == null || teamCode.length() == 0){
+								return;
+							}
+							String url = controller.getTeamURL(teamCode);
+							if(url.length() > 0){
+								Intent intent = new Intent(Intent.ACTION_VIEW); 
+								intent.setData(Uri.parse(url));
+								context.startActivity(intent);
+							}
+						}
+					});
 					convertView.setTag(holder);
 				}else{
 					holder = (ViewHolderTeam) convertView.getTag();
@@ -236,6 +253,7 @@ public class GroupFragment extends BaseFragment {
 				GroupStatistics item = getTeamInfo(position);
 				Drawable drawable = controller.getTeamNationalFlag(item.getTeamCode());
 				holder.flag.setImageDrawable(drawable);
+				holder.flag.setTag(item.getTeamCode());
 				holder.value_team.setText(controller.getTeamNationalName(item.getTeamCode()));
 				if(item.getPosition() <= 2 && item.getPoint() > 0){
 					holder.star.setVisibility(View.VISIBLE);
