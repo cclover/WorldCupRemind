@@ -360,6 +360,7 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 				     holder.flag1 = (ImageView)convertView.findViewById(R.id.imgFlag1);
 				     holder.team1 = (TextView)convertView.findViewById(R.id.txtTeam1);
 				     holder.score = (TextView)convertView.findViewById(R.id.txtScore);
+				     holder.ninetyScore = (TextView)convertView.findViewById(R.id.txtNinetyScore);
 				     holder.info = (TextView)convertView.findViewById(R.id.txtInfo);
 				     holder.team2 = (TextView)convertView.findViewById(R.id.txtTeam2);
 				     holder.flag2 = (ImageView)convertView.findViewById(R.id.imgFlag2);
@@ -402,6 +403,12 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 				}else{
 					holder.score.setText(String.format("%d:%d", model.getTeam1Score(), model.getTeam2Score()));
 					holder.score.setTextColor(resource.getColor(R.color.score));
+				}
+				if(model.getIsPen()){
+					holder.ninetyScore.setText(String.format("(%d:%d)", model.getNinetyScore1(), model.getNinetyScore2()));
+					holder.ninetyScore.setVisibility(View.VISIBLE);
+				}else{
+					holder.ninetyScore.setVisibility(View.GONE);
 				}
 				
 				//winner text color
@@ -593,6 +600,7 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 			TextView group;
 			ImageView flag1;
 			TextView team1;
+			TextView ninetyScore;
 			TextView score;
 			TextView info;
 			TextView team2;
