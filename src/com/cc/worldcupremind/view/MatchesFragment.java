@@ -286,8 +286,10 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 
 	class MatchesAdapter extends BaseAdapter{
 	
+		private ItemClickListener listener;
+		
 		public MatchesAdapter(){
-			
+			listener = new ItemClickListener();
 		}
 
 		@Override
@@ -362,53 +364,9 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 				     holder.flag2 = (ImageView)convertView.findViewById(R.id.imgFlag2);
 				     holder.remind = (CheckBox)convertView.findViewById(R.id.chkRemind);
 				     holder.imgRemind = (ImageView)convertView.findViewById(R.id.imgRemind);
-				     holder.info.setOnClickListener(new View.OnClickListener() {
-						
-						@Override
-						public void onClick(View v) {
-							int pos = Integer.parseInt(v.getTag().toString());
-							final MatchesModel match = matchDataList.get(pos);
-							if(match == null){
-								LogHelper.w(TAG, "match not exist");
-								return;
-							}
-							//check need alert
-							if(controller.needAlertWhenPlayVideo()){
-								
-								//Add check box
-								LinearLayout layout = new LinearLayout(context);
-								LinearLayout.LayoutParams params 
-									= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-								params.leftMargin = ResourceHelper.dip2px(context,10);
-								params.gravity = Gravity.CENTER_VERTICAL;
-								final CheckBox box = new CheckBox(context);
-								box.setText(R.string.str_viedo_checkbox);
-								box.setTextColor(resource.getColor(R.color.gray));
-								layout.addView(box, params);
-								
-								//Show alert box
-								AlertDialog.Builder builder = new AlertDialog.Builder(context);
-								builder.setTitle(R.string.str_viedo_alert_title);
-								builder.setMessage(R.string.str_viedo_alert_message);
-								builder.setIcon(R.drawable.ic_match_video);
-								builder.setView(layout);
-								builder.setPositiveButton(R.string.str_viedo_button, new OnClickListener() {	
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-										openNewsAndVideo(match);
-										if(box.isChecked()){
-											controller.setVideoAlert(false);
-										}
-									}
-								});
-								builder.setNegativeButton(android.R.string.cancel, null);
-								builder.show();
-							}else{
-								openNewsAndVideo(match);
-							}
-						}
-					});
-				     
+				     holder.flag1.setOnClickListener(listener);
+				     holder.flag2.setOnClickListener(listener);
+				     holder.info.setOnClickListener(listener); 
 				     convertView.setTag(holder);
 				} else {
 				     holder = (ViewHolder)convertView.getTag();
@@ -427,11 +385,13 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 				Drawable drawable1= controller.getTeamNationalFlag(model.getTeam1Code());
 				if(drawable1 != null){
 					holder.flag1.setImageDrawable(drawable1);
+					holder.flag1.setTag(model.getTeam1Code());
 				}
 				holder.team2.setText(controller.getTeamNationalName(model.getTeam2Code()));
 				Drawable drawable2 = controller.getTeamNationalFlag(model.getTeam2Code());
 				if(drawable2 != null){
 					holder.flag2.setImageDrawable(drawable2);
+					holder.flag2.setTag(model.getTeam1Code());
 				}
 				
 				//Match time or score
@@ -567,6 +527,71 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 					}
 				}
 			}
+		}
+		
+		class ItemClickListener implements View.OnClickListener{
+
+			@Override
+			public void onClick(View v) {
+				if(v.getId() == R.id.txtInfo){
+				
+					int pos = Integer.parseInt(v.getTag().toString());
+					final MatchesModel match = matchDataList.get(pos);
+					if(match == null){
+						LogHelper.w(TAG, "match not exist");
+						return;
+					}
+					//check need alert
+					if(controller.needAlertWhenPlayVideo() && match.getExtType() == MatchesModel.EXT_TYPE_VIDEO){
+						
+						//Add check box
+						LinearLayout layout = new LinearLayout(context);
+						LinearLayout.LayoutParams params 
+							= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+						params.leftMargin = ResourceHelper.dip2px(context,10);
+						params.gravity = Gravity.CENTER_VERTICAL;
+						final CheckBox box = new CheckBox(context);
+						box.setText(R.string.str_viedo_checkbox);
+						box.setTextColor(resource.getColor(R.color.gray));
+						layout.addView(box, params);
+						
+						//Show alert box
+						AlertDialog.Builder builder = new AlertDialog.Builder(context);
+						builder.setTitle(R.string.str_viedo_alert_title);
+						builder.setMessage(R.string.str_viedo_alert_message);
+						builder.setIcon(R.drawable.ic_match_video);
+						builder.setView(layout);
+						builder.setPositiveButton(R.string.str_viedo_button, new OnClickListener() {	
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								openNewsAndVideo(match);
+								if(box.isChecked()){
+									controller.setVideoAlert(false);
+								}
+							}
+						});
+						builder.setNegativeButton(android.R.string.cancel, null);
+						builder.show();
+					}else{
+						openNewsAndVideo(match);
+					}
+				}else if(v.getId() == R.id.imgFlag1 || v.getId() == R.id.imgFlag2){
+					
+					//Get url
+					String teamCode = v.getTag().toString();
+					if(teamCode == null || teamCode.length() == 0){
+						return;
+					}
+					
+					//Visit url
+					String url = controller.getTeamURL(teamCode);
+					if(url.length() > 0){
+						Intent intent = new Intent(Intent.ACTION_VIEW); 
+						intent.setData(Uri.parse(url));
+						context.startActivity(intent);
+					}
+				}
+			}	
 		}
 		
 		class ViewHolder{

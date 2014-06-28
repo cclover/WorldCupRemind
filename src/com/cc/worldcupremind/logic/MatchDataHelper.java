@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -87,6 +88,8 @@ class MatchDataHelper {
 	private static final String JSON_STATISTICS_PLAYER_POS= "pos";
 	private static final String JSON_STATISTICS_PLAYER_ENG_NAME= "eng";
 	private static final String JSON_STATISTICS_PLAYER_EXT= "ext";
+	private static final String JSON_STATISTICS_TEAM_ID = "id";
+	private static final String JSON_STATISTICS_TEAM_URL = "team";
 	
 	/** version.json format */
 	private static final String JSON_VERSION_MATCHES = "matchesVer";		/* Double */
@@ -134,6 +137,11 @@ class MatchDataHelper {
 	/** Match stage */
 	private MatchStage matchStage;
 	
+	/** Team base URL */
+	private String teamURL;
+	
+	/** Team URL List */
+	private HashMap<String, String> tameURLList;
 
 	/** Match video/news URL */
 	private String matchVideoURLFormat;
@@ -151,9 +159,17 @@ class MatchDataHelper {
 		this.groupStatisticsList = new ArrayList<GroupStatistics>();
 		this.goalStatisticsList = new ArrayList<PlayerStatistics>();
 		this.assistStatisticsList = new ArrayList<PlayerStatistics>();
+		this.tameURLList = new HashMap<String, String>();
 		this.context = context;
 		matchesCount = 0;
 		teamsCount = 0;
+	}
+	
+	public String getTeamURL(String teamCode){
+		if(tameURLList.containsKey(teamCode)){
+			return String.format(teamURL, tameURLList.get(teamCode));
+		}
+		return "";
 	}
 			
 	/**
@@ -900,6 +916,9 @@ class MatchDataHelper {
 			tmpVersion = rootObj.getDouble(JSON_STATISTICS_DATA_VERSION);
 	    	LogHelper.i(TAG, "The statistics data version is:" + String.valueOf(tmpVersion));
 	    	
+	    	//team url
+	    	teamURL = rootObj.optString(JSON_STATISTICS_TEAM_URL);
+	    	
 	    	//parse statistics group data
 	    	LogHelper.d(TAG, "parse group statistics");
 			JSONArray groupArray = rootObj.getJSONArray(JSON_STATISTICS_ARRAY_GROUP);
@@ -914,6 +933,12 @@ class MatchDataHelper {
 				int ga = teamObj.getInt(JSON_STATISTICS_FILED_GA);
 				int pts = teamObj.getInt(JSON_STATISTICS_FILED_POINT);
 				int pos = teamObj.getInt(JSON_STATISTICS_FILED_POS);
+				
+				//save the team id if exist
+				if(teamURL.length() > 0){
+					String id = teamObj.getString(JSON_STATISTICS_TEAM_ID);
+					tameURLList.put(teamCode, id);
+				}
 				
 				GroupStatistics team = new GroupStatistics(teamCode, group, win, draw, lose, gf, ga, pts, pos);
 				groupStatisticsList.add(team);
