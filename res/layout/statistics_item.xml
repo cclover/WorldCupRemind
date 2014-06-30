@@ -29,7 +29,7 @@
 	    android:scaleType="centerInside"/>
    	
    	<TextView android:id="@+id/txtStatName"
-	    android:layout_width="wrap_content"
+	    android:layout_width="100dp"
 	    android:layout_height="wrap_content"
 	    android:layout_toRightOf="@id/imgStatFlag"
 	   	android:layout_centerVertical="true"
@@ -54,9 +54,10 @@
 	    android:layout_alignParentRight="true"/>
    	
      <TextView android:id="@+id/txtStatNatinoal"
-	    android:layout_width="wrap_content"
+	    android:layout_width="100dp"
 	    android:layout_height="wrap_content"
 	    android:layout_centerVertical="true"
+	    android:gravity="right"
 	    android:layout_marginRight="2dp"
 	    android:layout_toLeftOf="@id/imgStatNationalFlag"
 	    android:textSize="17sp"

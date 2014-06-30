@@ -116,13 +116,15 @@ public class MatchDate {
 		
 		Calendar calendar = Calendar.getInstance();  
 		calendar.setTime(date);
-		int d = calendar.get(Calendar.DATE);
 		
 		Calendar calendarNow = Calendar.getInstance();  
 		calendarNow.setTime(new Date());
-		int dNow = calendarNow.get(Calendar.DATE);
 		
-		return ((dNow == d) || (dNow + 1 == d));
+		Calendar calendarNext = Calendar.getInstance();  
+		calendarNext.add(Calendar.DATE, 1);
+		
+		return  calendarNow.before(calendar) && 
+				calendarNext.getTimeInMillis() >= calendar.getTimeInMillis();
 	}
 	
 	public Boolean isWeekend(){
