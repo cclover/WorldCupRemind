@@ -392,7 +392,7 @@ public class MatchesFragment extends BaseFragment implements View.OnClickListene
 				Drawable drawable2 = controller.getTeamNationalFlag(model.getTeam2Code());
 				if(drawable2 != null){
 					holder.flag2.setImageDrawable(drawable2);
-					holder.flag2.setTag(model.getTeam1Code());
+					holder.flag2.setTag(model.getTeam2Code());
 				}
 				
 				//Match time or score
