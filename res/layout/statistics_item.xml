@@ -2,10 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_horizontal_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_horizontal_margin" >
+    android:paddingBottom="@dimen/activity_horizontal_margin_in"
+    android:paddingLeft="@dimen/activity_horizontal_margin_in"
+    android:paddingRight="@dimen/activity_horizontal_margin_in"
+    android:paddingTop="@dimen/activity_horizontal_margin_in" >
     
    <TextView android:id="@+id/txtStatPos"
 	    android:layout_width="wrap_content"
@@ -29,7 +29,7 @@
 	    android:scaleType="centerInside"/>
    	
    	<TextView android:id="@+id/txtStatName"
-	    android:layout_width="wrap_content"
+	    android:layout_width="100dp"
 	    android:layout_height="wrap_content"
 	    android:layout_toRightOf="@id/imgStatFlag"
 	   	android:layout_centerVertical="true"
@@ -54,9 +54,10 @@
 	    android:layout_alignParentRight="true"/>
    	
      <TextView android:id="@+id/txtStatNatinoal"
-	    android:layout_width="wrap_content"
+	    android:layout_width="100dp"
 	    android:layout_height="wrap_content"
 	    android:layout_centerVertical="true"
+	    android:gravity="right"
 	    android:layout_marginRight="2dp"
 	    android:layout_toLeftOf="@id/imgStatNationalFlag"
 	    android:textSize="17sp"
