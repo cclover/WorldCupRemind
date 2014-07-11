@@ -3,6 +3,10 @@ package com.cc.worldcupremind.view;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.bodong.dianjinweb.DianJinPlatform;
+import com.bodong.dianjinweb.banner.DianJinBanner;
+import com.bodong.dianjinweb.banner.DianJinBanner.AnimationType;
+import com.bodong.dianjinweb.listener.ChannelListener;
 import com.cc.worldcupremind.R;
 import com.cc.worldcupremind.common.AdsHelper;
 import com.cc.worldcupremind.common.LogHelper;
@@ -75,6 +79,7 @@ public class MainActivity extends ActionBarActivity implements
 	int selectServerID;
 	ViewGroup adsWidgetContainer = null;
 	AdsHelper adsHelper = null;
+	DianJinBanner banner = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +88,9 @@ public class MainActivity extends ActionBarActivity implements
 		
 		LogHelper.d(TAG, "onCreate");
 		super.onCreate(savedInstanceState);
+		
+		DianJinPlatform.initialize(this, 53222, "2608b3e6e7582a3c760a015adec8fb24",1001);
+		
 		setContentView(R.layout.activity_main);
 		isExit = false;
 
@@ -193,6 +201,23 @@ public class MainActivity extends ActionBarActivity implements
 //		});
 		adsHelper.initAds();
 		
+		DianJinPlatform.hideFloatView(MainActivity.this);
+		banner = (DianJinBanner) findViewById(R.id.dianJinBaaner1);
+		DianJinPlatform.requestChannelEnable(getApplicationContext(),
+				new ChannelListener() {
+
+					@Override
+					public void onError(int arg0, String arg1) {
+
+					}
+
+					@Override
+					public void onSuccess(boolean arg0) {
+						banner.startBanner();
+					}
+					
+		});
+		
 		// Load data
 		LogHelper.d(TAG, "Load data!");
 		controller = MatchDataController.getInstance();
@@ -212,6 +237,7 @@ public class MainActivity extends ActionBarActivity implements
 	{
 		LogHelper.d(TAG, "onDestroy");
 		super.onDestroy();
+		DianJinPlatform.destory(MainActivity.this);
 		controller.removeListener(this);
 	}
 

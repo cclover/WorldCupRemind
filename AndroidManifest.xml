@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cc.worldcupremind"
-    android:versionCode="5"
-    android:versionName="1.5" >
+    android:versionCode="6"
+    android:versionName="1.6" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -18,6 +18,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+   	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
    	
 
     <application
@@ -79,6 +82,22 @@
 	        android:configChanges="orientation|keyboardHidden|screenSize"/>
 	    <service android:name="com.wandoujia.ads.sdk.DownloadService"/>
 		<!--AdsSdk End.-->
+		
+		<!-- dianjin start -->
+        <activity
+            android:name="com.bodong.dianjinweb.downloadmanager.DianJinDownloadManager"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.bodong.dianjinweb.web.DianjinWebAcitivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+
+        <service android:name="com.bodong.dianjinweb.service.DianJinService" >
+        </service>
+        <!-- dianjin end -->
         
     </application>
 
