@@ -1,5 +1,6 @@
 package com.cc.worldcupremind.view;
 
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -89,7 +90,7 @@ public class MainActivity extends ActionBarActivity implements
 		LogHelper.d(TAG, "onCreate");
 		super.onCreate(savedInstanceState);
 		
-		DianJinPlatform.initialize(this, 53222, "2608b3e6e7582a3c760a015adec8fb24",1001);
+		DianJinPlatform.initialize(this, 53222, "2608b3e6e7582a3c760a015adec8fb24");
 		
 		setContentView(R.layout.activity_main);
 		isExit = false;
@@ -387,7 +388,12 @@ public class MainActivity extends ActionBarActivity implements
 				matchFragment.refresh();
 			}
 		}else if(id == R.id.action_app){
-			adsHelper.showAppWall();
+			Date now = new Date();
+			if(now.getTime() % 2 == 0){
+				adsHelper.showAppWall();
+			}else{
+				DianJinPlatform.showOfferWall(this);
+			}
 		}else if(id == R.id.action_update_server){
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.str_update_server_title);
