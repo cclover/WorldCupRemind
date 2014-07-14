@@ -1,4 +1,4 @@
-{"Version":2.611,"TeamsCount":32,"MatchesCount":64,"stage":3,"newsURL":"http://3g.163.com/ntes/special/00340H1J/worldcup2014.html?from=index",
+{"Version":2.650,"TeamsCount":32,"MatchesCount":64,"stage":5,"newsURL":"http://3g.163.com/ntes/special/00340H1J/worldcup2014.html?from=index",
 "videoURL":"http://flv2.bn.netease.com/videolib3%s-mobile.mp4","matchURL"="http://3g.163.com/ntes/special/00340H1J/match.html?matchid=%s&from=singlemessage&isappinstalled=1","Matches":[
 {"NO":1,"Stage":0,"Group":"A","Time":"2014-06-13 04:00:00","Team1":"bra","Team2":"cro","Status":2,"Score1":3,"Score2":1,"ext":"/1406/21/DOPAI7492/SD/DOPAI7492"},
 {"NO":2,"Stage":0,"Group":"A","Time":"2014-06-14 00:00:00","Team1":"mex","Team2":"cmr","Status":2,"Score1":1,"Score2":0,"ext":"/1406/21/JeZdz7573/SD/JeZdz7573"},
@@ -57,10 +57,10 @@
 {"NO":55,"Stage":1,"Group":"-","Time":"2014-07-02 00:00:00","Team1":"arg","Team2":"sui","Status":2,"Score1":1,"Score2":0,"ext":"/1407/02/msGcu2855/SD/msGcu2855"},
 {"NO":56,"Stage":1,"Group":"-","Time":"2014-07-02 04:00:00","Team1":"bel","Team2":"usa","Status":2,"Score1":2,"Score2":1,"ext":"/1407/02/dLUIb8149/SD/dLUIb8149"},
 {"NO":57,"Stage":2,"Group":"-","Time":"2014-07-05 04:00:00","Team1":"bra","Team2":"col","Status":2,"Score1":2,"Score2":1,"ext":"/1407/05/NOYjs4826/SD/NOYjs4826"},
-{"NO":58,"Stage":2,"Group":"-","Time":"2014-07-05 00:00:00","Team1":"fra","Team2":"ger","Status":2,"Score1":0,"Score2":1,"ext":"/1407/05/V9VE5MGG9/SD/V9VE5MGG9"},
+{"NO":58,"Stage":2,"Group":"-","Time":"2014-07-05 00:00:00","Team1":"fra","Team2":"ger","Status":2,"Score1":0,"Score2":1,"ext":"/1407/05/DEKMW9374/SD/DEKMW9374"},
 {"NO":59,"Stage":2,"Group":"-","Time":"2014-07-06 04:00:00","Team1":"ned","Team2":"crc","Status":2,"Score1":4,"Score2":3,"ext":"/1407/06/pYcGJ5084/SD/pYcGJ5084","ns1":0,"ns2":0},
 {"NO":60,"Stage":2,"Group":"-","Time":"2014-07-06 00:00:00","Team1":"arg","Team2":"bel","Status":2,"Score1":1,"Score2":0,"ext":"/1407/06/rHvCF6553/SD/rHvCF6553"},
 {"NO":61,"Stage":3,"Group":"-","Time":"2014-07-09 04:00:00","Team1":"bra","Team2":"ger","Status":2,"Score1":1,"Score2":7,"ext":"/1407/09/SjbDZ0848/SD/SjbDZ0848"},
-{"NO":62,"Stage":3,"Group":"-","Time":"2014-07-10 04:00:00","Team1":"ned","Team2":"arg","Status":0,"Score1":0,"Score2":0,"ext":"1263208"},
-{"NO":63,"Stage":4,"Group":"-","Time":"2014-07-13 04:00:00","Team1":"bra","Team2":"L62","Status":0,"Score1":0,"Score2":0,"ext":"1263209"},
-{"NO":64,"Stage":5,"Group":"-","Time":"2014-07-14 03:00:00","Team1":"ger","Team2":"W62","Status":0,"Score1":0,"Score2":0,"ext":"1263210"}]}
+{"NO":62,"Stage":3,"Group":"-","Time":"2014-07-10 04:00:00","Team1":"ned","Team2":"arg","Status":2,"Score1":2,"Score2":4,"ext":"/1407/10/MJVfe8597/SD/MJVfe8597","ns1":0,"ns2":0},
+{"NO":63,"Stage":4,"Group":"-","Time":"2014-07-13 04:00:00","Team1":"bra","Team2":"ned","Status":2,"Score1":0,"Score2":3,"ext":"/1407/13/PELxJ6215/SD/PELxJ6215"},
+{"NO":64,"Stage":5,"Group":"-","Time":"2014-07-14 03:00:00","Team1":"ger","Team2":"arg","Status":2,"Score1":1,"Score2":0,"ext":"/1407/14/QcxbP1113/SD/QcxbP1113"}]}
